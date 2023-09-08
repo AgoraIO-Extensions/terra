@@ -1,0 +1,27 @@
+parsers:
+  - name: LegacyCXXParser
+    package: '@agoraio-extensions/legacy-cxx-parser'
+    args:
+      includeHeaderDirs:
+        - shared_configs:headers/rtc_4.2.3/include
+      parseFiles:
+        include:
+          - shared_configs:headers/rtc_4.2.3/include/*.h
+        exclude:
+          - shared_configs:headers/rtc_4.2.3/include/AgoraRefPtr.h
+          - shared_configs:headers/rtc_4.2.3/include/time_utils.h
+          - shared_configs:headers/rtc_4.2.3/include/AgoraOptional.h
+          - shared_configs:headers/rtc_4.2.3/include/AgoraRefPtr.h
+          - shared_configs:headers/rtc_4.2.3/include/IAgoraH265Transcoder.h
+          - shared_configs:headers/rtc_4.2.3/include/IAgoraMediaComponentFactory.h
+          - shared_configs:headers/rtc_4.2.3/include/IAgoraParameter.h
+      customHeaders:
+        - shared_configs:headers/rtc_4.2.3/custom_headers/*.h
+        # - custom_headers/CustomIAgoraRtcEngine.h
+        # - custom_headers/CustomIAgoraMediaPlayer.h
+        # - custom_headers/CustomIAgoraRtcEngineEx.h
+        # - custom_headers/CustomIAgoraMusicContentCenter.h
+        # - custom_headers/CustomIAudioDeviceManager.h
+      language: dart
+      legacyRenders:
+        - DartSyntaxRender
