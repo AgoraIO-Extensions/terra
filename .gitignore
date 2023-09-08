@@ -1,0 +1,9 @@
+.idea
+.vscode
+.DS_Store
+build/
+
+node_modules/
+.dist/
+dump_json.json
+.ccls-cache

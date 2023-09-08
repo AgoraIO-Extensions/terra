@@ -1,0 +1,3 @@
+#define TARGET_OS_IOS 1
+#define TARGET_OS_MAC 1
+#define TARGET_OS_IPHONE 1

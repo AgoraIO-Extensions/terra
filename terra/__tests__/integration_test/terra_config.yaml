@@ -1,0 +1,49 @@
+# include: shared_configs:headers/rtc_4.2.3/shared_configs_test.yaml
+
+parsers:
+  - name: CXXParser
+    package: '@agoraio-extensions/cxx-parser'
+    args:
+      includeHeaderDirs:
+        - shared_configs:headers/rtc_4.2.3/include
+      parseFiles:
+        include:
+          - shared_configs:headers/rtc_4.2.3/include/*.h
+        exclude:
+          - shared_configs:headers/rtc_4.2.3/include/AgoraRefPtr.h
+          - shared_configs:headers/rtc_4.2.3/include/time_utils.h
+          - shared_configs:headers/rtc_4.2.3/include/AgoraOptional.h
+          - shared_configs:headers/rtc_4.2.3/include/AgoraRefPtr.h
+          - shared_configs:headers/rtc_4.2.3/include/IAgoraH265Transcoder.h
+          - shared_configs:headers/rtc_4.2.3/include/IAgoraMediaComponentFactory.h
+          - shared_configs:headers/rtc_4.2.3/include/IAgoraParameter.h
+        # - include/AgoraMediaBase.h
+        # - include/AgoraMediaPlayerTypes.h
+        # - include/AgoraOptional.h
+        # - include/AgoraRefPtr.h
+        # - include/IAgoraLog.h
+        # - include/IAgoraMediaEngine.h
+        # - include/IAgoraMediaPlayer.h
+        # - include/IAgoraMediaPlayerSource.h
+        # - include/IAgoraMediaRecorder.h
+        # - include/IAgoraMediaStreamingSource.h
+        # - include/IAgoraMusicContentCenter.h
+        # - include/IAgoraParameter.h
+        # - include/IAgoraRhythmPlayer.h
+        # - include/IAgoraRtcEngine.h
+        # - include/IAgoraRtcEngineEx.h
+        # - include/IAgoraSpatialAudio.h
+        # - include/IAudioDeviceManager.h
+      customHeaders:
+        - shared_configs:headers/rtc_4.2.3/custom_headers/*.h
+        # - custom_headers/CustomIAgoraRtcEngine.h
+        # - custom_headers/CustomIAgoraMediaPlayer.h
+        # - custom_headers/CustomIAgoraRtcEngineEx.h
+        # - custom_headers/CustomIAgoraMusicContentCenter.h
+        # - custom_headers/CustomIAudioDeviceManager.h
+      # language: dart
+      # legacyRenders:
+      #   - DartSyntaxRender
+
+renderers:
+  - path: test_renderer.ts
