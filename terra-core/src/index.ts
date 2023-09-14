@@ -15,7 +15,8 @@ export class TerraContext {
     constructor(
         public readonly configDir: string = "",
         public readonly outputDir: string = "",
-        public readonly cache: boolean = false
+        public readonly clean: boolean = false,
+        public readonly verbose: boolean = false,
     ) { }
 }
 
