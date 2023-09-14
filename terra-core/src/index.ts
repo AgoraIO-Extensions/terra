@@ -1,30 +1,40 @@
 // export * from "./app_root_path";
 export * from "./path_resolver";
 
-export interface TerraNode {}
+export interface TerraNode { }
 
 export class ParseResult {
-  nodes: TerraNode[] = [];
+    nodes: TerraNode[] = [];
 }
 
-export interface Generator {
-  generate(parseResult: ParseResult): boolean;
+// export interface Generator {
+//     generate(parseResult: ParseResult): boolean;
+// }
+
+export class TerraContext {
+    constructor(
+        public readonly configDir: string = "",
+        public readonly outputDir: string = "",
+        public readonly cache: boolean = false
+    ) { }
 }
 
-export class ParseConfig {
-  constructor(
-    public readonly configDir: string = "",
-    public readonly outputDir: string = "",
-    public readonly cache: boolean = false,
-    public readonly userData: any
-  ) {}
-}
+// export class ParseConfig {
+//     constructor(
+//         public readonly configDir: string = "",
+//         public readonly outputDir: string = "",
+//         public readonly cache: boolean = false,
+//         public readonly userData: any
+//     ) { }
+// }
 
-export abstract class Parser {
-  constructor(parseConfig: ParseConfig) {}
+export type Parser = (terraContext: TerraContext, args: any, parseResult?: ParseResult) => ParseResult | undefined;
 
-  abstract parse(preParseResult?: ParseResult): ParseResult | undefined;
-}
+// export abstract class Parser {
+//     constructor(parseConfig: ParseConfig) { }
+
+//     abstract parse(preParseResult?: ParseResult): ParseResult | undefined;
+// }
 
 // TODO(littlegnal): Maybe rename to chain
 // export class DefaultVisitor<T extends Parser> {
@@ -54,13 +64,13 @@ export abstract class Parser {
 //     }
 // }
 
-export interface Renderer {
-  render(parseResult: ParseResult): RenderResult[];
-}
+// export interface Renderer {
+//     render(parseResult: ParseResult): RenderResult[];
+// }
 
 export interface RenderResult {
-  file_name: string;
-  file_content: string;
+    file_name: string;
+    file_content: string;
 }
 
 /**
@@ -81,34 +91,34 @@ export interface RenderResult {
  * export default YourRenderer;
  * ```
  */
-export type RenderFunction = (parseResult: ParseResult) => RenderResult[];
+export type Renderer = (terraContext: TerraContext, args: any, parseResult: ParseResult) => RenderResult[];
 
-export class DefaultVisitor {
-  private parsers: Parser[];
+// export class DefaultVisitor {
+//     private parsers: Array<any>;
 
-  // constructor(rootParser: T) {
-  //     this.parsers = [];
-  //     this.rootParser = rootParser;
-  //     this.parsers.push(this.rootParser);
-  // }
+//     // constructor(rootParser: T) {
+//     //     this.parsers = [];
+//     //     this.rootParser = rootParser;
+//     //     this.parsers.push(this.rootParser);
+//     // }
 
-  constructor() {
-    this.parsers = [];
-  }
+//     constructor() {
+//         this.parsers = [];
+//     }
 
-  addParser(parser: Parser) {
-    this.parsers.push(parser);
-  }
+//     addParser(parser: any) {
+//         this.parsers.push(parser);
+//     }
 
-  accept(parseConfig: ParseConfig, generator: Generator) {
-    var parseResult: ParseResult = new ParseResult();
-    for (let parser of this.parsers) {
-      let tmp = parser.parse(parseResult);
-      if (tmp) {
-        parseResult = tmp;
-      }
-    }
+//     accept(terraContext: TerraContext, generator: Generator) {
+//         var parseResult: ParseResult = new ParseResult();
+//         for (let parser of this.parsers) {
+//             let tmp = parser(terraContext, {}, parseResult);
+//             if (tmp) {
+//                 parseResult = tmp;
+//             }
+//         }
 
-    generator.generate(parseResult);
-  }
-}
+//         generator.generate(parseResult);
+//     }
+// }

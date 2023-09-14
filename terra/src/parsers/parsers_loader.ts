@@ -1,35 +1,34 @@
-import { assert } from 'console';
+// import { assert } from 'console';
 
-import {
-  ParseConfig,
-  Parser,
-  requireModule,
-} from '@agoraio-extensions/terra-core';
+// import {
+//   Parser,
+//   requireModule,
+// } from '@agoraio-extensions/terra-core';
 
-import { TerraLoaderConfig } from '../base/terra_configs';
+// import { TerraLoaderConfig } from '../base/terra_configs';
 
-export class ParsersLoader {
-  private createParserUnsafe(
-    parseConfig: ParseConfig,
-    p: TerraLoaderConfig
-  ): Parser {
-    let instance: Parser | undefined = undefined;
+// export class ParsersLoader {
+//   private createParserUnsafe(
+//     parseConfig: ParseConfig,
+//     p: TerraLoaderConfig
+//   ): Parser {
+//     let instance: Parser | undefined = undefined;
 
-    let argObj = p.args;
+//     let argObj = p.args;
 
-    const parsers = requireModule(p.package!);
-    instance = new parsers[p.name!](parseConfig, argObj);
+//     const parsers = requireModule(p.package!);
+//     instance = new parsers[p.name!](parseConfig, argObj);
 
-    assert(instance !== undefined, `can not create parser: ${p.name}`);
+//     assert(instance !== undefined, `can not create parser: ${p.name}`);
 
-    return instance!;
-  }
+//     return instance!;
+//   }
 
-  load(parseConfig: ParseConfig, parsers: Array<TerraLoaderConfig>): Parser[] {
-    let parsedParsers = parsers.map((it) => {
-      return this.createParserUnsafe(parseConfig, it)!;
-    });
+//   load(parseConfig: ParseConfig, parsers: Array<TerraLoaderConfig>): Parser[] {
+//     let parsedParsers = parsers.map((it) => {
+//       return this.createParserUnsafe(parseConfig, it)!;
+//     });
 
-    return parsedParsers;
-  }
-}
+//     return parsedParsers;
+//   }
+// }
