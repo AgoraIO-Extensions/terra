@@ -2,7 +2,7 @@ import path from 'path';
 
 import { Command } from 'commander';
 
-import { RendererCommand } from '../commands/renderer_command';
+import { RunCommand } from '../commands/run_command';
 
 export function run() {
   // Set the app root path to my/path/terra-cli
@@ -13,11 +13,11 @@ export function run() {
 
   program
     .name('terra')
-    .description('CLI to generate code from one language to another.')
+    .description('terra CLI.')
     .version('0.1.0');
 
   // program.addCommand(new LegacyCommand());
-  program.addCommand(new RendererCommand());
+  program.addCommand(new RunCommand());
 
   program.parse();
 }
