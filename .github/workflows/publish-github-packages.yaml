@@ -38,12 +38,12 @@ jobs:
           npm publish
         working-directory: terra-core
 
-      # - name: publish cxx-parser
-      #   if: always()
-      #   continue-on-error: true
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     npm ci
-      #     npm publish
-      #   working-directory: cxx-parser
+      - name: publish cxx-parser
+        if: always()
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm ci
+          npm publish
+        working-directory: cxx-parser

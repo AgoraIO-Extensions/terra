@@ -13,7 +13,7 @@
     "typescript": "^5.2.2",
     "ts-node": "^10.9.1",
     "yaml": "^2.1.3",
-    "@agoraio-extensions/terra-core": "../terra-core",
+    "@agoraio-extensions/terra-core": "^0.1.0",
     "glob": "^10.3.4"
   }
 }
