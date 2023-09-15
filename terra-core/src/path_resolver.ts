@@ -2,6 +2,8 @@ import fs from "fs";
 
 import path from "path";
 
+import os from 'os';
+
 /**
  * Resolve the schema: `<module_name>:<path>`, or absolute path, or relative path
  */
@@ -15,10 +17,10 @@ export function resolvePath(
     }
 
     if (prefixDirIfNotAbsolute == "") {
-      return p;
+      return path.resolve(p);
     }
 
-    return path.join(prefixDirIfNotAbsolute, p);
+    return path.resolve(path.join(prefixDirIfNotAbsolute, p));
   }
 
   // e.g., shared_configs:headers/rtc_4.2.3/shared_configs.yaml
@@ -30,14 +32,13 @@ export function resolvePath(
   let localModulePath = resolveModulePath(moduleName);
   let localPathInModule = path.join(localModulePath, pathInModule);
 
-  return localPathInModule;
+  return path.resolve(localPathInModule);
 }
 
 export function resolveModulePath(module: string): string {
   let currentPackageJsonPath = process.env.npm_package_json;
   let currentPackageNodeModuleDir = path.join(
-    currentPackageJsonPath as string,
-    "..",
+    path.dirname(currentPackageJsonPath as string),
     "node_modules"
   );
   console.assert(fs.existsSync(currentPackageNodeModuleDir));
@@ -45,7 +46,7 @@ export function resolveModulePath(module: string): string {
   let parserPackageDir = path.join(currentPackageNodeModuleDir, module);
   console.assert(fs.existsSync(parserPackageDir));
 
-  return parserPackageDir;
+  return path.resolve(parserPackageDir);
 }
 
 export function requireModule(module: string): any {
@@ -67,5 +68,5 @@ export function requireModule(module: string): any {
     parserPackageJsonIndexFilePath
   );
 
-  return require(parserPackageIndexFilePath);
+  return require(path.resolve(parserPackageIndexFilePath));
 }

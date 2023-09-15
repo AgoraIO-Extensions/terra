@@ -1,0 +1,16 @@
+name: Unit test & integration test
+
+on:
+  pull_request:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+
+      - name: Run unit test
+        run: bash tool/run_ut.sh
