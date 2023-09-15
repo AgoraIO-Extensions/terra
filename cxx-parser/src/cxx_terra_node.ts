@@ -1,4 +1,5 @@
 import { TerraNode } from "@agoraio-extensions/terra-core";
+import path from "path";
 
 function getAllClazzs(cxxfiles: CXXFile[]): Clazz[] {
   return cxxfiles.flatMap((file) =>
@@ -43,23 +44,23 @@ export abstract class CXXTerraNode implements TerraNode {
   source: string = "";
   user_data?: any = undefined;
 
-  nameWithNamespace(): string {
-    let result = this.name;
-
+  get fullName(): string {
     if (this.namespaces?.length > 0) {
-      let prefix = this.namespaces.join("::");
-      result = `${prefix}::${result}`;
+      return `${this.namespace}::${this.realName}`;
     }
-
-    return result;
+    return this.name;
   }
 
-  nameWithoutNamespace(): string {
-    return this.name.trimNamespace() as string;
+  get realName(): string {
+    return this.name?.trimNamespace() as string;
   }
 
-  getNamespacesInString(): string {
-    return this.namespaces.join("::");
+  get namespace(): string {
+    return this.namespaces?.join("::");
+  }
+
+  get fileName(): string {
+    return path.basename(this.file_path);
   }
 
   asCXXFile(): CXXFile {
