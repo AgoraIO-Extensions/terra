@@ -25,6 +25,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm ci
+          npm exec tsc
           npm publish
         working-directory: terra
 
@@ -35,6 +36,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm ci
+          npm exec tsc
           npm publish
         working-directory: terra-core
 
@@ -45,5 +47,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm ci
+          npm exec tsc
           npm publish
         working-directory: cxx-parser
