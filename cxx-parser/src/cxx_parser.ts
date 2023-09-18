@@ -6,7 +6,7 @@ import {
   Parser,
   TerraContext,
 } from "@agoraio-extensions/terra-core";
-import { CXXFile, cast } from "./cxx_terra_node";
+import { CXXFile, CXXTYPE, cast } from "./cxx_terra_node";
 import { CXXParserConfigs } from "./cxx_parser_configs";
 
 export function dumpCXXAstJson(
@@ -57,21 +57,18 @@ export function dumpCXXAstJson(
 }
 
 export function genParseResultFromJson(astJsonContent: string): ParseResult {
-  let ast_json = JSON.parse(astJsonContent, (key, value) => {
+  const cxxFiles: CXXFile[] = JSON.parse(astJsonContent, (key, value) => {
     if (typeof value === "object") {
       if (Array.isArray(value)) {
         return value;
       }
       return cast(value);
     }
-
     return value;
   });
-  var parseResult: ParseResult = new ParseResult();
-  let cxxFiles: CXXFile[] = ast_json;
-
+  fillParentNode(cxxFiles);
+  const parseResult = new ParseResult();
   parseResult.nodes = cxxFiles;
-
   return parseResult;
 }
 
@@ -94,4 +91,49 @@ export function CXXParser(
   );
 
   return genParseResultFromJson(jsonContent);
+}
+
+function fillParentNode(cxxFiles: CXXFile[]) {
+  cxxFiles.forEach((file) => {
+    file.nodes.forEach((node) => {
+      node.parent = file;
+      if (node.__TYPE === CXXTYPE.Clazz) {
+        node.asClazz().constructors.forEach((constructor) => {
+          constructor.parent = node;
+          constructor.parameters.forEach((param) => {
+            param.parent = constructor;
+            param.type.parent = param;
+          });
+        });
+        node.asClazz().methods.forEach((method) => {
+          method.parent = node;
+          method.parameters.forEach((param) => {
+            param.parent = method;
+            param.type.parent = param;
+          });
+          method.return_type.parent = method;
+        });
+        node.asClazz().member_variables.forEach((variable) => {
+          variable.parent = node;
+          variable.type.parent = variable;
+        });
+      } else if (node.__TYPE === CXXTYPE.Struct) {
+        node.asStruct().constructors.forEach((constructor) => {
+          constructor.parent = node;
+          constructor.parameters.forEach((param) => {
+            param.parent = constructor;
+            param.type.parent = param;
+          });
+        });
+        node.asStruct().member_variables.forEach((variable) => {
+          variable.parent = node;
+          variable.type.parent = variable;
+        });
+      } else if (node.__TYPE === CXXTYPE.Enumz) {
+        node.asEnumz().enum_constants.forEach((enum_constant) => {
+          enum_constant.parent = node;
+        });
+      }
+    });
+  });
 }
