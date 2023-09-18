@@ -1,7 +1,5 @@
 export * from "./cxx_terra_node";
+export * from "./cxx_terra_node_ext";
 export * from "./cxx_parser_configs";
 export * from "./cxx_parser";
-
-import { CXXParser } from "./cxx_parser";
-
-export default CXXParser;
+export * from "./cxx_parser_ext";
