@@ -37,7 +37,7 @@ export class RunCommand extends BaseRenderCommand {
           new TerraContext(
             includeConfigDir,
             cliOption.outputDir,
-            cliOption.cache == true
+            cliOption.clean
           ),
           includeConfigs.parsers
         )
@@ -51,7 +51,7 @@ export class RunCommand extends BaseRenderCommand {
         new TerraContext(
           path.dirname(cliOption.config),
           cliOption.outputDir,
-          cliOption.cache == true
+          cliOption.clean
         ),
         terraConfigs.parsers
       )
@@ -65,7 +65,7 @@ export class RunCommand extends BaseRenderCommand {
           new TerraContext(
             path.dirname(cliOption.config),
             cliOption.outputDir,
-            cliOption.cache == true
+            cliOption.clean
           )
         )
       );
@@ -75,7 +75,7 @@ export class RunCommand extends BaseRenderCommand {
           new TerraContext(
             path.dirname(cliOption.config),
             cliOption.outputDir,
-            cliOption.cache == true
+            cliOption.clean
           ),
           terraConfigs.renderers
         )
