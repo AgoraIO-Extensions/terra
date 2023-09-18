@@ -18,16 +18,6 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           # Defaults to the user or organization that owns the workflow file
           scope: "@agoraio-extensions"
-      - name: publish terra
-        if: always()
-        continue-on-error: true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm ci
-          npm exec tsc
-          npm publish
-        working-directory: terra
 
       - name: publish terra-core
         if: always()
@@ -39,6 +29,17 @@ jobs:
           npm exec tsc
           npm publish
         working-directory: terra-core
+
+      - name: publish terra
+        if: always()
+        continue-on-error: true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm ci
+          npm exec tsc
+          npm publish
+        working-directory: terra
 
       - name: publish cxx-parser
         if: always()
