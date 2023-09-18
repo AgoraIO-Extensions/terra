@@ -1,6 +1,6 @@
 {
   "name": "@agoraio-extensions/terra",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "types": "./src/types/index.ts",
   "exports": {
     ".": "./src/types/index.ts"
