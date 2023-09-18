@@ -38,6 +38,7 @@ export abstract class CXXTerraNode implements TerraNode {
   file_path: string = "";
   namespaces: string[] = [];
   parent_name: string = "";
+  parent?: CXXTerraNode;
 
   attributes: string[] = [];
   comment: string = "";
@@ -206,6 +207,10 @@ export class MemberFunction extends CXXTerraNode {
   is_overriding: boolean = false;
   is_const: boolean = false;
   signature: string = "";
+
+  override get fullName(): string {
+    return `${this.parent?.fullName}.${this.name}`;
+  }
 }
 
 export class Variable extends CXXTerraNode {
@@ -213,6 +218,10 @@ export class Variable extends CXXTerraNode {
   type: SimpleType = new SimpleType();
   default_value: string = "";
   is_output: boolean = false;
+
+  override get fullName(): string {
+    return `${this.parent?.fullName}.${this.name}`;
+  }
 }
 
 export class SimpleType extends CXXTerraNode {
@@ -221,12 +230,19 @@ export class SimpleType extends CXXTerraNode {
   is_const: boolean = false;
   is_builtin_type: boolean = false;
 
-  getTypeName(): string {
-    if (this.name.length != 0) {
-      return this.name;
+  override get realName(): string {
+    if (this.name) {
+      return super.realName;
     }
+    return this.source?.trimNamespace();
+  }
 
-    return this.source;
+  override get fullName(): string {
+    if (this.parent?.__TYPE === CXXTYPE.MemberFunction) {
+      return `${this.parent?.fullName}@return_type`;
+    } else {
+      return `${this.parent?.fullName}@type`;
+    }
   }
 }
 
@@ -235,6 +251,10 @@ export class MemberVariable extends CXXTerraNode {
   type: SimpleType = new SimpleType();
   is_mutable: boolean = false;
   access_specifier: string = "";
+
+  override get fullName(): string {
+    return `${this.parent?.fullName}.${this.name}`;
+  }
 }
 
 export class EnumConstant extends CXXTerraNode {
