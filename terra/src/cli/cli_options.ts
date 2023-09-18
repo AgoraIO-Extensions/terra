@@ -4,7 +4,7 @@ export class CLIOptions {
   constructor(
     public readonly config: string,
     public readonly outputDir: string,
-    public readonly cache: string | boolean = false,
+    public readonly clean: boolean = false,
     public readonly dumpAstJson: boolean = false
   ) {}
 
@@ -12,7 +12,7 @@ export class CLIOptions {
     return new CLIOptions(
       options.config,
       options.outputDir,
-      options.cache,
+      options.clean,
       options.dumpAstJson
     );
   }

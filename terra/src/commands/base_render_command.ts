@@ -15,7 +15,7 @@ export abstract class BaseRenderCommand extends BaseCommand {
     this.addOption(
       new Option('--output-dir, --output-dir <string>', 'The output directory')
     );
-    this.addOption(new Option('-c, --cache [type]', 'use cache dump'));
+    this.addOption(new Option('-c, --clean', 'Run a clean build'));
     this.addOption(
       new Option(
         '-d, --dump-ast-json',
