@@ -29,7 +29,7 @@ export function resolveTerraLoaderConfig(
   );
 
   if (config.path) {
-    let p = path.join(terraConfigDir, config.path!);
+    let p = path.join(path.dirname(terraConfigDir), config.path!);
     let loaded = require(p);
     if (config.name) {
       // export named function
