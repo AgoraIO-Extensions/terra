@@ -48,10 +48,6 @@ export function dumpCXXAstJson(
     fs.rmSync(build_cache_dir_path, { recursive: true, force: true });
   }
 
-  // if (!fs.existsSync(build_cache_dir_path)) {
-  //   fs.mkdirSync(build_cache_dir_path, { recursive: true });
-  // }
-
   // If the previous output json cache exists, skip the process of cppast parser
   if (fs.existsSync(outputJsonPath)) {
     console.log(`Skip the process of cppast parser, use the cached ast json file: ${outputJsonPath}`);
