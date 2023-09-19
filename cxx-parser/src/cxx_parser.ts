@@ -8,6 +8,19 @@ import {
 } from "@agoraio-extensions/terra-core";
 import { CXXFile, CXXTYPE, cast } from "./cxx_terra_node";
 import { CXXParserConfigs } from "./cxx_parser_configs";
+import crypto from "crypto";
+
+export function generateChecksum(files: string[]) {
+  let allFileContents = files.map((it) => {
+    return fs.readFileSync(it, "utf-8");
+  }).join("\n");
+
+  return crypto
+    .createHash('md5')
+    .update(allFileContents)
+    .digest('hex')
+    .toString();
+}
 
 export function dumpCXXAstJson(
   terraContext: TerraContext,
@@ -16,6 +29,9 @@ export function dumpCXXAstJson(
   parseFiles: string[],
   defines: string[]
 ): string {
+
+  let parseFilesChecksum = generateChecksum(parseFiles);
+
   let agora_rtc_ast_dir_path = path.join(
     __dirname,
     "..",
@@ -25,10 +41,22 @@ export function dumpCXXAstJson(
 
   let build_shell_path = path.join(agora_rtc_ast_dir_path, "build.sh");
   let build_cache_dir_path = path.join(agora_rtc_ast_dir_path, "build");
-  let outputJsonPath = path.join(build_cache_dir_path, "dump_json.json");
+  let outputJsonFileName = `dump_json_${parseFilesChecksum}.json`;
+  let outputJsonPath = path.join(build_cache_dir_path, outputJsonFileName);
 
   if (terraContext.clean && fs.existsSync(build_cache_dir_path)) {
     fs.rmSync(build_cache_dir_path, { recursive: true, force: true });
+  }
+
+  // if (!fs.existsSync(build_cache_dir_path)) {
+  //   fs.mkdirSync(build_cache_dir_path, { recursive: true });
+  // }
+
+  // If the previous output json cache exists, skip the process of cppast parser
+  if (fs.existsSync(outputJsonPath)) {
+    console.log(`Skip the process of cppast parser, use the cached ast json file: ${outputJsonPath}`);
+    let ast_json_file_content = fs.readFileSync(outputJsonPath, "utf-8");
+    return ast_json_file_content;
   }
 
   let include_header_dirs_arg = includeHeaderDirs.join(",");
