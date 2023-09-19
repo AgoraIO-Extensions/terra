@@ -13,4 +13,6 @@ jobs:
           node-version: "16.x"
 
       - name: Run unit test
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash tool/run_ut.sh
