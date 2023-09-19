@@ -4,7 +4,10 @@ import path from 'path';
 
 import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
-import { dumpJsonRenderer, terraAstJsonFileName } from './dump_json_renderer';
+import {
+  dumpJsonRenderer,
+  terraAstJsonFileName,
+} from '../../../src/renderers/dump_json_renderer';
 
 interface FakeNode {
   name: string;
