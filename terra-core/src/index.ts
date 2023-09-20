@@ -1,5 +1,6 @@
 // export * from "./app_root_path";
 export * from './path_resolver';
+export * from './testing_utils';
 
 export interface TerraNode {}
 

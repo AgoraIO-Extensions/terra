@@ -4,6 +4,7 @@
     "module": "commonjs",
     "strict": true,
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "rootDirs": ["**/src", "**/__tests__"]
   }
 }

@@ -1,3 +1,5 @@
+import { SimpleType } from './cxx_terra_node';
+
 export {};
 
 declare global {
@@ -14,6 +16,10 @@ declare global {
      * Example: "std::vector::size_type" returns "std::vector"
      */
     getNamespace(): string;
+  }
+
+  export interface ParseResult {
+    findSimpleTypeByName(fullName: string): SimpleType;
   }
 }
 
