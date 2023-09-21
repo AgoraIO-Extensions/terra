@@ -9,6 +9,9 @@
     "build": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "test": "jest --coverage",
+    "test:terra": "jest --selectProjects=terra",
+    "test:terra-core": "jest --selectProjects=terra-core",
+    "test:cxx-parser": "jest --selectProjects=cxx-parser",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
