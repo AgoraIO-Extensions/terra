@@ -2,7 +2,7 @@
   "name": "@agoraio-extensions/terra-core",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AgoraIO-Extensions/terrax.git"
+    "url": "git+https://github.com/AgoraIO-Extensions/terrax.git"
   },
   "version": "0.1.2",
   "main": "src/index.js",
@@ -11,15 +11,9 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@types/jest": "^29.5.1",
-    "jest": "^29.5.0",
-    "ts-jest": "^29.1.0"
+  "bugs": {
+    "url": "https://github.com/AgoraIO-Extensions/terrax/issues"
   },
-  "dependencies": {
-    "@types/node": "^20.5.9",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.8.4"
-  },
+  "homepage": "https://github.com/AgoraIO-Extensions/terrax#readme",
   "description": ""
 }

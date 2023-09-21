@@ -7,4 +7,3 @@ node_modules/
 .dist/
 dump_json.json
 .ccls-cache
-**/package-lock.json
