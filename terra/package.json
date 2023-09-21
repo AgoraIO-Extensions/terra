@@ -6,7 +6,9 @@
     "terra": "./src/bin"
   },
   "scripts": {
-    "start": "ts-node -T ./src/bin"
+    "build": "tsc",
+    "start": "ts-node -T ./src/bin",
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",

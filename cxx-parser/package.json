@@ -4,6 +4,10 @@
   "main": "src/index",
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --coverage"
+  },
   "peerDependencies": {
     "@agoraio-extensions/terra-core": ">=0.1.0"
   },

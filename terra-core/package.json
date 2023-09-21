@@ -1,13 +1,17 @@
 {
   "name": "@agoraio-extensions/terra-core",
+  "version": "0.1.2",
+  "main": "./src/index",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --coverage"
+  },
+  "author": "",
+  "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AgoraIO-Extensions/terrax.git"
   },
-  "version": "0.1.2",
-  "main": "./src/index",
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/AgoraIO-Extensions/terrax/issues"
   },
