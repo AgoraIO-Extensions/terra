@@ -20,16 +20,11 @@
     "type": "git",
     "url": "git+https://github.com/AgoraIO-Extensions/terrax.git"
   },
-  "peerDependencies": {
-    "@agoraio-extensions/terra-core": ">=0.1.0"
-  },
   "dependencies": {
+    "@agoraio-extensions/terra-core": "^0.1.0",
     "commander": "^9.4.1",
     "mustache": "^4.2.0",
     "yaml": "^2.1.3"
-  },
-  "devDependencies": {
-    "@agoraio-extensions/terra-core": "../terra-core"
   },
   "bugs": {
     "url": "https://github.com/AgoraIO-Extensions/terrax/issues"
