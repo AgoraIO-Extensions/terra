@@ -6,6 +6,8 @@
     "terra-core"
   ],
   "scripts": {
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\""
   },
   "devDependencies": {

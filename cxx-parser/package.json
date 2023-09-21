@@ -14,6 +14,9 @@
     "yaml": "^2.1.3",
     "glob": "^10.3.4"
   },
+  "devDependencies": {
+    "@agoraio-extensions/terra-core": "../terra-core"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AgoraIO-Extensions/terrax.git"
