@@ -1,7 +1,6 @@
 {
   "name": "test_package",
   "version": "1.0.0",
-  "description": "",
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,5 +14,14 @@
     "@agoraio-extensions/cxx-parser": "^0.1.0",
     "@agoraio-extensions/legacy-cxx-parser": "github:AgoraIO-Extensions/terra-legacy-cxx-parser#main",
     "@agoraio-extensions/terra_shared_configs": "github:AgoraIO-Extensions/terra_shared_configs#main"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgoraIO-Extensions/terrax.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AgoraIO-Extensions/terrax/issues"
+  },
+  "homepage": "https://github.com/AgoraIO-Extensions/terrax#readme",
+  "description": ""
 }
