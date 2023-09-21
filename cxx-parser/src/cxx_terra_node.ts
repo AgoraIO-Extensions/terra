@@ -1,5 +1,6 @@
-import { TerraNode } from "@agoraio-extensions/terra-core";
-import path from "path";
+import path from 'path';
+
+import { TerraNode } from '@agoraio-extensions/terra-core';
 
 function getAllClazzs(cxxfiles: CXXFile[]): Clazz[] {
   return cxxfiles.flatMap((file) =>
@@ -10,19 +11,19 @@ function getAllClazzs(cxxfiles: CXXFile[]): Clazz[] {
 }
 
 export enum CXXTYPE {
-  Unknown = "Unknown",
-  CXXFile = "CXXFile",
-  IncludeDirective = "IncludeDirective",
-  TypeAlias = "TypeAlias",
-  Clazz = "Clazz",
-  Struct = "Struct",
-  Constructor = "Constructor",
-  MemberFunction = "MemberFunction",
-  Variable = "Variable",
-  SimpleType = "SimpleType",
-  MemberVariable = "MemberVariable",
-  EnumConstant = "EnumConstant",
-  Enumz = "Enumz",
+  Unknown = 'Unknown',
+  CXXFile = 'CXXFile',
+  IncludeDirective = 'IncludeDirective',
+  TypeAlias = 'TypeAlias',
+  Clazz = 'Clazz',
+  Struct = 'Struct',
+  Constructor = 'Constructor',
+  MemberFunction = 'MemberFunction',
+  Variable = 'Variable',
+  SimpleType = 'SimpleType',
+  MemberVariable = 'MemberVariable',
+  EnumConstant = 'EnumConstant',
+  Enumz = 'Enumz',
 }
 
 export enum SimpleTypeKind {
@@ -34,15 +35,15 @@ export enum SimpleTypeKind {
 
 export abstract class CXXTerraNode implements TerraNode {
   __TYPE: CXXTYPE = CXXTYPE.Unknown;
-  name: string = "";
-  file_path: string = "";
+  name: string = '';
+  file_path: string = '';
   namespaces: string[] = [];
-  parent_name: string = "";
+  parent_name: string = '';
   parent?: CXXTerraNode;
 
   attributes: string[] = [];
-  comment: string = "";
-  source: string = "";
+  comment: string = '';
+  source: string = '';
   user_data?: any = undefined;
 
   get fullName(): string {
@@ -57,7 +58,7 @@ export abstract class CXXTerraNode implements TerraNode {
   }
 
   get namespace(): string {
-    return this.namespaces?.join("::");
+    return this.namespaces?.join('::');
   }
 
   get fileName(): string {
@@ -66,84 +67,84 @@ export abstract class CXXTerraNode implements TerraNode {
 
   asCXXFile(): CXXFile {
     if (this.__TYPE !== CXXTYPE.CXXFile) {
-      throw new Error("This node is not a CXXFile");
+      throw new Error('This node is not a CXXFile');
     }
     return this as unknown as CXXFile;
   }
 
   asIncludeDirective(): IncludeDirective {
     if (this.__TYPE !== CXXTYPE.IncludeDirective) {
-      throw new Error("This node is not an IncludeDirective");
+      throw new Error('This node is not an IncludeDirective');
     }
     return this as unknown as IncludeDirective;
   }
 
   asTypeAlias(): TypeAlias {
     if (this.__TYPE !== CXXTYPE.TypeAlias) {
-      throw new Error("This node is not a TypeAlias");
+      throw new Error('This node is not a TypeAlias');
     }
     return this as unknown as TypeAlias;
   }
 
   asClazz(): Clazz {
     if (this.__TYPE !== CXXTYPE.Clazz) {
-      throw new Error("This node is not a Clazz");
+      throw new Error('This node is not a Clazz');
     }
     return this as unknown as Clazz;
   }
 
   asStruct(): Struct {
     if (this.__TYPE !== CXXTYPE.Struct) {
-      throw new Error("This node is not a Struct");
+      throw new Error('This node is not a Struct');
     }
     return this as unknown as Struct;
   }
 
   asConstructor(): Constructor {
     if (this.__TYPE !== CXXTYPE.Constructor) {
-      throw new Error("This node is not a Constructor");
+      throw new Error('This node is not a Constructor');
     }
     return this as unknown as Constructor;
   }
 
   asMemberFunction(): MemberFunction {
     if (this.__TYPE !== CXXTYPE.MemberFunction) {
-      throw new Error("This node is not a MemberFunction");
+      throw new Error('This node is not a MemberFunction');
     }
     return this as unknown as MemberFunction;
   }
 
   asVariable(): Variable {
     if (this.__TYPE !== CXXTYPE.Variable) {
-      throw new Error("This node is not a Variable");
+      throw new Error('This node is not a Variable');
     }
     return this as unknown as Variable;
   }
 
   asSimpleType(): SimpleType {
     if (this.__TYPE !== CXXTYPE.SimpleType) {
-      throw new Error("This node is not a SimpleType");
+      throw new Error('This node is not a SimpleType');
     }
     return this as unknown as SimpleType;
   }
 
   asMemberVariable(): MemberVariable {
     if (this.__TYPE !== CXXTYPE.MemberVariable) {
-      throw new Error("This node is not a MemberVariable");
+      throw new Error('This node is not a MemberVariable');
     }
     return this as unknown as MemberVariable;
   }
 
   asEnumConstant(): EnumConstant {
     if (this.__TYPE !== CXXTYPE.EnumConstant) {
-      throw new Error("This node is not an EnumConstant");
+      throw new Error('This node is not an EnumConstant');
     }
     return this as unknown as EnumConstant;
   }
 
   asEnumz(): Enumz {
     if (this.__TYPE !== CXXTYPE.Enumz) {
-      throw new Error("This node is not an Enumz");
+      throw new Error('This node is not an Enumz');
     }
     return this as unknown as Enumz;
   }
@@ -151,7 +152,7 @@ export abstract class CXXTerraNode implements TerraNode {
 
 export class IncludeDirective extends CXXTerraNode {
   override __TYPE: CXXTYPE = CXXTYPE.IncludeDirective;
-  include_file_path: string = "";
+  include_file_path: string = '';
 }
 
 export class TypeAlias extends CXXTerraNode {
@@ -203,10 +204,10 @@ export class MemberFunction extends CXXTerraNode {
   return_type: SimpleType = new SimpleType();
 
   parameters: Variable[] = [];
-  access_specifier: string = "";
+  access_specifier: string = '';
   is_overriding: boolean = false;
   is_const: boolean = false;
-  signature: string = "";
+  signature: string = '';
 
   override get fullName(): string {
     return `${this.parent?.fullName}.${this.name}`;
@@ -216,7 +217,7 @@ export class MemberFunction extends CXXTerraNode {
 export class Variable extends CXXTerraNode {
   override __TYPE: CXXTYPE = CXXTYPE.Variable;
   type: SimpleType = new SimpleType();
-  default_value: string = "";
+  default_value: string = '';
   is_output: boolean = false;
 
   override get fullName(): string {
@@ -250,7 +251,7 @@ export class MemberVariable extends CXXTerraNode {
   override __TYPE: CXXTYPE = CXXTYPE.MemberVariable;
   type: SimpleType = new SimpleType();
   is_mutable: boolean = false;
-  access_specifier: string = "";
+  access_specifier: string = '';
 
   override get fullName(): string {
     return `${this.parent?.fullName}.${this.name}`;
@@ -260,7 +261,7 @@ export class MemberVariable extends CXXTerraNode {
 export class EnumConstant extends CXXTerraNode {
   override __TYPE: CXXTYPE = CXXTYPE.EnumConstant;
 
-  value: string = "";
+  value: string = '';
 }
 
 type ParentNodeType =

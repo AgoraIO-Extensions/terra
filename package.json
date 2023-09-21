@@ -5,6 +5,9 @@
     "terra",
     "terra-core"
   ],
+  "scripts": {
+    "lint": "eslint \"**/*.{js,ts,tsx}\""
+  },
   "devDependencies": {
     "@types/jest": "^29.5.1",
     "@types/mustache": "^4.2.2",
