@@ -22,4 +22,5 @@ jobs:
       - name: Run unit test
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: bash tool/run_ut.sh
