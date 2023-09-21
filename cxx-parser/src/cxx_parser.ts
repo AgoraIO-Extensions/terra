@@ -3,11 +3,7 @@ import crypto from 'crypto';
 import * as fs from 'fs';
 import path from 'path';
 
-import {
-  ParseResult,
-  Parser,
-  TerraContext,
-} from '@agoraio-extensions/terra-core';
+import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
 import { CXXParserConfigs } from './cxx_parser_configs';
 import { CXXFile, CXXTYPE, cast } from './cxx_terra_node';

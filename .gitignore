@@ -3,7 +3,7 @@
 .DS_Store
 build/
 
+coverage/
 node_modules/
 .dist/
 dump_json.json
-.ccls-cache

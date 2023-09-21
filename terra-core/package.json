@@ -5,10 +5,7 @@
     "url": "git+https://github.com/AgoraIO-Extensions/terrax.git"
   },
   "version": "0.1.2",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "jest"
-  },
+  "main": "./src/index",
   "author": "",
   "license": "ISC",
   "bugs": {

@@ -1,17 +1,12 @@
 {
   "name": "@agoraio-extensions/terra",
   "version": "0.1.3",
-  "types": "./src/types/index.ts",
-  "exports": {
-    ".": "./src/types/index.ts"
-  },
+  "main": "./src/index",
   "bin": {
-    "terra": "src/bin.ts"
+    "terra": "./src/bin"
   },
   "scripts": {
-    "test": "jest",
-    "build": "ts-node -T ./src/bin.ts",
-    "lint": "eslint \"**/*.{js,ts}\""
+    "start": "ts-node -T ./src/bin"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +25,5 @@
     "url": "https://github.com/AgoraIO-Extensions/terrax/issues"
   },
   "homepage": "https://github.com/AgoraIO-Extensions/terrax#readme",
-  "main": "jest.config.js",
   "description": ""
 }

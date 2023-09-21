@@ -18,7 +18,14 @@ describe('cxx_parser', () => {
 
     // Since the test run on the root of the `cxx-parser`, so we can concat the path
     // as relative path here.
-    cppastBackendBuildDir = path.resolve('cxx', 'cppast_backend', 'build');
+    cppastBackendBuildDir = path.join(
+      __dirname,
+      '..',
+      '..',
+      'cxx',
+      'cppast_backend',
+      'build'
+    );
     // Clean the build dir before each test case.
     if (fs.existsSync(cppastBackendBuildDir)) {
       fs.rmSync(cppastBackendBuildDir, { recursive: true, force: true });

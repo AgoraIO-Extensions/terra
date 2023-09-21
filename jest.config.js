@@ -1,6 +1,6 @@
 module.exports = {
+  coverageDirectory: 'coverage',
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['node_modules/', '.dist/'],
-  testRegex: '.*\\.test\\.ts$',
+  testRegex: '/__tests__/.*\\.(test|spec)\\.[jt]sx?$',
 };

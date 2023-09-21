@@ -1,10 +1,7 @@
 {
   "name": "@agoraio-extensions/cxx-parser",
   "version": "0.1.7",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "jest"
-  },
+  "main": "src/index",
   "author": "",
   "license": "ISC",
   "dependencies": {
