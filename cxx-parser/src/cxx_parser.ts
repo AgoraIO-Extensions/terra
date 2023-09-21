@@ -1,19 +1,19 @@
-import { execSync } from "child_process";
-import * as fs from "fs";
-import path from "path";
-import {
-  ParseResult,
-  Parser,
-  TerraContext,
-} from "@agoraio-extensions/terra-core";
-import { CXXFile, CXXTYPE, cast } from "./cxx_terra_node";
-import { CXXParserConfigs } from "./cxx_parser_configs";
-import crypto from "crypto";
+import { execSync } from 'child_process';
+import crypto from 'crypto';
+import * as fs from 'fs';
+import path from 'path';
+
+import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
+
+import { CXXParserConfigs } from './cxx_parser_configs';
+import { CXXFile, CXXTYPE, cast } from './cxx_terra_node';
 
 export function generateChecksum(files: string[]) {
-  let allFileContents = files.map((it) => {
-    return fs.readFileSync(it, "utf-8");
-  }).join("\n");
+  let allFileContents = files
+    .map((it) => {
+      return fs.readFileSync(it, 'utf-8');
+    })
+    .join('\n');
 
   return crypto
     .createHash('md5')
@@ -29,18 +29,17 @@ export function dumpCXXAstJson(
   parseFiles: string[],
   defines: string[]
 ): string {
-
   let parseFilesChecksum = generateChecksum(parseFiles);
 
   let agora_rtc_ast_dir_path = path.join(
     __dirname,
-    "..",
-    "cxx",
-    "cppast_backend"
+    '..',
+    'cxx',
+    'cppast_backend'
   );
 
-  let build_shell_path = path.join(agora_rtc_ast_dir_path, "build.sh");
-  let build_cache_dir_path = path.join(agora_rtc_ast_dir_path, "build");
+  let build_shell_path = path.join(agora_rtc_ast_dir_path, 'build.sh');
+  let build_cache_dir_path = path.join(agora_rtc_ast_dir_path, 'build');
   let outputJsonFileName = `dump_json_${parseFilesChecksum}.json`;
   let outputJsonPath = path.join(build_cache_dir_path, outputJsonFileName);
 
@@ -50,21 +49,23 @@ export function dumpCXXAstJson(
 
   // If the previous output json cache exists, skip the process of cppast parser
   if (fs.existsSync(outputJsonPath)) {
-    console.log(`Skip the process of cppast parser, use the cached ast json file: ${outputJsonPath}`);
-    let ast_json_file_content = fs.readFileSync(outputJsonPath, "utf-8");
+    console.log(
+      `Skip the process of cppast parser, use the cached ast json file: ${outputJsonPath}`
+    );
+    let ast_json_file_content = fs.readFileSync(outputJsonPath, 'utf-8');
     return ast_json_file_content;
   }
 
-  let include_header_dirs_arg = includeHeaderDirs.join(",");
-  let visit_headers_arg = parseFiles.join(",");
+  let include_header_dirs_arg = includeHeaderDirs.join(',');
+  let visit_headers_arg = parseFiles.join(',');
 
   let bashArgs: string = `--visit-headers=${visit_headers_arg} --include-header-dirs=${include_header_dirs_arg}`;
 
-  let definess = defines.join(",");
+  let definess = defines.join(',');
   bashArgs += ` --defines-macros=\"${definess}\"`;
 
   if (customHeaders) {
-    bashArgs += ` --custom-headers=${customHeaders.join(",")}`;
+    bashArgs += ` --custom-headers=${customHeaders.join(',')}`;
   }
 
   bashArgs += ` --output-dir=${outputJsonPath}`;
@@ -74,15 +75,15 @@ export function dumpCXXAstJson(
   let buildScript = `bash ${build_shell_path} \"${bashArgs}\"`;
   console.log(`Running command: \n${buildScript}`);
 
-  execSync(buildScript, { encoding: "utf8", stdio: "inherit" });
+  execSync(buildScript, { encoding: 'utf8', stdio: 'inherit' });
 
-  let ast_json_file_content = fs.readFileSync(outputJsonPath, "utf-8");
+  let ast_json_file_content = fs.readFileSync(outputJsonPath, 'utf-8');
   return ast_json_file_content;
 }
 
 export function genParseResultFromJson(astJsonContent: string): ParseResult {
   const cxxFiles: CXXFile[] = JSON.parse(astJsonContent, (key, value) => {
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       if (Array.isArray(value)) {
         return value;
       }

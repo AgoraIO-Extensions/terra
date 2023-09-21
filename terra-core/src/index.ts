@@ -1,5 +1,5 @@
 // export * from "./app_root_path";
-export * from "./path_resolver";
+export * from './path_resolver';
 
 export interface TerraNode {}
 
@@ -9,8 +9,8 @@ export class ParseResult {
 
 export class TerraContext {
   constructor(
-    public readonly configDir: string = "",
-    public readonly outputDir: string = "",
+    public readonly configDir: string = '',
+    public readonly outputDir: string = '',
     public readonly clean: boolean = false,
     public readonly verbose: boolean = false
   ) {}

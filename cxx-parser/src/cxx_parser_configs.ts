@@ -1,5 +1,5 @@
-import { resolvePath } from "@agoraio-extensions/terra-core";
-import { globSync } from "glob";
+import { resolvePath } from '@agoraio-extensions/terra-core';
+import { globSync } from 'glob';
 
 function _resolvePaths(globPaths: string[]): string[] {
   let res: string[] = [];

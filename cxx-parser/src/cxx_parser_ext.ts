@@ -1,9 +1,10 @@
-import { ParseResult } from "@agoraio-extensions/terra-core";
-import { CXXFile, CXXTYPE, Clazz, Enumz } from "./cxx_terra_node";
+import { ParseResult } from '@agoraio-extensions/terra-core';
+
+import { CXXFile, CXXTYPE, Clazz, Enumz } from './cxx_terra_node';
 
 export {};
 
-declare module "@agoraio-extensions/terra-core" {
+declare module '@agoraio-extensions/terra-core' {
   export interface ParseResult {
     /**
      * Find a `Clazz` by its name.
@@ -23,7 +24,7 @@ declare module "@agoraio-extensions/terra-core" {
 ParseResult.prototype.findClazz = function (
   clazzName: string
 ): Clazz | undefined {
-  if (clazzName == "") {
+  if (clazzName == '') {
     return undefined;
   }
 
@@ -39,7 +40,7 @@ ParseResult.prototype.findClazz = function (
         if (clazz.name == trimNamespacesName) {
           if (
             clazz.namespace == clazzNameNamespace ||
-            clazzNameNamespace == "" ||
+            clazzNameNamespace == '' ||
             clazz.namespace.includes(clazzNameNamespace)
           ) {
             return clazz as Clazz;
@@ -75,7 +76,7 @@ ParseResult.prototype.findEnumz = function (
         if (enumz.name === trim_namespaces_name) {
           if (
             enumz.namespace == namespace_string ||
-            namespace_string == "" ||
+            namespace_string == '' ||
             enumz.namespace.includes(namespace_string)
           ) {
             return enumz;
