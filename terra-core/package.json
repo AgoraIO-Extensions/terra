@@ -10,11 +10,11 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AgoraIO-Extensions/terrax.git"
+    "url": "git+https://github.com/AgoraIO-Extensions/terra.git"
   },
   "bugs": {
-    "url": "https://github.com/AgoraIO-Extensions/terrax/issues"
+    "url": "https://github.com/AgoraIO-Extensions/terra/issues"
   },
-  "homepage": "https://github.com/AgoraIO-Extensions/terrax#readme",
+  "homepage": "https://github.com/AgoraIO-Extensions/terra#readme",
   "description": ""
 }
