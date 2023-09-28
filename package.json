@@ -3,8 +3,7 @@
   "workspaces": [
     "cxx-parser",
     "terra",
-    "terra-core",
-    "terra/__tests__/integration_test/test_package"
+    "terra-core"
   ],
   "scripts": {
     "build": "tsc",
