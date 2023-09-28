@@ -18,7 +18,7 @@ describe('dumpJsonRenderer', () => {
     let tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'terra-ut-'));
 
     let dumpJsonFunc = dumpJsonRenderer(
-      new TerraContext('', tmpDir, false, false)
+      new TerraContext('', '', tmpDir, false, false)
     );
     let terraAstPath = path.join(tmpDir, terraAstJsonFileName);
 

@@ -9,6 +9,7 @@ export class ParseResult {
 
 export class TerraContext {
   constructor(
+    public readonly buildDir: string = '',
     public readonly configDir: string = '',
     public readonly outputDir: string = '',
     public readonly clean: boolean = false,
