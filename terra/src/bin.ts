@@ -1,4 +1,3 @@
-#!/usr/bin/env -S ts-node -T
 import * as cli from './cli/cli_main';
 
 const args = process.argv.slice(2);
