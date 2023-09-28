@@ -153,11 +153,10 @@ describe('cxx_parser', () => {
         `dump_json_${checkSum}.json`
       );
 
-      let isBuildDirExists = false;
+      let isBashCalled = false;
 
       (execSync as jest.Mock).mockImplementationOnce(() => {
-        // When passing the `TerraContext.clean` as true, the build dir should be removed.
-        isBuildDirExists = fs.existsSync(cppastBackendBuildDir);
+        isBashCalled = true;
 
         // Simulate generate the ast json file after run the bash script
         fs.mkdirSync(cppastBackendBuildDir, { recursive: true });
@@ -179,7 +178,7 @@ describe('cxx_parser', () => {
         stdio: 'inherit',
       });
       expect(json).toEqual(expectedJson);
-      expect(isBuildDirExists).toBe(false);
+      expect(isBashCalled).toBe(true);
     });
 
     it('generate ast json with cached ast json', () => {
@@ -233,7 +232,10 @@ describe('cxx_parser', () => {
       // Simulate cached ast json file exists
       fs.writeFileSync(jsonFilePath, expectedJson);
 
+      let isBashCalled = false;
+
       (execSync as jest.Mock).mockImplementationOnce(() => {
+        isBashCalled = true;
         return '';
       });
 
@@ -247,6 +249,7 @@ describe('cxx_parser', () => {
 
       expect(execSync).not.toHaveBeenCalled();
       expect(json).toEqual(expectedJson);
+      expect(isBashCalled).toBe(false);
     });
   });
 
