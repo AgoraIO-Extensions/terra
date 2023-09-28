@@ -31,6 +31,9 @@ export function dumpCXXAstJson(
 ): string {
   let parseFilesChecksum = generateChecksum(parseFiles);
 
+  // <my_project>/.terra/cxx_parser
+  let buildDir = path.join(terraContext.buildDir, 'cxx_parser');
+
   let agora_rtc_ast_dir_path = path.join(
     __dirname,
     '..',
@@ -39,7 +42,7 @@ export function dumpCXXAstJson(
   );
 
   let build_shell_path = path.join(agora_rtc_ast_dir_path, 'build.sh');
-  let build_cache_dir_path = path.join(agora_rtc_ast_dir_path, 'build');
+  let build_cache_dir_path = buildDir;
   let outputJsonFileName = `dump_json_${parseFilesChecksum}.json`;
   let outputJsonPath = path.join(build_cache_dir_path, outputJsonFileName);
 
@@ -54,6 +57,11 @@ export function dumpCXXAstJson(
     );
     let ast_json_file_content = fs.readFileSync(outputJsonPath, 'utf-8');
     return ast_json_file_content;
+  }
+
+  // Ensure the build cache dir exists
+  if (!fs.existsSync(build_cache_dir_path)) {
+    fs.mkdirSync(build_cache_dir_path, { recursive: true });
   }
 
   let include_header_dirs_arg = includeHeaderDirs.join(',');
@@ -72,7 +80,7 @@ export function dumpCXXAstJson(
 
   bashArgs += ` --dump-json`;
 
-  let buildScript = `bash ${build_shell_path} \"${bashArgs}\"`;
+  let buildScript = `bash ${build_shell_path} \"${buildDir}\" \"${bashArgs}\"`;
   console.log(`Running command: \n${buildScript}`);
 
   execSync(buildScript, { encoding: 'utf8', stdio: 'inherit' });

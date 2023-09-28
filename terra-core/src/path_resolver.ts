@@ -34,6 +34,7 @@ export function resolvePath(
   return path.resolve(localPathInModule);
 }
 
+// TODO(littlegnal): Use `require.resolve(`${module}/package.json`)` to require the module's path
 export function resolveModulePath(module: string): string {
   let currentPackageJsonPath = process.env.npm_package_json;
   let currentPackageNodeModuleDir = path.join(
@@ -48,6 +49,7 @@ export function resolveModulePath(module: string): string {
   return path.resolve(parserPackageDir);
 }
 
+// TODO(littlegnal): Use `require(`${module}/package.json`)` to require the module
 export function requireModule(module: string): any {
   let currentPackageJsonPath = process.env.npm_package_json;
   let currentPackageNodeModuleDir = path.join(

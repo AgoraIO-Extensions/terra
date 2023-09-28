@@ -8,10 +8,12 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "test": "jest --coverage",
+    "test": "jest --coverage --selectProjects=test",
+    "test:integration": "jest --coverage --selectProjects=integration",
     "test:terra": "jest --selectProjects=terra",
     "test:terra-core": "jest --selectProjects=terra-core",
     "test:cxx-parser": "jest --selectProjects=cxx-parser",
+    "test:integration:cxx-parser": "jest --selectProjects=integration:cxx-parser",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

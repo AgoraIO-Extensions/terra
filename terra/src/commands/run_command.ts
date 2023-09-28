@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import path from 'path';
 
 import { TerraContext, resolvePath } from '@agoraio-extensions/terra-core';
@@ -25,9 +26,19 @@ export class RunCommand extends BaseRenderCommand {
 
     console.log(`Parsed TerraConfigs: \n${JSON.stringify(terraConfigs)}`);
 
+    let hostPackageJsonPath = process.env.npm_package_json;
+    // <my_project>/.terra
+    let buildDir = path.resolve(path.dirname(hostPackageJsonPath!), '.terra');
+    if (cliOption.clean && fs.existsSync(buildDir)) {
+      fs.rmSync(buildDir, { recursive: true, force: true });
+    }
+    if (!fs.existsSync(buildDir)) {
+      fs.mkdirSync(buildDir, { recursive: true });
+    }
+
     let defaultVisitor = new TerraShell();
     let loader = new TerraConfigLoader(cliOption);
-    // let parsersLoader = new ParsersLoader();
+
     if (terraConfigs.include) {
       let includeConfigs = TerraConfigs.parse(terraConfigs.include);
       let includeConfigDir = path.dirname(resolvePath(terraConfigs.include));
@@ -35,6 +46,7 @@ export class RunCommand extends BaseRenderCommand {
       loader
         .loadParsers(
           new TerraContext(
+            buildDir,
             includeConfigDir,
             cliOption.outputDir,
             cliOption.clean
@@ -49,6 +61,7 @@ export class RunCommand extends BaseRenderCommand {
     loader
       .loadParsers(
         new TerraContext(
+          buildDir,
           path.dirname(cliOption.config),
           cliOption.outputDir,
           cliOption.clean
@@ -63,6 +76,7 @@ export class RunCommand extends BaseRenderCommand {
       defaultVisitor.addRenderer(
         dumpJsonRenderer(
           new TerraContext(
+            buildDir,
             path.dirname(cliOption.config),
             cliOption.outputDir,
             cliOption.clean
@@ -73,6 +87,7 @@ export class RunCommand extends BaseRenderCommand {
       loader
         .loadRenderers(
           new TerraContext(
+            buildDir,
             path.dirname(cliOption.config),
             cliOption.outputDir,
             cliOption.clean

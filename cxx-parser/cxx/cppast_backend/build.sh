@@ -5,8 +5,8 @@ set -x
 
 SCRIPT_PATH=$(dirname "$0")
 MY_PATH=$(realpath ${SCRIPT_PATH})
-OUTPUT_PATH=$MY_PATH/build
-ARGS=$1
+OUTPUT_PATH=$1
+ARGS=$2
 
 if [ ! -d "${OUTPUT_PATH}" ]; then
     mkdir -p ${OUTPUT_PATH}
