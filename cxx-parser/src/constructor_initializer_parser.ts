@@ -459,7 +459,6 @@ function filterAndFlattenNodes(
     filterByFile: boolean = true
   ): Array<_FlattenNode> {
     let res = new Array<_FlattenNode>();
-    // let nsStack: string[] = [];
 
     for (let n of inner) {
       if (filterByFile) {
