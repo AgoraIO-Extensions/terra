@@ -4,8 +4,7 @@ import path from 'path';
 
 import { TerraContext } from '@agoraio-extensions/terra-core';
 
-import { CXXParser, dumpCXXAstJson } from '../src/cxx_parser';
-import { CXXFile, Struct } from '../src/cxx_terra_node';
+import { dumpCXXAstJson } from '../src/cxx_parser';
 
 describe('cxx_parser', () => {
   let tmpDir: string = '';
@@ -28,8 +27,8 @@ describe('cxx_parser', () => {
         file1Path,
         `
 struct AAA {
-  int a;
-};
+    int a;
+}
 `
       );
 
@@ -84,57 +83,6 @@ struct AAA {
 
       // Use `JSON.parse` to parse the json string to avoid the format issue
       expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));
-    });
-  });
-
-  describe('CXXParser', () => {
-    it('parse Struct with constructor initializer list', () => {
-      let file1Name = 'file1.h';
-      let file1Path = path.join(tmpDir, file1Name);
-
-      fs.writeFileSync(
-        file1Path,
-        `
-#pragma once
-
-namespace ns1 {
-  struct AAA {
-      int aaa_;
-
-      AAA(): aaa_(0) {}
-      AAA(int aaa): aaa_(aaa) {}
-  };
-}
-`
-      );
-
-      let args = {
-        includeHeaderDirs: [],
-        definesMacros: [],
-        parseFiles: { include: [file1Name] },
-        customHeaders: [],
-      };
-
-      let parseResult = CXXParser(
-        new TerraContext(tmpDir, tmpDir),
-        args,
-        undefined
-      )!;
-
-      let s = (parseResult.nodes[0] as CXXFile).nodes[0] as Struct;
-      expect(s.constructors.length).toBe(2);
-
-      expect(s.constructors[0].initializerList.length).toBe(1);
-      expect(s.constructors[0].initializerList[0].kind).toEqual('Value');
-      expect(s.constructors[0].initializerList[0].name).toEqual('aaa_');
-      expect(s.constructors[0].initializerList[0].type).toEqual('int');
-      expect(s.constructors[0].initializerList[0].values).toEqual(['0']);
-
-      expect(s.constructors[1].initializerList.length).toBe(1);
-      expect(s.constructors[1].initializerList[0].kind).toEqual('Parameter');
-      expect(s.constructors[1].initializerList[0].name).toEqual('aaa_');
-      expect(s.constructors[1].initializerList[0].type).toEqual('int');
-      expect(s.constructors[1].initializerList[0].values).toEqual(['aaa']);
     });
   });
 });

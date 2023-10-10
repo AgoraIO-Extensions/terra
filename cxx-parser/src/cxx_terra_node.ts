@@ -1,7 +1,6 @@
 import path from 'path';
 
 import { TerraNode } from '@agoraio-extensions/terra-core';
-import './cxx_terra_node_ext';
 
 function getAllClazzs(cxxfiles: CXXFile[]): Clazz[] {
   return cxxfiles.flatMap((file) =>
@@ -47,7 +46,7 @@ export abstract class CXXTerraNode implements TerraNode {
   source: string = '';
   user_data?: any = undefined;
 
-  public get fullName(): string {
+  get fullName(): string {
     if (this.namespaces?.length > 0) {
       return `${this.namespace}::${this.realName}`;
     }
@@ -161,31 +160,9 @@ export class TypeAlias extends CXXTerraNode {
   underlyingType: SimpleType = new SimpleType();
 }
 
-export enum ConstructorInitializerKind {
-  Parameter = 'Parameter',
-  Value = 'Value',
-  Construct = 'Construct',
-}
-
-export class ConstructorInitializer {
-  kind: ConstructorInitializerKind = ConstructorInitializerKind.Value;
-  name: string = '';
-  type: string = ''; // Maybe change the type to the `SimpleType` in the furture
-  // If the kind is `ConstructorInitializerKind.Parameter`, the `values`'s length is 1,
-  // the `values[0]` is the parameter name of the constructor
-  //
-  // If the kind is `ConstructorInitializerKind.Value`, the `values`'s length is 1,
-  // the `values[0]` is the value of the initializer
-  //
-  // If the kind is `ConstructorInitializerKind.Construct`, the `values`'s length is the
-  // constructor parameter's length of the `type`.
-  values: string[] = [];
-}
-
 export class Constructor extends CXXTerraNode {
   override __TYPE: CXXTYPE = CXXTYPE.Constructor;
   parameters: Variable[] = [];
-  initializerList: ConstructorInitializer[] = [];
 }
 
 export class Clazz extends CXXTerraNode {
@@ -261,8 +238,6 @@ export class SimpleType extends CXXTerraNode {
     return this.source?.trimNamespace();
   }
 
-  // TODO(lxh): Remove this custom logic, this function should return the common full name
-  // in C++ way: <namespace>::<name>
   override get fullName(): string {
     if (this.parent?.__TYPE === CXXTYPE.MemberFunction) {
       return `${this.parent?.fullName}@return_type`;

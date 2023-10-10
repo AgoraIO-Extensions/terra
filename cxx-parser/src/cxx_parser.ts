@@ -5,7 +5,6 @@ import path from 'path';
 
 import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
-import { ClangASTStructConstructorParser } from './constructor_initializer_parser';
 import { CXXParserConfigs } from './cxx_parser_configs';
 import { CXXFile, CXXTYPE, cast } from './cxx_terra_node';
 
@@ -23,11 +22,6 @@ export function generateChecksum(files: string[]) {
     .toString();
 }
 
-function getBuildDir(terraContext: TerraContext) {
-  // <my_project>/.terra/cxx_parser
-  return path.join(terraContext.buildDir, 'cxx_parser');
-}
-
 export function dumpCXXAstJson(
   terraContext: TerraContext,
   includeHeaderDirs: string[],
@@ -37,7 +31,8 @@ export function dumpCXXAstJson(
 ): string {
   let parseFilesChecksum = generateChecksum(parseFiles);
 
-  let buildDir = getBuildDir(terraContext);
+  // <my_project>/.terra/cxx_parser
+  let buildDir = path.join(terraContext.buildDir, 'cxx_parser');
 
   let agora_rtc_ast_dir_path = path.join(
     __dirname,
@@ -88,17 +83,7 @@ export function dumpCXXAstJson(
   let buildScript = `bash ${build_shell_path} \"${buildDir}\" \"${bashArgs}\"`;
   console.log(`Running command: \n${buildScript}`);
 
-  try {
-    execSync(buildScript, { encoding: 'utf8', stdio: 'inherit' });
-  } catch (e: any) {
-    console.log(`Failed to run command: \n${buildScript}`);
-    console.log(`status: ${e.status}`);
-    console.log(`stderr: ${e.stderr}`);
-    console.log(`stdout: ${e.stdout}`);
-    console.log(`message: ${e.message}`);
-    // console.error(e);
-    throw e;
-  }
+  execSync(buildScript, { encoding: 'utf8', stdio: 'inherit' });
 
   let ast_json_file_content = fs.readFileSync(outputJsonPath, 'utf-8');
   return ast_json_file_content;
@@ -123,7 +108,7 @@ export function genParseResultFromJson(astJsonContent: string): ParseResult {
 export function CXXParser(
   terraContext: TerraContext,
   args: any,
-  _?: ParseResult
+  parseResult?: ParseResult
 ): ParseResult | undefined {
   let cxxParserConfigs = CXXParserConfigs.resolve(terraContext.configDir, args);
 
@@ -138,22 +123,7 @@ export function CXXParser(
     cxxParserConfigs.definesMacros
   );
 
-  let newParseResult = genParseResultFromJson(jsonContent);
-
-  // Use the parsed file path from cppast parser to avoid additional operations for the file,
-  // e.g., the macros operations
-  let cppastParsedFiles = newParseResult.nodes.map((it) => {
-    return (it as CXXFile).file_path;
-  });
-
-  ClangASTStructConstructorParser(
-    getBuildDir(terraContext),
-    cxxParserConfigs.includeHeaderDirs,
-    cppastParsedFiles,
-    newParseResult
-  );
-
-  return newParseResult;
+  return genParseResultFromJson(jsonContent);
 }
 
 function fillParentNode(cxxFiles: CXXFile[]) {
