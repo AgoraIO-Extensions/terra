@@ -89,7 +89,7 @@ export function dumpCXXAstJson(
   console.log(`Running command: \n${buildScript}`);
 
   try {
-    execSync(buildScript, { encoding: 'utf8', stdio: 'inherit' }).toString();
+    execSync(buildScript, { encoding: 'utf8', stdio: 'inherit' });
   } catch (e: any) {
     console.log(`Failed to run command: \n${buildScript}`);
     console.log(`status: ${e.status}`);
