@@ -88,7 +88,17 @@ export function dumpCXXAstJson(
   let buildScript = `bash ${build_shell_path} \"${buildDir}\" \"${bashArgs}\"`;
   console.log(`Running command: \n${buildScript}`);
 
-  execSync(buildScript, { encoding: 'utf8', stdio: 'inherit' });
+  try {
+    execSync(buildScript, { encoding: 'utf8', stdio: 'inherit' }).toString();
+  } catch (e: any) {
+    console.log(`Failed to run command: \n${buildScript}`);
+    console.log(`status: ${e.status}`);
+    console.log(`stderr: ${e.stderr}`);
+    console.log(`stdout: ${e.stdout}`);
+    console.log(`message: ${e.message}`);
+    // console.error(e);
+    throw e;
+  }
 
   let ast_json_file_content = fs.readFileSync(outputJsonPath, 'utf-8');
   return ast_json_file_content;
