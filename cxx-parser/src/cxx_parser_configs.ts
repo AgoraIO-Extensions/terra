@@ -24,25 +24,25 @@ export interface CXXParserConfigs {
 export class CXXParserConfigs {
   static resolve(configDir: any, original: CXXParserConfigs): CXXParserConfigs {
     return {
-      includeHeaderDirs: (original.includeHeaderDirs ?? [])
+      includeHeaderDirs: original.includeHeaderDirs
         .map((it) => {
           return globSync(resolvePath(it, configDir));
         })
         .flat(1),
       definesMacros: original.definesMacros ?? [],
       parseFiles: {
-        include: (original.parseFiles.include ?? [])
+        include: original.parseFiles.include
           .map((it) => {
             return globSync(resolvePath(it, configDir));
           })
           .flat(1),
-        exclude: (original.parseFiles.exclude ?? [])
+        exclude: original.parseFiles.exclude
           .map((it) => {
             return globSync(resolvePath(it, configDir));
           })
           .flat(1),
       },
-      customHeaders: (original.customHeaders ?? [])
+      customHeaders: original.customHeaders
         .map((it) => {
           return globSync(resolvePath(it, configDir));
         })
