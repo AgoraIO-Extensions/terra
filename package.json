@@ -9,7 +9,7 @@
     "build": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "test": "jest --coverage --selectProjects=test",
-    "test:integration": "jest --coverage --selectProjects=integration",
+    "test:integration": "jest --selectProjects=integration --verbose --useStderr --runInBand",
     "test:terra": "jest --selectProjects=terra",
     "test:terra-core": "jest --selectProjects=terra-core",
     "test:cxx-parser": "jest --selectProjects=cxx-parser",
