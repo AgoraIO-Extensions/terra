@@ -1,5 +1,9 @@
 name: Unit test & integration test
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   pull_request:
 
@@ -41,10 +45,18 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           # Defaults to the user or organization that owns the workflow file
           scope: "@agoraio-extensions"
+      - name: Cache LLVM and Clang
+        id: cache-llvm
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./llvm
+          key: llvm-15.0.7
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v1
         with:
-          version: "15.0.6"
+          version: "15.0.7"
+          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
       - name: Run unit test
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
