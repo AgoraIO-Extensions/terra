@@ -48,12 +48,12 @@ jobs:
         with:
           path: |
             ./llvm
-          key: ubuntu-llvm-15.0.7
+          key: ubuntu-llvm-15.0.6
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v1
         with:
           ubuntu-version: 22.04
-          version: "15.0.7"
+          version: "15.0.6"
           cached: ${{ steps.cache-llvm.outputs.cache-hit }}
       - name: Run unit test
         env:
