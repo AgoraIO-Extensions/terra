@@ -28,11 +28,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash tool/run_ut.sh
 
-  integration_test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-13]
-    runs-on: ${{ matrix.os }}
+  integration_test_ubuntu:
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: read
@@ -51,9 +48,42 @@ jobs:
         with:
           path: |
             ./llvm
-          key: llvm-15.0.7
+          key: ubuntu-llvm-15.0.7
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1.9
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "15.0.7"
+          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+      - name: Run unit test
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm install
+          npm run test:integration
+
+  integration_test_macos:
+    runs-on: macos-13
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: "https://npm.pkg.github.com"
+          # Defaults to the user or organization that owns the workflow file
+          scope: "@agoraio-extensions"
+      - name: Cache LLVM and Clang
+        id: cache-llvm
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./llvm
+          key: macos-llvm-15.0.7
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
         with:
           version: "15.0.7"
           cached: ${{ steps.cache-llvm.outputs.cache-hit }}
