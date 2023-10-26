@@ -9,6 +9,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    strategy:
+      matrix:
+        package: ["terra", "terra-core", "cxx-parser"]
     steps:
       - uses: actions/checkout@v3
       # Setup .npmrc file to publish to GitHub Packages
@@ -19,35 +22,12 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: "@agoraio-extensions"
 
-      - name: publish terra-core
+      - name: publish package
         if: always()
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm install
-          npm exec tsc
-          npm publish
-        working-directory: terra-core
-
-      - name: publish terra
-        if: always()
-        continue-on-error: true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm install
-          npm exec tsc
-          npm publish
-        working-directory: terra
-
-      - name: publish cxx-parser
-        if: always()
-        continue-on-error: true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm install
-          npm exec tsc
-          npm publish
-        working-directory: cxx-parser
+          npm run build --workspace=${{ matrix.package }}
+          npm publish --workspace=${{ matrix.package }}
