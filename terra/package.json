@@ -1,7 +1,7 @@
 {
   "name": "@agoraio-extensions/terra",
-  "version": "0.1.4",
-  "main": "./src/index",
+  "version": "0.1.5",
+  "main": "./src/index.ts",
   "bin": {
     "terra": "./bin/terra"
   },
