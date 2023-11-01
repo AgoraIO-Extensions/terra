@@ -33,7 +33,9 @@ describe('CXXParserConfigs', () => {
       args as unknown as CXXParserConfigs
     );
 
-    let expectedFiles = fs.readdirSync(tmpDir);
+    let expectedFiles = fs.readdirSync(tmpDir).map((it) => {
+      return path.join(tmpDir, it);
+    });
 
     expect(config.parseFiles.include.length).toBe(2);
     expect(config.parseFiles.include[0]).toEqual(expectedFiles[0]); // file1.h
