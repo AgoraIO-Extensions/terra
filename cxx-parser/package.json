@@ -9,7 +9,7 @@
     "test": "jest --coverage"
   },
   "peerDependencies": {
-    "@agoraio-extensions/terra-core": ">=0.1.0"
+    "@agoraio-extensions/terra-core": "*"
   },
   "dependencies": {
     "yaml": "^2.1.3",
