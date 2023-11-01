@@ -12,8 +12,8 @@
     "@agoraio-extensions/terra-core": "*",
     "@agoraio-extensions/terra": "*",
     "@agoraio-extensions/cxx-parser": "*",
-    "@agoraio-extensions/legacy-cxx-parser": "AgoraIO-Extensions/terra-legacy-cxx-parser#head=main",
-    "@agoraio-extensions/terra_shared_configs": "AgoraIO-Extensions/terra_shared_configs#head=main"
+    "@agoraio-extensions/legacy-cxx-parser": "github:AgoraIO-Extensions/terra-legacy-cxx-parser#main",
+    "@agoraio-extensions/terra_shared_configs": "github:AgoraIO-Extensions/terra_shared_configs#main"
   },
   "repository": {
     "type": "git",
