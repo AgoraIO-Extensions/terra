@@ -1,12 +1,9 @@
 import { resolvePath } from '@agoraio-extensions/terra-core';
 import { globSync } from 'glob';
 
-function _resolvePaths(globPaths: string[]): string[] {
-  let res: string[] = [];
-  globPaths.forEach((it) => {
-    res.push(...globSync(it));
-  });
-  return res;
+function _resolvePaths(globPath: string, configDir: string): string[] {
+  // The files order will descend when using globSync. So we sort the files to ensure the order.
+  return globSync(resolvePath(globPath, configDir)).sort();
 }
 
 export interface ParseFilesConfig {
@@ -26,25 +23,25 @@ export class CXXParserConfigs {
     return {
       includeHeaderDirs: (original.includeHeaderDirs ?? [])
         .map((it) => {
-          return globSync(resolvePath(it, configDir));
+          return _resolvePaths(it, configDir);
         })
         .flat(1),
       definesMacros: original.definesMacros ?? [],
       parseFiles: {
         include: (original.parseFiles.include ?? [])
           .map((it) => {
-            return globSync(resolvePath(it, configDir));
+            return _resolvePaths(it, configDir);
           })
           .flat(1),
         exclude: (original.parseFiles.exclude ?? [])
           .map((it) => {
-            return globSync(resolvePath(it, configDir));
+            return _resolvePaths(it, configDir);
           })
           .flat(1),
       },
       customHeaders: (original.customHeaders ?? [])
         .map((it) => {
-          return globSync(resolvePath(it, configDir));
+          return _resolvePaths(it, configDir);
         })
         .flat(1),
     };
