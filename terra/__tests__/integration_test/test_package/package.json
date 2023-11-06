@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@agoraio-extensions/terra-core": "^0.1.0",
-    "@agoraio-extensions/terra": "^0.1.0",
-    "@agoraio-extensions/cxx-parser": "^0.1.0",
+    "@agoraio-extensions/terra-core": "*",
+    "@agoraio-extensions/terra": "*",
+    "@agoraio-extensions/cxx-parser": "*",
     "@agoraio-extensions/legacy-cxx-parser": "github:AgoraIO-Extensions/terra-legacy-cxx-parser#main",
     "@agoraio-extensions/terra_shared_configs": "github:AgoraIO-Extensions/terra_shared_configs#main"
   },
