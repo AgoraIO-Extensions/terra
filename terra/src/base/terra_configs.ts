@@ -1,8 +1,8 @@
-import fs from 'fs';
+import * as fs from 'fs';
 
 import { resolvePath } from '@agoraio-extensions/terra-core';
 
-import YAML from 'yaml';
+import * as YAML from 'yaml';
 
 export interface TerraLoaderConfig {
   name?: string;

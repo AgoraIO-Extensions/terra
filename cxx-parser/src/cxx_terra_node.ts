@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 
 import { TerraNode } from '@agoraio-extensions/terra-core';
 import './cxx_terra_node_ext';
