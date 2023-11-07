@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 
