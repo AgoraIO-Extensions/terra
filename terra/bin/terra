@@ -1,2 +1,2 @@
-#!/usr/bin/env ts-node -T --skipIgnore
+#!/usr/bin/env -S ts-node -T --skipIgnore
 require('../src/bin');
