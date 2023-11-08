@@ -140,6 +140,108 @@ namespace ns1 {
       // Aim to test the private funtion
       const parseStructConstructors = testingUsed.parseStructConstructors;
 
+      it('empty constructor', () => {
+        let filePath = path.join(tmpDir, 'file.h');
+        let fileContent = `
+#pragma once
+      
+namespace ns1 {
+  struct AAA {
+      AAA() {}
+  };
+}
+`;
+        fs.writeFileSync(filePath, fileContent);
+
+        let constructorInitializers = parseStructConstructors(
+          tmpDir,
+          [],
+          [filePath]
+        );
+
+        let expectedRes = [
+          {
+            name: 'ns1::AAA',
+            constructors: [
+              {
+                name: 'AAA',
+                signature: 'void ()',
+                parameterList: [],
+                initializerList: [],
+              },
+            ],
+          },
+        ];
+
+        expect(JSON.stringify(constructorInitializers)).toEqual(
+          JSON.stringify(expectedRes)
+        );
+      });
+
+      it('default constructor', () => {
+        let filePath = path.join(tmpDir, 'file.h');
+        let fileContent = `
+#pragma once
+      
+namespace ns1 {
+  struct AAA {
+      AAA() = default;
+  };
+}
+`;
+        fs.writeFileSync(filePath, fileContent);
+
+        let constructorInitializers = parseStructConstructors(
+          tmpDir,
+          [],
+          [filePath]
+        );
+
+        let expectedRes = [
+          {
+            name: 'ns1::AAA',
+            constructors: [],
+          },
+        ];
+
+        expect(JSON.stringify(constructorInitializers)).toEqual(
+          JSON.stringify(expectedRes)
+        );
+      });
+
+      it('declare struct only', () => {
+        let filePath = path.join(tmpDir, 'file.h');
+        let fileContent = `
+#pragma once
+      
+namespace ns1 {
+  struct AAANameOnly;
+
+  struct AAA {
+    AAA() = default;
+  };
+}
+`;
+        fs.writeFileSync(filePath, fileContent);
+
+        let constructorInitializers = parseStructConstructors(
+          tmpDir,
+          [],
+          [filePath]
+        );
+
+        let expectedRes = [
+          {
+            name: 'ns1::AAA',
+            constructors: [],
+          },
+        ];
+
+        expect(JSON.stringify(constructorInitializers)).toEqual(
+          JSON.stringify(expectedRes)
+        );
+      });
+
       it('constructor assign enum', () => {
         let filePath = path.join(tmpDir, 'file.h');
         let fileContent = `
