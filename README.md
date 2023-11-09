@@ -4,32 +4,36 @@ terra is a shell of the code-gen flow: Parse AST -> Generate codes.
 
 **Disclaimer**: This is not an officially supported Agora product.
 
-## How to install terra to your project
+## Get started
 
-#### Environment prepare
+### Environment Setup
 
 [node](https://nodejs.org/en/download) >=18
 
 [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 
-#### installation
+### Installing terra in your Project
 
-- ```touch .yarnrc.yml```
-- ```echo "httpsProxy: \"http://127.0.0.1:7890\"" >> .yarnrc.yml```
-- ```echo "nodeLinker: node-modules" >> .yarnrc.yml```
-- ```touch package.json```
-- Add the package that is you want to package.json
-- ```yarn set version berry```
-- ```yarn```
+> Currently, we do not provide an npm package for this repository. You should depend on `terra` from the GitHub repository using [yarn berry](https://github.com/yarnpkg/berry) as the package manager.
+  
+#### 1. Create a `.yarnrc.yml` file in your project directory:
+```
+echo "nodeLinker: node-modules" >> .yarnrc.yml
+```
+#### 2. Set `yarn` version to `berry`:
+```yarn set version berry```
+#### 3. Install `terra` from the GitHub repository:
+``` 
+yarn add <terra repo url>
+# yarn add git@github.com:AgoraIO-Extensions/terra.git#head=main&workspace=terra
+# yarn add git@github.com:AgoraIO-Extensions/terra.git#head=main&workspace=terra-core
+```
+#### 4. Install dependencies:
+ ```yarn```
 
-#### some example
-- render(https://github.com/AgoraIO-Extensions/iris_web/blob/main/scripts/terra)
-- legacy(https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK/tree/main/tool/terra)
-
-#### some tips
-
-- you can add `.yarn` directory into `.gitignore` file
-- httpsProxy is optional
+## Examples
+- https://github.com/AgoraIO-Extensions/iris_web/blob/main/scripts/terra
+- https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK/tree/main/tool/terra
 
 ## License
 
