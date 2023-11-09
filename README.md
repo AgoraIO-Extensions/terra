@@ -14,10 +14,10 @@ terra is a shell of the code-gen flow: Parse AST -> Generate codes.
 
 #### installation
 
-- ``` touch .yarnrc.yml```
+- ```touch .yarnrc.yml```
 - ```echo "httpsProxy: \"http://127.0.0.1:7890\"" >> .yarnrc.yml```
 - ```echo "nodeLinker: node-modules" >> .yarnrc.yml```
-- ``` touch package.json```
+- ```touch package.json```
 - Add the package that is you want to package.json
 - ```yarn set version berry```
 - ```yarn```
