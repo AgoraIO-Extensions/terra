@@ -4,16 +4,32 @@ terra is a shell of the code-gen flow: Parse AST -> Generate codes.
 
 **Disclaimer**: This is not an officially supported Agora product.
 
-## Install package
+## How to install terra to your project
 
-- [Authenticating with a personal access token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token)
-- [Installing a package](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package)
+#### Environment prepare
 
-  Add a `.npmrc` file with the following config:
+[node](https://nodejs.org/en/download) >=18
 
-  ```
-  @agoraio-extensions:registry=https://npm.pkg.github.com
-  ```
+[yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
+
+#### installation
+
+- ``` touch .yarnrc.yml```
+- ```echo "httpsProxy: \"http://127.0.0.1:7890\"" >> .yarnrc.yml```
+- ```echo "nodeLinker: node-modules" >> .yarnrc.yml```
+- ``` touch package.json```
+- Add the package that is you want to package.json
+- ```yarn set version berry```
+- ```yarn```
+
+#### some example
+- render(https://github.com/AgoraIO-Extensions/iris_web/blob/main/scripts/terra)
+- legacy(https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK/tree/main/tool/terra)
+
+#### some tips
+
+- you can add `.yarn` directory into `.gitignore` file
+- httpsProxy is optional
 
 ## License
 
