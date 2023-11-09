@@ -28,6 +28,10 @@ function getBuildDir(terraContext: TerraContext) {
   return path.join(terraContext.buildDir, 'cxx_parser');
 }
 
+export function getCppAstBackendDir() {
+  return path.join(__dirname, '..', 'cxx', 'cppast_backend');
+}
+
 export function dumpCXXAstJson(
   terraContext: TerraContext,
   includeHeaderDirs: string[],
@@ -39,12 +43,7 @@ export function dumpCXXAstJson(
 
   let buildDir = getBuildDir(terraContext);
 
-  let agora_rtc_ast_dir_path = path.join(
-    __dirname,
-    '..',
-    'cxx',
-    'cppast_backend'
-  );
+  let agora_rtc_ast_dir_path = getCppAstBackendDir();
 
   let build_shell_path = path.join(agora_rtc_ast_dir_path, 'build.sh');
   let build_cache_dir_path = buildDir;

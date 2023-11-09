@@ -6,7 +6,7 @@ import path from 'path';
 
 import { ParseResult, visibleForTesting } from '@agoraio-extensions/terra-core';
 
-import { generateChecksum } from './cxx_parser';
+import { generateChecksum, getCppAstBackendDir } from './cxx_parser';
 import {
   CXXFile,
   CXXTYPE,
@@ -87,6 +87,66 @@ class _StructConstructors {
 }
 
 /**
+ *
+ * @returns The default include dirs for clang command line tool
+ */
+function getDefaultIncludeDirs(): string[] {
+  // TODO(littlegnal): This implementation is borrowed from cppast to retrive the default include dirs
+  // https://github.com/foonathan/cppast/blob/f00df6675d87c6983033d270728c57a55cd3db22/src/libclang/libclang_parser.cpp#L287
+  // But it seems it's not necessary to add these when running the clang command line tool, so we just keep the code here, and
+  // see if we need to add these in the future.
+  // function _findIncludeDirsFromClang(): string[] {
+  //   let verbose_output: string = '';
+  //   let verboseCommand = 'clang++ -xc++ -v -';
+  //   try {
+  //     execSync(verboseCommand, {
+  //       input: '',
+  //       stdio: ['pipe', 'pipe', 'pipe'], // Pipe stdin, stdout, and stderr
+  //       encoding: 'utf-8',
+  //     }).toString();
+  //   } catch (error: any) {
+  //     // We need to use the tricky wayt to get the verbose output from clang
+  //     verbose_output = error.message ?? '';
+  //   }
+
+  //   // If the command failed, return the empty include header dirs
+  //   if (!verbose_output) {
+  //     return [];
+  //   }
+
+  //   let verboseOutputInLines = verbose_output.split('\n');
+
+  //   verboseOutputInLines = verboseOutputInLines.slice(
+  //     verboseOutputInLines.findIndex((it) => {
+  //       return it.startsWith('#include <...>');
+  //     }) + 1, // Do not include the index of '#include <...>'
+  //     verboseOutputInLines.findIndex((it) => {
+  //       return it.startsWith('End of search list.');
+  //     })
+  //   );
+  //   let includeDirs = verboseOutputInLines
+  //     .filter((it) => {
+  //       return it.startsWith(' ');
+  //     })
+  //     .map((it) => {
+  //       if (it.includes(' (')) {
+  //         // /Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk/System/Library/Frameworks (framework directory)
+  //         return it.trim().split(' (')[0];
+  //       }
+
+  //       return it.trim();
+  //     });
+
+  //   return includeDirs;
+  // }
+
+  return [
+    // Add cxx-parser/cxx/cppast_backend/include/system_fake
+    path.join(getCppAstBackendDir(), 'include', 'system_fake'),
+  ];
+}
+
+/**
  * This function mainly use the clang command line tool to dump the AST in json format,
  * ```
  * clang++ -fsyntax-only -Xclang -ast-dump=json \
@@ -126,25 +186,42 @@ function dumpClangASTJSON(
     return fs.readFileSync(clangAstJsonPath, 'utf-8');
   }
 
-  let includeHeaderDirsNew = [
-    // For macos
-    '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include',
-    '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-    // For linux
-    '/usr/local/include',
-    ...includeHeaderDirs,
-  ];
+  let includeHeaderDirsNew = [...getDefaultIncludeDirs(), ...includeHeaderDirs];
   let includeHeaderDirsArgs = includeHeaderDirsNew.map((it) => {
     return `-I ${it}`;
   });
 
-  let args = ['-Xclang', '-ast-dump=json', '-fsyntax-only'];
+  let args = ['-Xclang', '-ast-dump=json', '-fsyntax-only', '-std=c++11'];
   let _args = [...args, ...includeHeaderDirsArgs, parseFile].join(' ');
 
   let bashScript = `clang++ ${_args} > ${clangAstJsonPath}`;
   console.log(`Running command: \n${bashScript}`);
 
-  execSync(bashScript, { encoding: 'utf8', stdio: 'inherit' });
+  try {
+    execSync(bashScript, {
+      stdio: ['pipe', 'pipe', 'pipe'], // Pipe stdin, stdout, and stderr,
+      encoding: 'utf8',
+    });
+  } catch (err: any) {
+    let errMessage = err.message;
+    // Eliminate the fatal error summary, and then see if there's any other fatal error message, like
+    // /usr/local/Cellar/llvm@15/15.0.7/lib/clang/15.0.7/include/arm64intr.h:12:15: fatal error: 'arm64intr.h' file not found
+    errMessage = errMessage.replace(
+      'fatal error: too many errors emitted, stopping now [-ferror-limit=]',
+      ''
+    );
+    if (errMessage.includes('fatal error:')) {
+      // The file in path `clangAstJsonPath` will be created no matter the clang command failed or not,
+      // so we need to remove it if the clang command failed.
+      if (fs.existsSync(clangAstJsonPath)) {
+        fs.rmSync(clangAstJsonPath);
+      }
+      console.error(err.message);
+      process.exit(err.status);
+    }
+
+    console.log(errMessage);
+  }
 
   let ast_json_file_content = fs.readFileSync(clangAstJsonPath, 'utf-8');
   return ast_json_file_content;
@@ -172,6 +249,15 @@ function _parseStructConstructors(
     let structConstructor: _StructConstructors = {} as _StructConstructors;
     structConstructor.name = s.ns ? `${s.ns}::${s.node.name}` : s.node.name;
 
+    // If only declare the struct with name, e.g.,
+    // ```c++
+    // struct EncodedVideoFrameInfo;
+    // ```
+    // There's no `s.node.inner` of it, skip it.
+    if (!s.node.inner) {
+      continue;
+    }
+
     // Find all `CXXConstructorDecl` nodes in `cxxRecordDecls`'s `inner`
     let cxxConstructorDecls = s.node.inner.filter((node: any) => {
       return (
@@ -186,6 +272,16 @@ function _parseStructConstructors(
       let constructorInitializer = new _ConstructorInitializer();
       constructorInitializer.name = cxxConstructorDecl.name;
       constructorInitializer.signature = cxxConstructorDecl.type.qualType;
+
+      // If the constructor is explicitly defaulted, skip it. e.g.,
+      // ```c++
+      //struct RemoteVoicePositionInfo {
+      //   RemoteVoicePositionInfo() = default;
+      // };
+      // ```
+      if (!cxxConstructorDecl.inner) {
+        continue;
+      }
 
       // Find all `ParmVarDecl` nodes in `cxxConstructorDecl`'s `inner`
       let parmVarDecls = cxxConstructorDecl.inner.filter((node: any) => {
@@ -353,7 +449,7 @@ function parseInnerValues(inner: any): [ConstructorInitializerKind, string[]] {
         break;
       }
       case ClangASTNodeKind.CXXConstructExpr: {
-        if (!node.isImplicit) {
+        if (!node.isImplicit && node.inner) {
           const [_, v] = parseInnerValues(node.inner);
           kind = ConstructorInitializerKind.Construct;
           values.push(...v);
