@@ -2,7 +2,7 @@ export * from './path_resolver';
 export * from './testing_utils';
 
 /**
- * Abstract representation of a node in terra.
+ * Abstract representation of a AST node in terra.
  * This interface serves as a base for node types and can be extended to
  * represent various node-specific details and functionalities within terra.
  */
@@ -39,11 +39,15 @@ export class TerraContext {
 }
 
 /**
- * Type definition for a Parser function.
- * @param terraContext The `TerraContext` instance.
- * @param args Additional arguments.
- * @param parseResult Optional `ParseResult` instance.
- * @return A `ParseResult` or undefined.
+ * Type definition for a Parser function in terra.
+ * Transforms source code into AST nodes (TerraNode).
+ * This `Parser` can be part of a chain, where each `Parser` has the ability
+ * to modify the results of its predecessor before passing them to the next `Parser`.
+ *
+ * @param terraContext The `TerraContext` instance, providing operational context.
+ * @param args Additional arguments or data for parsing.
+ * @param parseResult An optional initial `ParseResult` from a previous Parser in the chain.
+ * @returns A new or modified `ParseResult` to be used by subsequent Parsers.
  */
 export type Parser = (
   terraContext: TerraContext,
@@ -58,11 +62,14 @@ export interface RenderResult {
 }
 
 /**
- * Type definition for a Renderer function.
- * @param terraContext The `TerraContext` instance.
- * @param args Additional arguments.
- * @param parseResult A `ParseResult` instance.
- * @return An array of `RenderResult` objects.
+ * Type definition for a Renderer function in Terra.
+ * Processes the results obtained from a Parser.
+ * Use this Renderer to generate code or other forms of output based on the parsed AST nodes (TerraNode).
+ *
+ * @param terraContext The `TerraContext` instance, providing the operational context.
+ * @param args Additional arguments relevant to the rendering process.
+ * @param parseResult The `ParseResult` instance containing the Parser's output.
+ * @returns An array of `RenderResult` objects, representing the rendered output.
  */
 export type Renderer = (
   terraContext: TerraContext,
