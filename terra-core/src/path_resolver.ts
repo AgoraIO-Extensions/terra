@@ -1,10 +1,15 @@
 import fs from 'fs';
 
-import os from 'os';
 import path from 'path';
 
 /**
- * Resolve the schema: `<module_name>:<path>`, or absolute path, or relative path
+ * Resolves a given path to its absolute form.
+ * It can resolve paths in various formats: module schemas (`<module_name>:<path>`), absolute paths, or relative paths.
+ * If the path is not absolute and `prefixDirIfNotAbsolute` is provided, the path is resolved relative to this directory.
+ *
+ * @param p The path to resolve, which can be in the format of a module schema, absolute, or relative path.
+ * @param prefixDirIfNotAbsolute The directory to use as a prefix for non-absolute paths. Defaults to an empty string.
+ * @returns The resolved absolute path.
  */
 export function resolvePath(
   p: string,
@@ -34,6 +39,13 @@ export function resolvePath(
   return path.resolve(localPathInModule);
 }
 
+/**
+ * Resolves the path to a specified module.
+ * This function assumes the module exists in the `node_modules` directory relative to the current package's `package.json`.
+ *
+ * @param module The name of the module to resolve.
+ * @returns The resolved path of the module.
+ */
 // TODO(littlegnal): Use `require.resolve(`${module}/package.json`)` to require the module's path
 export function resolveModulePath(module: string): string {
   let currentPackageJsonPath = process.env.npm_package_json;
@@ -49,6 +61,13 @@ export function resolveModulePath(module: string): string {
   return path.resolve(parserPackageDir);
 }
 
+/**
+ * Requires a module and returns its exported content.
+ * The module is expected to be located in the `node_modules` directory relative to the current package's `package.json`.
+ *
+ * @param module The name of the module to require.
+ * @returns The exported content of the required module.
+ */
 // TODO(littlegnal): Use `require(`${module}/package.json`)` to require the module
 export function requireModule(module: string): any {
   let currentPackageJsonPath = process.env.npm_package_json;
