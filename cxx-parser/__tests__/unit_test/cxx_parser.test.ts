@@ -100,7 +100,7 @@ describe('cxx_parser', () => {
         []
       );
 
-      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --custom-headers= --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
+      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
       expect(execSync).toHaveBeenCalledWith(expectedBashScript, {
         encoding: 'utf8',
         stdio: 'inherit',
@@ -178,7 +178,7 @@ describe('cxx_parser', () => {
         []
       );
 
-      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --custom-headers= --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
+      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
       expect(execSync).toHaveBeenCalledWith(expectedBashScript, {
         encoding: 'utf8',
         stdio: 'inherit',
