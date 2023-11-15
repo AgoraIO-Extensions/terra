@@ -4,16 +4,16 @@ import path from 'path';
 
 import { TerraContext } from '@agoraio-extensions/terra-core';
 
-import { CXXParser, dumpCXXAstJson } from '../src/cxx_parser';
+import { CXXParser, dumpCXXAstJson, generateChecksum } from '../src/cxx_parser';
 import { CXXFile, Struct } from '../src/cxx_terra_node';
 
 describe('cxx_parser', () => {
   let tmpDir: string = '';
-  let cppastBackendPath: string = '';
+  let cxxParserCacheDir: string = '';
 
   beforeEach(() => {
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'terra-ut-'));
-    cppastBackendPath = path.join(__dirname, '..', 'cxx', 'cppast_backend');
+    cxxParserCacheDir = path.join(tmpDir, 'cxx_parser');
   });
 
   afterEach(() => {
@@ -33,12 +33,18 @@ struct AAA {
 `
       );
 
+      let checkSum = generateChecksum([file1Path]);
+      let preProcessParseFilesDir = path.join(
+        cxxParserCacheDir,
+        `preProcess@${checkSum}`
+      );
+
       // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
       const expectedJson = `
       [
         {
           "__TYPE":"CXXFile",
-          "file_path":"${cppastBackendPath}/tmp/file1.h",
+          "file_path":"${preProcessParseFilesDir}/file1.h",
           "nodes":[
             {
               "__TYPE":"Struct",
@@ -46,7 +52,7 @@ struct AAA {
               "base_clazzs":[],
               "comment":"",
               "constructors":[],
-              "file_path":"${cppastBackendPath}/tmp/file1.h",
+              "file_path":"${preProcessParseFilesDir}/file1.h",
               "member_variables":[
                 {
                   "__TYPE":"MemberVariable",
@@ -66,7 +72,7 @@ struct AAA {
               "methods":[],
               "name":"AAA",
               "namespaces":[],
-              "parent_name":"${cppastBackendPath}/tmp/file1.h",
+              "parent_name":"${preProcessParseFilesDir}/file1.h",
               "source":""
             }
           ]
@@ -74,13 +80,9 @@ struct AAA {
       ]
       `;
 
-      let json = dumpCXXAstJson(
-        new TerraContext(tmpDir),
-        [],
-        [],
-        [file1Path],
-        []
-      );
+      let json = dumpCXXAstJson(new TerraContext(tmpDir), [], [], [file1Path]);
+
+      expect(fs.existsSync(preProcessParseFilesDir)).toBe(true);
 
       // Use `JSON.parse` to parse the json string to avoid the format issue
       expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));

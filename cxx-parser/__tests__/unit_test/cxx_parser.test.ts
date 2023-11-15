@@ -81,6 +81,10 @@ describe('cxx_parser', () => {
         cppastBackendBuildDir,
         `dump_json_${checkSum}.json`
       );
+      let preProcessParseFilesDir = path.join(
+        cppastBackendBuildDir,
+        `preProcess@${checkSum}`
+      );
 
       (execSync as jest.Mock).mockImplementationOnce(() => {
         // Simulate generate the ast json file after run the bash script
@@ -93,11 +97,10 @@ describe('cxx_parser', () => {
         new TerraContext(tmpDir),
         [],
         [],
-        [file1Path, file2Path],
-        []
+        [file1Path, file2Path]
       );
 
-      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --custom-headers= --output-dir=${jsonFilePath} --dump-json"`;
+      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --custom-headers= --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
       expect(execSync).toHaveBeenCalledWith(expectedBashScript, {
         encoding: 'utf8',
         stdio: 'inherit',
@@ -152,6 +155,10 @@ describe('cxx_parser', () => {
         cppastBackendBuildDir,
         `dump_json_${checkSum}.json`
       );
+      let preProcessParseFilesDir = path.join(
+        cppastBackendBuildDir,
+        `preProcess@${checkSum}`
+      );
 
       let isBashCalled = false;
 
@@ -168,11 +175,10 @@ describe('cxx_parser', () => {
         new TerraContext(tmpDir, '', '', true, false),
         [],
         [],
-        [file1Path, file2Path],
-        []
+        [file1Path, file2Path]
       );
 
-      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --custom-headers= --output-dir=${jsonFilePath} --dump-json"`;
+      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --custom-headers= --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
       expect(execSync).toHaveBeenCalledWith(expectedBashScript, {
         encoding: 'utf8',
         stdio: 'inherit',
@@ -229,6 +235,7 @@ describe('cxx_parser', () => {
         cppastBackendBuildDir,
         `dump_json_${checkSum}.json`
       );
+
       // Simulate cached ast json file exists
       fs.writeFileSync(jsonFilePath, expectedJson);
 
@@ -243,8 +250,7 @@ describe('cxx_parser', () => {
         new TerraContext(tmpDir),
         [],
         [],
-        [file1Path, file2Path],
-        []
+        [file1Path, file2Path]
       );
 
       expect(execSync).not.toHaveBeenCalled();

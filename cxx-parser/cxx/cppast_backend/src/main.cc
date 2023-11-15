@@ -31,6 +31,7 @@ int main(int argc, char **argv) {
     option_list.add_options()
         ("include-header-dirs", "The include C++ headers directories, split with \",\"", cxxopts::value<std::string>())
         ("output-dir", "The output directory, or output to ./build/iris-ast/ by default", cxxopts::value<std::string>())
+        ("pre-process-dir", "The pre-process parse files directory", cxxopts::value<std::string>())
         ("visit-headers", "The C++ headers to be visited, split with \",\"", cxxopts::value<std::string>())
         ("custom-headers", "The custom C++ headers to be visited, split with \",\"", cxxopts::value<std::string>())
         ("defines-macros", "Custom macros, split with \",\"", cxxopts::value<std::string>())
@@ -41,6 +42,7 @@ int main(int argc, char **argv) {
 
   std::string output_dir = "";
   std::string visit_headers = "";
+  std::string pre_process_dir = "";
   std::vector<std::string> include_header_dirs;
   std::vector<std::string> visit_files;
   std::vector<std::string> custom_headers;
@@ -66,9 +68,15 @@ int main(int argc, char **argv) {
     output_dir = std::string(std::filesystem::absolute(tmp_out).c_str());
   }
 
-  std::filesystem::path tmp_path = std::filesystem::current_path() / "tmp";
-  // make sure pre_processed_files as the first of the headers
-  include_header_dirs.push_back(tmp_path.c_str());
+  if (parse_result.count("pre-process-dir")) {
+    pre_process_dir = parse_result["pre-process-dir"].as<std::string>();
+  } else {
+    std::cerr << "The pre-process-dir option is missing." << std::endl;
+    return -1;
+  }
+
+  // make sure `pre_process_dir` as the first of the headers
+  include_header_dirs.push_back(pre_process_dir);
 
   if (parse_result.count("include-header-dirs")) {
     auto include_system_dir =
@@ -116,6 +124,7 @@ int main(int argc, char **argv) {
   }
 
   std::vector<std::string> pre_processed_files;
+  std::filesystem::path tmp_path = pre_process_dir;
   PreProcessVisitFiles(tmp_path, visit_files, pre_processed_files,
                        is_dump_json);
 
