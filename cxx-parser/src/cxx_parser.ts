@@ -35,13 +35,16 @@ export function getCppAstBackendDir() {
 export function dumpCXXAstJson(
   terraContext: TerraContext,
   includeHeaderDirs: string[],
-  customHeaders: string[],
   parseFiles: string[],
   defines: string[]
 ): string {
   let parseFilesChecksum = generateChecksum(parseFiles);
 
   let buildDir = getBuildDir(terraContext);
+  let preProcessParseFilesDir = path.join(
+    buildDir,
+    `preProcess@${parseFilesChecksum}`
+  );
 
   let agora_rtc_ast_dir_path = getCppAstBackendDir();
 
@@ -76,11 +79,9 @@ export function dumpCXXAstJson(
   let definess = defines.join(',');
   bashArgs += ` --defines-macros=\"${definess}\"`;
 
-  if (customHeaders) {
-    bashArgs += ` --custom-headers=${customHeaders.join(',')}`;
-  }
-
   bashArgs += ` --output-dir=${outputJsonPath}`;
+
+  bashArgs += ` --pre-process-dir=${preProcessParseFilesDir}`;
 
   bashArgs += ` --dump-json`;
 
@@ -122,7 +123,6 @@ export function CXXParser(
   let jsonContent = dumpCXXAstJson(
     terraContext,
     cxxParserConfigs.includeHeaderDirs,
-    cxxParserConfigs.customHeaders,
     parseFiles,
     cxxParserConfigs.definesMacros
   );

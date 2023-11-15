@@ -15,7 +15,6 @@ export interface CXXParserConfigs {
   includeHeaderDirs: string[];
   definesMacros: string[];
   parseFiles: ParseFilesConfig;
-  customHeaders: string[];
 }
 
 export class CXXParserConfigs {
@@ -39,11 +38,6 @@ export class CXXParserConfigs {
           })
           .flat(1),
       },
-      customHeaders: (original.customHeaders ?? [])
-        .map((it) => {
-          return _resolvePaths(it, configDir);
-        })
-        .flat(1),
     };
   }
 }
