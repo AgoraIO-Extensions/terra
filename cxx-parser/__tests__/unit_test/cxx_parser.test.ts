@@ -96,8 +96,8 @@ describe('cxx_parser', () => {
       let json = dumpCXXAstJson(
         new TerraContext(tmpDir),
         [],
-        [],
-        [file1Path, file2Path]
+        [file1Path, file2Path],
+        []
       );
 
       let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --custom-headers= --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
@@ -174,8 +174,8 @@ describe('cxx_parser', () => {
       let json = dumpCXXAstJson(
         new TerraContext(tmpDir, '', '', true, false),
         [],
-        [],
-        [file1Path, file2Path]
+        [file1Path, file2Path],
+        []
       );
 
       let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDir}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --custom-headers= --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
@@ -249,8 +249,8 @@ describe('cxx_parser', () => {
       let json = dumpCXXAstJson(
         new TerraContext(tmpDir),
         [],
-        [],
-        [file1Path, file2Path]
+        [file1Path, file2Path],
+        []
       );
 
       expect(execSync).not.toHaveBeenCalled();

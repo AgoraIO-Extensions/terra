@@ -80,7 +80,7 @@ struct AAA {
       ]
       `;
 
-      let json = dumpCXXAstJson(new TerraContext(tmpDir), [], [], [file1Path]);
+      let json = dumpCXXAstJson(new TerraContext(tmpDir), [], [file1Path], []);
 
       expect(fs.existsSync(preProcessParseFilesDir)).toBe(true);
 
