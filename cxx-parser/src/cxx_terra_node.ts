@@ -1,7 +1,7 @@
 import path from 'path';
 
 import { TerraNode } from '@agoraio-extensions/terra-core';
-import './cxx_terra_node_ext';
+import './cxx_terra_node_string_ext';
 
 function getAllClazzs(cxxfiles: CXXFile[]): Clazz[] {
   return cxxfiles.flatMap((file) =>

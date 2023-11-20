@@ -1,7 +1,3 @@
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
-
 import '../../src/cxx_terra_node_ext';
 import { SimpleType, SimpleTypeKind } from '../../src/cxx_terra_node';
 
