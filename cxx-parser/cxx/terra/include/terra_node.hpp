@@ -87,6 +87,9 @@ namespace terra
         bool is_const = false;
         bool is_builtin_type = false;
 
+        /// @brief  Only and maybe have values if the `kind == SimpleTypeKind::template_t`
+        std::vector<std::string> template_arguments;
+
         std::string GetTypeName() const
         {
             if (!name.empty())

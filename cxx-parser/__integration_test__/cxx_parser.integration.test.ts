@@ -65,7 +65,8 @@ struct AAA {
                     "is_const":false,
                     "kind":100,
                     "name":"int",
-                    "source":"int"
+                    "source":"int",
+                    "template_arguments":[]
                   }
                 }
               ],
