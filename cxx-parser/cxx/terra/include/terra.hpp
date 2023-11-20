@@ -107,9 +107,12 @@ namespace terra
             }
             case cppast::cpp_type_kind::pointer_t:
             {
+
                 auto &cpp_pointer_type = static_cast<const cppast::cpp_pointer_type &>(cpp_type);
                 to_simple_type(type, cpp_pointer_type.pointee(), true);
                 type.kind = SimpleTypeKind::pointer_t;
+                std::cout << "pointer_t: "
+                          << "\n";
                 break;
             }
             case cppast::cpp_type_kind::reference_t:
@@ -335,6 +338,7 @@ namespace terra
             parse_base_node(type_alias, namespaceList, file_path, cpp_type_alias);
 
             SimpleType st;
+            std::cout << "parse_type_alias: " << type_alias.name << "\n";
             to_simple_type(st, cpp_type_alias.underlying_type());
             type_alias.underlyingType = st;
 
@@ -557,11 +561,31 @@ namespace terra
                             return true;
                         }
 
+                        // If C-style definitions are used to define structs or enums, such as,
+                        // ```
+                        // typedef enum
+                        // {
+                        //     kPreloadStatusCompleted = 0,
+                        //     kPreloadStatusFailed = 1,
+                        // } PreloadStatusCode;
+                        // ```
+                        // The above code will be parsed as an enum node with an empty name. Next,
+                        // we need to fill the name of the type_alias_t to the previous node.
+
                         auto &last_node = cxx_file.nodes.back();
+
+                        bool isNeedFillPreNodeName = false;
+                        std::string preNodeName = "";
+
+                        // need fill the previous node name if name is empty
+                        // if the name is same, do nothing
 
                         if (std::holds_alternative<Enumz>(last_node))
                         {
                             auto &enumz = std::get<Enumz>(last_node);
+                            preNodeName = enumz.name;
+
+                            isNeedFillPreNodeName = enumz.name.empty();
                             if (enumz.name.empty())
                             {
                                 enumz.name = cpp_type_alias.name();
@@ -571,6 +595,9 @@ namespace terra
                         else if (std::holds_alternative<Clazz>(last_node))
                         {
                             auto &clazz = std::get<Clazz>(last_node);
+                            preNodeName = clazz.name;
+
+                            isNeedFillPreNodeName = clazz.name.empty();
                             if (clazz.name.empty())
                             {
                                 clazz.name = cpp_type_alias.name();
@@ -580,13 +607,19 @@ namespace terra
                         else if (std::holds_alternative<Struct>(last_node))
                         {
                             auto &structt = std::get<Struct>(last_node);
-                            if (structt.name.empty())
+                            isNeedFillPreNodeName = structt.name.empty();
+                            preNodeName = structt.name;
+                            if (isNeedFillPreNodeName)
                             {
                                 structt.name = cpp_type_alias.name();
                                 std::cout << "[type_alias_t] struct name: " << structt.name << std::endl;
                             }
                         }
-                        else
+
+                        // It's the normal type alias, e.g.,
+                        // `typedef void* view_t`
+                        std::string cn = cpp_type_alias.name();
+                        if (!isNeedFillPreNodeName && preNodeName != cn)
                         {
                             NodeType node = parse_type_alias(cpp_type_alias, namespaceList, file_path);
                             cxx_file.nodes.push_back(node);
