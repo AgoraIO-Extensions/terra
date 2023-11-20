@@ -1,7 +1,3 @@
-import { strict as assert } from 'assert';
-
-import { SimpleType, SimpleTypeKind } from './cxx_terra_node';
-
 export {};
 
 declare global {
@@ -18,15 +14,6 @@ declare global {
      * Example: "std::vector::size_type" returns "std::vector"
      */
     getNamespace(): string;
-  }
-}
-
-declare module '@agoraio-extensions/cxx-parser' {
-  export interface SimpleType {
-    /**
-     * The length of the array type. For example, "int[10]" returns "10".
-     */
-    lenOfArrayType(): string;
   }
 }
 
@@ -63,20 +50,4 @@ String.prototype.getNamespace = function (): string {
 
   const splitted = this.split('::');
   return Array.from(splitted.slice(0, splitted.length - 1)).join('::');
-};
-
-/**
- * The length of the array type. For example, "int[10]" returns "10".
- */
-SimpleType.prototype.lenOfArrayType = function (): string {
-  assert(this.kind === SimpleTypeKind.array_t);
-  assert(this.source);
-
-  let regex = new RegExp(/\d+/);
-  let len = this.source.match(regex);
-  if (len) {
-    return len[0];
-  }
-
-  assert(false); // Should not reach here
 };
