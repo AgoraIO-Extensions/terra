@@ -4,23 +4,6 @@ import { SimpleType, SimpleTypeKind } from './cxx_terra_node';
 
 export {};
 
-declare global {
-  export interface String {
-    /**
-     * This function removes the namespace from a fully qualified name.
-     * For example, "foo::bar" becomes "bar".
-     */
-    trimNamespace(): string;
-
-    /**
-     * Returns the namespace of the class name.
-     *
-     * Example: "std::vector::size_type" returns "std::vector"
-     */
-    getNamespace(): string;
-  }
-}
-
 declare module '@agoraio-extensions/cxx-parser' {
   export interface SimpleType {
     /**
