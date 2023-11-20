@@ -32,6 +32,7 @@ export enum SimpleTypeKind {
   pointer_t = 101,
   reference_t = 102,
   array_t = 103,
+  template_t = 104,
 }
 
 export abstract class CXXTerraNode implements TerraNode {
@@ -253,6 +254,7 @@ export class SimpleType extends CXXTerraNode {
   kind: SimpleTypeKind = SimpleTypeKind.value_t;
   is_const: boolean = false;
   is_builtin_type: boolean = false;
+  template_arguments: string[] = [];
 
   override get realName(): string {
     if (this.name) {

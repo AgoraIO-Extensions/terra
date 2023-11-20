@@ -65,12 +65,13 @@ namespace terra
         void to_simple_type(SimpleType &type, const cppast::cpp_type &cpp_type, bool recursion = false)
         {
             std::cout << "------------" << cppast::to_string(cpp_type) << " >> " << std::to_string((int)cpp_type.kind()) << "\n";
-            if (!recursion) {
+            if (!recursion)
+            {
                 type.name = cppast::to_string(cpp_type);
                 type.source = cppast::to_string(cpp_type);
                 type.kind = SimpleTypeKind::value_t;
             }
-                
+
             switch (cpp_type.kind())
             {
             case cppast::cpp_type_kind::builtin_t:
@@ -155,14 +156,29 @@ namespace terra
             case cppast::cpp_type_kind::template_instantiation_t:
             {
                 auto &cpp_template_instantiation_type = static_cast<const cppast::cpp_template_instantiation_type &>(cpp_type);
-                // if (cpp_template_instantiation_type.arguments().has_value()) {
-                //     if (cpp_template_instantiation_type.arguments().value().size() == 1) {
-                //         if (cpp_template_instantiation_type.arguments().value().begin()->type().has_value()) {
-                //             to_simple_type(type, cpp_template_instantiation_type.arguments().value().begin()->type().value(), true);
-                //             break;
-                //         }
-                //     }
-                // }
+
+                type.name = cpp_template_instantiation_type.primary_template().name();
+
+                if (cpp_template_instantiation_type.arguments_exposed())
+                {
+                    for (auto &arg : cpp_template_instantiation_type.arguments().value())
+                    {
+                        if (auto arg_type = arg.type())
+                        {
+                            std::string arg_type_name = cppast::to_string(arg_type.value());
+                            type.template_arguments.push_back(arg_type_name);
+                            std::cout << "template_instantiation_t argument: " << arg_type_name << "\n";
+                        }
+                    }
+                }
+                else if (!cpp_template_instantiation_type.unexposed_arguments().empty())
+                {
+                    std::string arg_type_name = cpp_template_instantiation_type.unexposed_arguments();
+                    type.template_arguments.push_back(arg_type_name);
+                    std::cout << "template_instantiation_t unexposed_arguments: " << arg_type_name << "\n";
+                }
+
+                type.source = cppast::to_string(cpp_type);
                 type.kind = SimpleTypeKind::template_t;
                 break;
             }
@@ -181,7 +197,8 @@ namespace terra
             }
         }
 
-        void parse_base_node(BaseNode &base_node, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_entity &cpp_entity) {
+        void parse_base_node(BaseNode &base_node, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_entity &cpp_entity)
+        {
             base_node.name = std::string(cpp_entity.name());
             base_node.namespaces = std::vector<std::string>(namespaceList);
             base_node.file_path = std::string(file_path);
@@ -190,7 +207,7 @@ namespace terra
             base_node.comment = parse_comment(cpp_entity);
             // base_node.source = cppast::to_string(cpp_entity);
         }
-       
+
         // public cpp_entity, public cpp_variable_base,
         template <typename T>
         void parse_parameter(Variable &parameter, const std::vector<std::string> &namespaceList, const std::string &file_path, const T &cpp_variable_base)
@@ -219,7 +236,7 @@ namespace terra
                 }
             }
             parameter.default_value = default_value;
-            
+
             std::cout << "param type:" << parameter.type.name << " " << parameter.type.kind << " " << parameter.type.is_builtin_type << ", name:" << parameter.name << ", default value: " << parameter.default_value << "\n";
         }
 
@@ -237,7 +254,7 @@ namespace terra
         void parse_method(MemberFunction &method, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_member_function &cpp_member_function, std::string &current_access_specifier)
         {
             parse_base_node(method, namespaceList, file_path, cpp_member_function);
-            
+
             method.is_virtual = cpp_member_function.is_virtual();
             SimpleType return_type;
             to_simple_type(return_type, cpp_member_function.return_type());
@@ -316,7 +333,7 @@ namespace terra
         {
             TypeAlias type_alias;
             parse_base_node(type_alias, namespaceList, file_path, cpp_type_alias);
-            
+
             SimpleType st;
             to_simple_type(st, cpp_type_alias.underlying_type());
             type_alias.underlyingType = st;
@@ -1020,6 +1037,7 @@ namespace terra
             json["kind"] = (int)node->kind;
             json["is_const"] = node->is_const;
             json["is_builtin_type"] = node->is_builtin_type;
+            json["template_arguments"] = node->template_arguments;
         }
 
         void MemberVariable2Json(MemberVariable *node, nlohmann::json &json)
