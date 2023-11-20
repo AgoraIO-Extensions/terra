@@ -1,6 +1,16 @@
+import './cxx_terra_node_string_ext';
+
 import { ParseResult } from '@agoraio-extensions/terra-core';
 
-import { CXXFile, CXXTYPE, Clazz, Enumz } from './cxx_terra_node';
+import {
+  CXXFile,
+  CXXTYPE,
+  CXXTerraNode,
+  Clazz,
+  Enumz,
+  SimpleType,
+  SimpleTypeKind,
+} from './cxx_terra_node';
 
 export {};
 
@@ -8,13 +18,23 @@ declare module '@agoraio-extensions/terra-core' {
   export interface ParseResult {
     /**
      * Find a `Clazz` by its name.
+     * @deprecated Use `resolveNodeByType` instead.
      */
     findClazz(clazzName: string): Clazz | undefined;
 
     /**
      * Find a `Enumz` by its name.
+     * @deprecated Use `resolveNodeByType` instead.
      */
     findEnumz(enumzName: string): Enumz | undefined;
+
+    /**
+     * Resolves a `CXXTerraNode` based on the given `SimpleType`. If none is found, the `SimpleType` is returned.
+     *
+     * @param type - The `SimpleType` to resolve.
+     * @returns The resolved `CXXTerraNode`.
+     */
+    resolveNodeByType(type: SimpleType): CXXTerraNode;
   }
 }
 
@@ -87,4 +107,61 @@ ParseResult.prototype.findEnumz = function (
   }
 
   return undefined;
+};
+
+/**
+ * Resolves a `CXXTerraNode` based on the given `SimpleType`. If none is found, the `SimpleType` is returned.
+ *
+ * @param type - The `SimpleType` to resolve.
+ * @returns The resolved `CXXTerraNode`.
+ */
+ParseResult.prototype.resolveNodeByType = function (
+  type: SimpleType
+): CXXTerraNode {
+  function _match(ns: string, namespace_string: string): boolean {
+    return (
+      ns == namespace_string ||
+      namespace_string == '' ||
+      ns.includes(namespace_string)
+    );
+  }
+  let name = type.name;
+  if (name.length === 0) {
+    return type;
+  }
+
+  if (type.is_builtin_type) {
+    return type;
+  }
+
+  if (
+    type.kind == SimpleTypeKind.template_t &&
+    type.template_arguments.length
+  ) {
+    // Only support the first template argument at this time
+    name = type.template_arguments[0];
+  }
+
+  const namespaceInString = name.getNamespace();
+  const nameWithoutNS = name.trimNamespace();
+
+  for (const f of this.nodes) {
+    let cxxFile = f as CXXFile;
+    for (const node of cxxFile.nodes) {
+      if (node.name === nameWithoutNS) {
+        let ns = node.namespaces.join('::');
+        let found = _match(ns, namespaceInString);
+        if (!found && node.parent_name) {
+          ns = [...node.namespaces, node.parent_name].join('::');
+          found = _match(ns, namespaceInString);
+        }
+
+        if (found) {
+          return node;
+        }
+      }
+    }
+  }
+
+  return type;
 };
