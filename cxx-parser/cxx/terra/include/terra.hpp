@@ -111,8 +111,7 @@ namespace terra
                 auto &cpp_pointer_type = static_cast<const cppast::cpp_pointer_type &>(cpp_type);
                 to_simple_type(type, cpp_pointer_type.pointee(), true);
                 type.kind = SimpleTypeKind::pointer_t;
-                std::cout << "pointer_t: "
-                          << "\n";
+
                 break;
             }
             case cppast::cpp_type_kind::reference_t:
@@ -338,7 +337,6 @@ namespace terra
             parse_base_node(type_alias, namespaceList, file_path, cpp_type_alias);
 
             SimpleType st;
-            std::cout << "parse_type_alias: " << type_alias.name << "\n";
             to_simple_type(st, cpp_type_alias.underlying_type());
             type_alias.underlyingType = st;
 
