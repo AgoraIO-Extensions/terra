@@ -107,7 +107,6 @@ namespace terra
             }
             case cppast::cpp_type_kind::pointer_t:
             {
-
                 auto &cpp_pointer_type = static_cast<const cppast::cpp_pointer_type &>(cpp_type);
                 to_simple_type(type, cpp_pointer_type.pointee(), true);
                 type.kind = SimpleTypeKind::pointer_t;
