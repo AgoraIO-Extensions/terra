@@ -623,6 +623,8 @@ namespace terra
                             std::cout << "[type_alias_t] type name: " << cpp_type_alias.name() << ", under type: " << cppast::to_string(cpp_type_alias.underlying_type())
                                       << std::endl;
                         }
+
+                        return true;
                     }
 
                     if (e.kind() == cppast::cpp_entity_kind::class_t && !info.is_old_entity())

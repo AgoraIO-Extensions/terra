@@ -27,10 +27,10 @@ describe('cxx_parser', () => {
       fs.writeFileSync(
         file1Path,
         `
-struct AAA {
-  int a;
-};
-`
+    struct AAA {
+      int a;
+    };
+    `
       );
 
       let checkSum = generateChecksum([file1Path]);
@@ -41,45 +41,45 @@ struct AAA {
 
       // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
       const expectedJson = `
-      [
-        {
-          "__TYPE":"CXXFile",
-          "file_path":"${preProcessParseFilesDir}/file1.h",
-          "nodes":[
+          [
             {
-              "__TYPE":"Struct",
-              "attributes":[],
-              "base_clazzs":[],
-              "comment":"",
-              "constructors":[],
+              "__TYPE":"CXXFile",
               "file_path":"${preProcessParseFilesDir}/file1.h",
-              "member_variables":[
+              "nodes":[
                 {
-                  "__TYPE":"MemberVariable",
-                  "access_specifier":"",
-                  "is_mutable":false,
-                  "name":"a",
-                  "type":{
-                    "__TYPE":"SimpleType",
-                    "is_builtin_type":true,
-                    "is_const":false,
-                    "kind":100,
-                    "name":"int",
-                    "source":"int",
-                    "template_arguments":[]
-                  }
+                  "__TYPE":"Struct",
+                  "attributes":[],
+                  "base_clazzs":[],
+                  "comment":"",
+                  "constructors":[],
+                  "file_path":"${preProcessParseFilesDir}/file1.h",
+                  "member_variables":[
+                    {
+                      "__TYPE":"MemberVariable",
+                      "access_specifier":"",
+                      "is_mutable":false,
+                      "name":"a",
+                      "type":{
+                        "__TYPE":"SimpleType",
+                        "is_builtin_type":true,
+                        "is_const":false,
+                        "kind":100,
+                        "name":"int",
+                        "source":"int",
+                        "template_arguments":[]
+                      }
+                    }
+                  ],
+                  "methods":[],
+                  "name":"AAA",
+                  "namespaces":[],
+                  "parent_name":"${preProcessParseFilesDir}/file1.h",
+                  "source":""
                 }
-              ],
-              "methods":[],
-              "name":"AAA",
-              "namespaces":[],
-              "parent_name":"${preProcessParseFilesDir}/file1.h",
-              "source":""
+              ]
             }
           ]
-        }
-      ]
-      `;
+          `;
 
       let json = dumpCXXAstJson(new TerraContext(tmpDir), [], [file1Path], []);
 
@@ -97,6 +97,7 @@ struct AAA {
           file1Path,
           `
   typedef struct AAA {
+    int a;
   } AAA;
   `
         );
@@ -121,7 +122,23 @@ struct AAA {
                 "comment":"",
                 "constructors":[],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
-                "member_variables":[],
+                "member_variables":[
+                  {
+                    "__TYPE":"MemberVariable",
+                    "access_specifier":"",
+                    "is_mutable":false,
+                    "name":"a",
+                    "type":{
+                      "__TYPE":"SimpleType",
+                      "is_builtin_type":true,
+                      "is_const":false,
+                      "kind":100,
+                      "name":"int",
+                      "source":"int",
+                      "template_arguments":[]
+                    }
+                  }
+                ],
                 "methods":[],
                 "name":"AAA",
                 "namespaces":[],
@@ -153,6 +170,7 @@ struct AAA {
           file1Path,
           `
   typedef struct {
+    int a;
   } AAA;
   `
         );
@@ -177,7 +195,23 @@ struct AAA {
                 "comment":"",
                 "constructors":[],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
-                "member_variables":[],
+                "member_variables":[
+                  {
+                    "__TYPE":"MemberVariable",
+                    "access_specifier":"",
+                    "is_mutable":false,
+                    "name":"a",
+                    "type":{
+                      "__TYPE":"SimpleType",
+                      "is_builtin_type":true,
+                      "is_const":false,
+                      "kind":100,
+                      "name":"int",
+                      "source":"int",
+                      "template_arguments":[]
+                    }
+                  }
+                ],
                 "methods":[],
                 "name":"AAA",
                 "namespaces":[],
@@ -209,6 +243,7 @@ struct AAA {
           file1Path,
           `
   typedef enum MyEnum {
+    A = 0,
   } MyEnum;
   `
         );
@@ -231,7 +266,14 @@ struct AAA {
                 "attributes":[],
                 "base_clazzs":[],
                 "comment":"",
-                "enum_constants":[],
+                "enum_constants": [
+                  {
+                    "__TYPE": "EnumConstant",
+                    "name": "A",
+                    "source": "0",
+                    "value": "0"
+                  }
+                ],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "name":"MyEnum",
                 "namespaces":[],
@@ -263,6 +305,7 @@ struct AAA {
           file1Path,
           `
   typedef enum {
+    A = 0,
   } MyEnum;
   `
         );
@@ -285,7 +328,14 @@ struct AAA {
                 "attributes":[],
                 "base_clazzs":[],
                 "comment":"",
-                "enum_constants":[],
+                "enum_constants": [
+                  {
+                    "__TYPE": "EnumConstant",
+                    "name": "A",
+                    "source": "0",
+                    "value": "0"
+                  }
+                ],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "name":"MyEnum",
                 "namespaces":[],
