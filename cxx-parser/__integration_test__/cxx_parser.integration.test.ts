@@ -27,10 +27,10 @@ describe('cxx_parser', () => {
       fs.writeFileSync(
         file1Path,
         `
-struct AAA {
-  int a;
-};
-`
+    struct AAA {
+      int a;
+    };
+    `
       );
 
       let checkSum = generateChecksum([file1Path]);
@@ -41,45 +41,45 @@ struct AAA {
 
       // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
       const expectedJson = `
-      [
-        {
-          "__TYPE":"CXXFile",
-          "file_path":"${preProcessParseFilesDir}/file1.h",
-          "nodes":[
+          [
             {
-              "__TYPE":"Struct",
-              "attributes":[],
-              "base_clazzs":[],
-              "comment":"",
-              "constructors":[],
+              "__TYPE":"CXXFile",
               "file_path":"${preProcessParseFilesDir}/file1.h",
-              "member_variables":[
+              "nodes":[
                 {
-                  "__TYPE":"MemberVariable",
-                  "access_specifier":"",
-                  "is_mutable":false,
-                  "name":"a",
-                  "type":{
-                    "__TYPE":"SimpleType",
-                    "is_builtin_type":true,
-                    "is_const":false,
-                    "kind":100,
-                    "name":"int",
-                    "source":"int",
-                    "template_arguments":[]
-                  }
+                  "__TYPE":"Struct",
+                  "attributes":[],
+                  "base_clazzs":[],
+                  "comment":"",
+                  "constructors":[],
+                  "file_path":"${preProcessParseFilesDir}/file1.h",
+                  "member_variables":[
+                    {
+                      "__TYPE":"MemberVariable",
+                      "access_specifier":"",
+                      "is_mutable":false,
+                      "name":"a",
+                      "type":{
+                        "__TYPE":"SimpleType",
+                        "is_builtin_type":true,
+                        "is_const":false,
+                        "kind":100,
+                        "name":"int",
+                        "source":"int",
+                        "template_arguments":[]
+                      }
+                    }
+                  ],
+                  "methods":[],
+                  "name":"AAA",
+                  "namespaces":[],
+                  "parent_name":"${preProcessParseFilesDir}/file1.h",
+                  "source":""
                 }
-              ],
-              "methods":[],
-              "name":"AAA",
-              "namespaces":[],
-              "parent_name":"${preProcessParseFilesDir}/file1.h",
-              "source":""
+              ]
             }
           ]
-        }
-      ]
-      `;
+          `;
 
       let json = dumpCXXAstJson(new TerraContext(tmpDir), [], [file1Path], []);
 
@@ -87,6 +87,430 @@ struct AAA {
 
       // Use `JSON.parse` to parse the json string to avoid the format issue
       expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));
+    });
+
+    describe('parse typedef', () => {
+      it('c-style typedef struct', () => {
+        let file1Path = path.join(tmpDir, 'file1.h');
+
+        fs.writeFileSync(
+          file1Path,
+          `
+  typedef struct AAA {
+    int a;
+  } AAA;
+  `
+        );
+
+        let checkSum = generateChecksum([file1Path]);
+        let preProcessParseFilesDir = path.join(
+          cxxParserCacheDir,
+          `preProcess@${checkSum}`
+        );
+
+        // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
+        const expectedJson = `
+        [
+          {
+            "__TYPE":"CXXFile",
+            "file_path":"${preProcessParseFilesDir}/file1.h",
+            "nodes":[
+              {
+                "__TYPE":"Struct",
+                "attributes":[],
+                "base_clazzs":[],
+                "comment":"",
+                "constructors":[],
+                "file_path":"${preProcessParseFilesDir}/file1.h",
+                "member_variables":[
+                  {
+                    "__TYPE":"MemberVariable",
+                    "access_specifier":"",
+                    "is_mutable":false,
+                    "name":"a",
+                    "type":{
+                      "__TYPE":"SimpleType",
+                      "is_builtin_type":true,
+                      "is_const":false,
+                      "kind":100,
+                      "name":"int",
+                      "source":"int",
+                      "template_arguments":[]
+                    }
+                  }
+                ],
+                "methods":[],
+                "name":"AAA",
+                "namespaces":[],
+                "parent_name":"${preProcessParseFilesDir}/file1.h",
+                "source":""
+              }
+            ]
+          }
+        ]
+        `;
+
+        let json = dumpCXXAstJson(
+          new TerraContext(tmpDir),
+          [],
+          [file1Path],
+          []
+        );
+
+        expect(fs.existsSync(preProcessParseFilesDir)).toBe(true);
+
+        // Use `JSON.parse` to parse the json string to avoid the format issue
+        expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));
+      });
+
+      it('c-style typedef struct with empty name', () => {
+        let file1Path = path.join(tmpDir, 'file1.h');
+
+        fs.writeFileSync(
+          file1Path,
+          `
+  typedef struct {
+    int a;
+  } AAA;
+  `
+        );
+
+        let checkSum = generateChecksum([file1Path]);
+        let preProcessParseFilesDir = path.join(
+          cxxParserCacheDir,
+          `preProcess@${checkSum}`
+        );
+
+        // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
+        const expectedJson = `
+        [
+          {
+            "__TYPE":"CXXFile",
+            "file_path":"${preProcessParseFilesDir}/file1.h",
+            "nodes":[
+              {
+                "__TYPE":"Struct",
+                "attributes":[],
+                "base_clazzs":[],
+                "comment":"",
+                "constructors":[],
+                "file_path":"${preProcessParseFilesDir}/file1.h",
+                "member_variables":[
+                  {
+                    "__TYPE":"MemberVariable",
+                    "access_specifier":"",
+                    "is_mutable":false,
+                    "name":"a",
+                    "type":{
+                      "__TYPE":"SimpleType",
+                      "is_builtin_type":true,
+                      "is_const":false,
+                      "kind":100,
+                      "name":"int",
+                      "source":"int",
+                      "template_arguments":[]
+                    }
+                  }
+                ],
+                "methods":[],
+                "name":"AAA",
+                "namespaces":[],
+                "parent_name":"${preProcessParseFilesDir}/file1.h",
+                "source":""
+              }
+            ]
+          }
+        ]
+        `;
+
+        let json = dumpCXXAstJson(
+          new TerraContext(tmpDir),
+          [],
+          [file1Path],
+          []
+        );
+
+        expect(fs.existsSync(preProcessParseFilesDir)).toBe(true);
+
+        // Use `JSON.parse` to parse the json string to avoid the format issue
+        expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));
+      });
+
+      it('c-style typedef enum', () => {
+        let file1Path = path.join(tmpDir, 'file1.h');
+
+        fs.writeFileSync(
+          file1Path,
+          `
+  typedef enum MyEnum {
+    A = 0,
+  } MyEnum;
+  `
+        );
+
+        let checkSum = generateChecksum([file1Path]);
+        let preProcessParseFilesDir = path.join(
+          cxxParserCacheDir,
+          `preProcess@${checkSum}`
+        );
+
+        // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
+        const expectedJson = `
+        [
+          {
+            "__TYPE":"CXXFile",
+            "file_path":"${preProcessParseFilesDir}/file1.h",
+            "nodes":[
+              {
+                "__TYPE":"Enumz",
+                "attributes":[],
+                "comment":"",
+                "enum_constants": [
+                  {
+                    "__TYPE": "EnumConstant",
+                    "name": "A",
+                    "source": "0",
+                    "value": "0"
+                  }
+                ],
+                "file_path":"${preProcessParseFilesDir}/file1.h",
+                "name":"MyEnum",
+                "namespaces":[],
+                "parent_name":"${preProcessParseFilesDir}/file1.h",
+                "source":""
+              }
+            ]
+          }
+        ]
+        `;
+
+        let json = dumpCXXAstJson(
+          new TerraContext(tmpDir),
+          [],
+          [file1Path],
+          []
+        );
+
+        expect(fs.existsSync(preProcessParseFilesDir)).toBe(true);
+
+        // Use `JSON.parse` to parse the json string to avoid the format issue
+        expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));
+      });
+
+      it('c-style typedef enum with empty name', () => {
+        let file1Path = path.join(tmpDir, 'file1.h');
+
+        fs.writeFileSync(
+          file1Path,
+          `
+  typedef enum {
+    A = 0,
+  } MyEnum;
+  `
+        );
+
+        let checkSum = generateChecksum([file1Path]);
+        let preProcessParseFilesDir = path.join(
+          cxxParserCacheDir,
+          `preProcess@${checkSum}`
+        );
+
+        // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
+        const expectedJson = `
+        [
+          {
+            "__TYPE":"CXXFile",
+            "file_path":"${preProcessParseFilesDir}/file1.h",
+            "nodes":[
+              {
+                "__TYPE":"Enumz",
+                "attributes":[],
+                "comment":"",
+                "enum_constants": [
+                  {
+                    "__TYPE": "EnumConstant",
+                    "name": "A",
+                    "source": "0",
+                    "value": "0"
+                  }
+                ],
+                "file_path":"${preProcessParseFilesDir}/file1.h",
+                "name":"MyEnum",
+                "namespaces":[],
+                "parent_name":"${preProcessParseFilesDir}/file1.h",
+                "source":""
+              }
+            ]
+          }
+        ]
+        `;
+
+        let json = dumpCXXAstJson(
+          new TerraContext(tmpDir),
+          [],
+          [file1Path],
+          []
+        );
+
+        expect(fs.existsSync(preProcessParseFilesDir)).toBe(true);
+
+        // Use `JSON.parse` to parse the json string to avoid the format issue
+        expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));
+      });
+
+      it('normal typedef void*', () => {
+        let file1Path = path.join(tmpDir, 'file1.h');
+
+        fs.writeFileSync(
+          file1Path,
+          `
+  typedef void* view_t;
+  `
+        );
+
+        let checkSum = generateChecksum([file1Path]);
+        let preProcessParseFilesDir = path.join(
+          cxxParserCacheDir,
+          `preProcess@${checkSum}`
+        );
+
+        // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
+        const expectedJson = `
+        [
+          {
+            "__TYPE":"CXXFile",
+            "file_path":"${preProcessParseFilesDir}/file1.h",
+            "nodes":[
+              {
+                "__TYPE": "TypeAlias",
+                "attributes": [],
+                "comment": "",
+                "file_path":"${preProcessParseFilesDir}/file1.h",
+                "name": "view_t",
+                "namespaces": [],
+                "parent_name":"${preProcessParseFilesDir}/file1.h",
+                "source": "",
+                "underlyingType": {
+                  "__TYPE": "SimpleType",
+                  "is_builtin_type": true,
+                  "is_const": false,
+                  "kind": 101,
+                  "name": "void",
+                  "source": "void*",
+                  "template_arguments": []
+                }
+              }
+            ]
+          }
+        ]
+        `;
+
+        let json = dumpCXXAstJson(
+          new TerraContext(tmpDir),
+          [],
+          [file1Path],
+          []
+        );
+
+        expect(fs.existsSync(preProcessParseFilesDir)).toBe(true);
+
+        // Use `JSON.parse` to parse the json string to avoid the format issue
+        expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));
+      });
+
+      it('normal typedef void* under typedef struct', () => {
+        let file1Path = path.join(tmpDir, 'file1.h');
+
+        fs.writeFileSync(
+          file1Path,
+          `
+  struct AAA {
+    int a;
+  };
+
+  typedef void* view_t;
+  `
+        );
+
+        let checkSum = generateChecksum([file1Path]);
+        let preProcessParseFilesDir = path.join(
+          cxxParserCacheDir,
+          `preProcess@${checkSum}`
+        );
+
+        // TODO(littlegnal): Should move the tmp/*.h to the build dir in the future
+        const expectedJson = `
+        [
+          {
+            "__TYPE":"CXXFile",
+            "file_path":"${preProcessParseFilesDir}/file1.h",
+            "nodes":[
+              {
+                "__TYPE":"Struct",
+                "attributes":[],
+                "base_clazzs":[],
+                "comment":"",
+                "constructors":[],
+                "file_path":"${preProcessParseFilesDir}/file1.h",
+                "member_variables":[
+                  {
+                    "__TYPE":"MemberVariable",
+                    "access_specifier":"",
+                    "is_mutable":false,
+                    "name":"a",
+                    "type":{
+                      "__TYPE":"SimpleType",
+                      "is_builtin_type":true,
+                      "is_const":false,
+                      "kind":100,
+                      "name":"int",
+                      "source":"int",
+                      "template_arguments":[]
+                    }
+                  }
+                ],
+                "methods":[],
+                "name":"AAA",
+                "namespaces":[],
+                "parent_name":"${preProcessParseFilesDir}/file1.h",
+                "source":""
+              },
+              {
+                "__TYPE": "TypeAlias",
+                "attributes": [],
+                "comment": "",
+                "file_path":"${preProcessParseFilesDir}/file1.h",
+                "name": "view_t",
+                "namespaces": [],
+                "parent_name":"${preProcessParseFilesDir}/file1.h",
+                "source": "",
+                "underlyingType": {
+                  "__TYPE": "SimpleType",
+                  "is_builtin_type": true,
+                  "is_const": false,
+                  "kind": 101,
+                  "name": "void",
+                  "source": "void*",
+                  "template_arguments": []
+                }
+              }
+            ]
+          }
+        ]
+        `;
+
+        let json = dumpCXXAstJson(
+          new TerraContext(tmpDir),
+          [],
+          [file1Path],
+          []
+        );
+
+        expect(fs.existsSync(preProcessParseFilesDir)).toBe(true);
+
+        // Use `JSON.parse` to parse the json string to avoid the format issue
+        expect(JSON.parse(json)).toEqual(JSON.parse(expectedJson));
+      });
     });
   });
 
