@@ -218,6 +218,7 @@ namespace terra
             SimpleType param_type;
             to_simple_type(param_type, cpp_variable_base.type());
             parameter.type = param_type;
+            parameter.comment = parse_comment(cpp_variable_base);
 
             std::string default_value = "";
             if (cpp_variable_base.default_value().has_value())
@@ -300,6 +301,7 @@ namespace terra
             {
                 EnumConstant enum_constant;
                 enum_constant.name = en.name();
+                enum_constant.comment = parse_comment(en);
                 enum_constant.parent_name = cpp_enum.name();
                 if (en.value().has_value())
                 {
@@ -1082,6 +1084,7 @@ namespace terra
             json["type"] = typeJson;
 
             json["is_mutable"] = node->is_mutable;
+            json["comment"] = node->comment;
             json["access_specifier"] = node->access_specifier;
         }
 
@@ -1091,6 +1094,7 @@ namespace terra
             json["name"] = node->name;
             json["value"] = node->value;
             json["source"] = node->source;
+            json["comment"] = node->comment;
         }
     };
 

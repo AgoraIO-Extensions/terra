@@ -57,6 +57,7 @@ describe('cxx_parser', () => {
                     {
                       "__TYPE":"MemberVariable",
                       "access_specifier":"",
+                      "comment":"",
                       "is_mutable":false,
                       "name":"a",
                       "type":{
@@ -126,6 +127,7 @@ describe('cxx_parser', () => {
                   {
                     "__TYPE":"MemberVariable",
                     "access_specifier":"",
+                    "comment":"",
                     "is_mutable":false,
                     "name":"a",
                     "type":{
@@ -199,6 +201,7 @@ describe('cxx_parser', () => {
                   {
                     "__TYPE":"MemberVariable",
                     "access_specifier":"",
+                    "comment":"",
                     "is_mutable":false,
                     "name":"a",
                     "type":{
@@ -268,6 +271,7 @@ describe('cxx_parser', () => {
                 "enum_constants": [
                   {
                     "__TYPE": "EnumConstant",
+                    "comment":"",
                     "name": "A",
                     "source": "0",
                     "value": "0"
@@ -329,6 +333,7 @@ describe('cxx_parser', () => {
                 "enum_constants": [
                   {
                     "__TYPE": "EnumConstant",
+                    "comment":"",
                     "name": "A",
                     "source": "0",
                     "value": "0"
@@ -456,6 +461,7 @@ describe('cxx_parser', () => {
                   {
                     "__TYPE":"MemberVariable",
                     "access_specifier":"",
+                    "comment":"",
                     "is_mutable":false,
                     "name":"a",
                     "type":{
