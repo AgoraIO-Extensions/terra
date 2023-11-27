@@ -49,10 +49,14 @@ export abstract class CXXTerraNode implements TerraNode {
   user_data?: any = undefined;
 
   public get fullName(): string {
-    if (this.namespaces?.length > 0) {
-      return `${this.namespace}::${this.realName}`;
+    let fn = this.realName;
+    if (this.parent_name) {
+      fn = `${this.parent_name}::${fn}`;
     }
-    return this.name;
+    if (this.namespaces?.length > 0) {
+      fn = `${this.namespace}::${fn}`;
+    }
+    return fn;
   }
 
   get realName(): string {

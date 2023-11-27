@@ -203,7 +203,13 @@ namespace terra
             base_node.name = std::string(cpp_entity.name());
             base_node.namespaces = std::vector<std::string>(namespaceList);
             base_node.file_path = std::string(file_path);
-            base_node.parent_name = cpp_entity.parent().value().name();
+            std::string parent_name = "";
+            if (cpp_entity.parent().has_value() &&
+                cpp_entity.parent().value().kind() != cppast::cpp_entity_kind::namespace_t)
+            {
+                parent_name = cpp_entity.parent().value().name();
+            }
+            base_node.parent_name = parent_name;
             base_node.attributes = std::vector<std::string>(parse_attributes(cpp_entity));
             base_node.comment = parse_comment(cpp_entity);
             // base_node.source = cppast::to_string(cpp_entity);
@@ -322,11 +328,6 @@ namespace terra
                 }
 
                 enumz.enum_constants.push_back(enum_constant);
-
-                if (cpp_enum.parent().has_value())
-                {
-                    enumz.parent_name = cpp_enum.parent().value().name();
-                }
 
                 std::cout << "enum_constant: " << enum_constant.name << " = " << enum_constant.value << "\n";
             }
