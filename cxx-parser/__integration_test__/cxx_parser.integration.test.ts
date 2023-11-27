@@ -570,4 +570,45 @@ namespace ns1 {
       expect(s.constructors[1].initializerList[0].values).toEqual(['aaa']);
     });
   });
+
+  describe('system_fake', () => {
+    it('include Windows.h file', () => {
+      //if include wrong file, it will got test failed but except macos environment
+      let file1Name = 'file1.h';
+      let file1Path = path.join(tmpDir, file1Name);
+
+      fs.writeFileSync(
+        file1Path,
+        `
+  #pragma once
+  #include <Windows.h>
+
+  namespace ns1 {
+    struct AAA {
+        int aaa_;
+
+        AAA(): aaa_(0) {}
+        AAA(int aaa): aaa_(aaa) {}
+    };
+  }
+  `
+      );
+
+      let args = {
+        includeHeaderDirs: [],
+        definesMacros: [],
+        parseFiles: { include: [file1Name] },
+        customHeaders: [],
+      };
+
+      let parseResult = CXXParser(
+        new TerraContext(tmpDir, tmpDir),
+        args,
+        undefined
+      )!;
+
+      let s = (parseResult.nodes[0] as CXXFile).nodes[0] as Struct;
+      expect(s.constructors).toBeUndefined();
+    });
+  });
 });
