@@ -108,7 +108,7 @@ namespace ns1 {
               "methods":[],
               "name":"AAA",
               "namespaces":["ns1"],
-              "parent_name":"ns1",
+              "parent_name":"",
               "source":""
             }
           ]
