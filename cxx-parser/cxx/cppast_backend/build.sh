@@ -14,11 +14,15 @@ fi
 
 pushd ${OUTPUT_PATH}
 
-LLVM_CONFIG_BINARY=$(which llvm-config)
+LLVM_CONFIG_BINARY=""
 if [[ ! -z "${LLVM_DOWNLOAD_URL}" ]]; then
   echo "Use the llvm from the url: ${LLVM_DOWNLOAD_URL}"
   # Use the llvm from the url instead of the system installed one
   LLVM_CONFIG_BINARY=""
+else
+  echo "Use the llvm from the system"
+  # Use the llvm from the system
+  LLVM_CONFIG_BINARY=$(which llvm-config)
 fi
 
 # set LLVM_DOWNLOAD_URL env like 
