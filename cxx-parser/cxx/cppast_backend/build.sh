@@ -22,7 +22,7 @@ if [[ ! -z "${LLVM_DOWNLOAD_URL}" ]]; then
 else
   echo "Use the llvm from the system"
   # Use the llvm from the system
-  LLVM_DOWNLOAD_URL=$(which llvm-config)
+  LLVM_CONFIG_BINARY=$(which llvm-config)
 fi
 
 # set LLVM_DOWNLOAD_URL env like 
