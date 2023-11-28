@@ -14,12 +14,16 @@ fi
 
 pushd ${OUTPUT_PATH}
 
+set +e
+
 LLVM_CONFIG_BINARY=$(which llvm-config)
 if [[ ! -z "${LLVM_DOWNLOAD_URL}" ]]; then
   echo "Use the llvm from the url: ${LLVM_DOWNLOAD_URL}"
   # Use the llvm from the url instead of the system installed one
   LLVM_CONFIG_BINARY=""
 fi
+
+set -e
 
 # set LLVM_DOWNLOAD_URL env like 
 # linux: https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
