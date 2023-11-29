@@ -41,6 +41,9 @@ namespace terra
         std::vector<std::string> attributes;
         std::string comment;
         std::string source;
+
+        std::vector<std::string> conditional_compilation_directives_infos;
+
         std::any user_data;
 
         // Name with namespace

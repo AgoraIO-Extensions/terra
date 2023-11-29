@@ -46,6 +46,7 @@ export abstract class CXXTerraNode implements TerraNode {
   attributes: string[] = [];
   comment: string = '';
   source: string = '';
+  conditional_compilation_directives_infos: string[] = [];
   user_data?: any = undefined;
 
   public get fullName(): string {

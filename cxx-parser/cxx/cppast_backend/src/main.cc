@@ -1,5 +1,5 @@
 #include "terra.hpp"
-#include "utils.hpp"
+#include "terra_utils.hpp"
 #include <cxxopts.hpp>
 #include <filesystem>
 #include <fstream>
@@ -125,8 +125,8 @@ int main(int argc, char **argv) {
 
   std::vector<std::string> pre_processed_files;
   std::filesystem::path tmp_path = pre_process_dir;
-  PreProcessVisitFiles(tmp_path, visit_files, pre_processed_files,
-                       is_dump_json);
+  terra::PreProcessVisitFiles(tmp_path, visit_files, pre_processed_files,
+                              is_dump_json);
 
   if (is_dump_json) {
     DumpJson(include_header_dirs, pre_processed_files, defines, output_dir);

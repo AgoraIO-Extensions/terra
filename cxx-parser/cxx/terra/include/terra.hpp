@@ -34,6 +34,7 @@
 #include "terra_node.hpp"
 #include "terra_parser.hpp"
 #include "terra_generator.hpp"
+#include "terra_utils.hpp"
 #include <variant>
 
 namespace terra
@@ -198,6 +199,50 @@ namespace terra
             }
         }
 
+        std::vector<std::string> parse_conditional_compilation_directives_info(const cppast::cpp_entity &cpp_entity)
+        {
+            std::string comment = parse_comment(cpp_entity);
+            std::vector<std::string> directives;
+
+            if (!comment.empty())
+            {
+                for (auto &cm : terra::Split(comment, "\n"))
+                {
+                    if (terra::trim(cm).find("#if") != std::string::npos)
+                    {
+                        directives.push_back(cm);
+                    }
+                }
+            }
+
+            return directives;
+        }
+
+        void adjust_comment_and_directives(BaseNode &base_node, const cppast::cpp_entity &cpp_entity)
+        {
+            std::vector<std::string> parent_directives;
+            if (cpp_entity.parent().has_value() &&
+                cpp_entity.parent().value().kind() != cppast::cpp_entity_kind::namespace_t)
+            {
+                parent_directives = parse_conditional_compilation_directives_info(cpp_entity.parent().value());
+            }
+
+            std::vector<std::string> directives = parse_conditional_compilation_directives_info(cpp_entity);
+            std::string comment = parse_comment(cpp_entity);
+            for (auto &d : directives)
+            {
+                terra::Replace(comment, d, "");
+            }
+
+            base_node.comment = comment;
+
+            // If the parent include this directives, do not apply it to the child again
+            if (terra::JoinToString(directives, "") != terra::JoinToString(parent_directives, ""))
+            {
+                base_node.conditional_compilation_directives_infos = directives;
+            }
+        }
+
         void parse_base_node(BaseNode &base_node, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_entity &cpp_entity)
         {
             base_node.name = std::string(cpp_entity.name());
@@ -211,8 +256,8 @@ namespace terra
             }
             base_node.parent_name = parent_name;
             base_node.attributes = std::vector<std::string>(parse_attributes(cpp_entity));
-            base_node.comment = parse_comment(cpp_entity);
-            // base_node.source = cppast::to_string(cpp_entity);
+            // base_node.comment = parse_comment(cpp_entity);
+            adjust_comment_and_directives(base_node, cpp_entity);
         }
 
         // public cpp_entity, public cpp_variable_base,
@@ -224,7 +269,6 @@ namespace terra
             SimpleType param_type;
             to_simple_type(param_type, cpp_variable_base.type());
             parameter.type = param_type;
-            parameter.comment = parse_comment(cpp_variable_base);
 
             std::string default_value = "";
             if (cpp_variable_base.default_value().has_value())
@@ -307,7 +351,9 @@ namespace terra
             {
                 EnumConstant enum_constant;
                 enum_constant.name = en.name();
-                enum_constant.comment = parse_comment(en);
+                // enum_constant.comment = parse_comment(en);
+
+                parse_base_node(enum_constant, {}, "", en);
                 enum_constant.parent_name = cpp_enum.name();
                 if (en.value().has_value())
                 {
@@ -879,6 +925,7 @@ namespace terra
             json["attributes"] = node->attributes;
             json["comment"] = node->comment;
             json["source"] = node->source;
+            json["conditional_compilation_directives_infos"] = node->conditional_compilation_directives_infos;
         }
 
         void IncludeDirective2Json(IncludeDirective *node, nlohmann::json &json)
@@ -899,7 +946,7 @@ namespace terra
 
         void Constructor2Json(Constructor *node, nlohmann::json &json)
         {
-
+            BaseNode2Json(node, json);
             json["__TYPE"] = __TYPE_Constructor;
             json["name"] = node->name;
 
@@ -1052,7 +1099,7 @@ namespace terra
 
         void Variable2Json(Variable *node, nlohmann::json &json)
         {
-
+            BaseNode2Json(node, json);
             json["__TYPE"] = __TYPE_Variable;
 
             json["name"] = node->name;
@@ -1077,6 +1124,7 @@ namespace terra
 
         void MemberVariable2Json(MemberVariable *node, nlohmann::json &json)
         {
+            BaseNode2Json(node, json);
             json["__TYPE"] = __TYPE_MemberVariable;
             json["name"] = node->name;
 
@@ -1091,6 +1139,7 @@ namespace terra
 
         void EnumConstant2Json(EnumConstant *node, nlohmann::json &json)
         {
+            BaseNode2Json(node, json);
             json["__TYPE"] = __TYPE_EnumConstant;
             json["name"] = node->name;
             json["value"] = node->value;

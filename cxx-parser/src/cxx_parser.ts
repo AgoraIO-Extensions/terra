@@ -9,6 +9,9 @@ import { ClangASTStructConstructorParser } from './constructor_initializer_parse
 import { CXXParserConfigs } from './cxx_parser_configs';
 import { CXXFile, CXXTYPE, cast } from './cxx_terra_node';
 
+// Conditional Compilation Directives
+function applyConditionalCompilationDirectives(parseResult: ParseResult) {}
+
 export function generateChecksum(files: string[]) {
   let allFileContents = files
     .map((it) => {
