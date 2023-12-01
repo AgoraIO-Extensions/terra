@@ -141,7 +141,7 @@ describe('cxx_parser', () => {
                     "file_path":"${preProcessParseFilesDir}/file1.h",
                     "is_mutable":false,
                     "name":"a",
-                    "namespaces": Array [],
+                    "namespaces": [],
                     "parent_name": "AAA",
                     "source": "",
                     "type":{
@@ -489,7 +489,7 @@ describe('cxx_parser', () => {
                 "attributes":[],
                 "base_clazzs":[],
                 "comment":"",
-                "conditional_compilation_directives_infos": [],
+                "conditional_compilation_directives_infos":[],
                 "constructors":[],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "member_variables":[
@@ -504,7 +504,7 @@ describe('cxx_parser', () => {
                     "name":"a",
                     "namespaces": [],
                     "parent_name": "AAA",
-                    "source": ""
+                    "source": "",
                     "type":{
                       "__TYPE":"SimpleType",
                       "is_builtin_type":true,
