@@ -51,15 +51,22 @@ describe('cxx_parser', () => {
                   "attributes":[],
                   "base_clazzs":[],
                   "comment":"",
+                  "conditional_compilation_directives_infos": [],
                   "constructors":[],
                   "file_path":"${preProcessParseFilesDir}/file1.h",
                   "member_variables":[
                     {
                       "__TYPE":"MemberVariable",
                       "access_specifier":"",
+                      "attributes": [],
                       "comment":"",
+                      "conditional_compilation_directives_infos":[],
+                      "file_path":"${preProcessParseFilesDir}/file1.h",
                       "is_mutable":false,
                       "name":"a",
+                      "namespaces": [],
+                      "parent_name": "AAA",
+                      "source": "",
                       "type":{
                         "__TYPE":"SimpleType",
                         "is_builtin_type":true,
@@ -121,15 +128,22 @@ describe('cxx_parser', () => {
                 "attributes":[],
                 "base_clazzs":[],
                 "comment":"",
+                "conditional_compilation_directives_infos": [],
                 "constructors":[],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "member_variables":[
                   {
                     "__TYPE":"MemberVariable",
                     "access_specifier":"",
+                    "attributes": [],
                     "comment":"",
+                    "conditional_compilation_directives_infos": [],
+                    "file_path":"${preProcessParseFilesDir}/file1.h",
                     "is_mutable":false,
                     "name":"a",
+                    "namespaces": Array [],
+                    "parent_name": "AAA",
+                    "source": "",
                     "type":{
                       "__TYPE":"SimpleType",
                       "is_builtin_type":true,
@@ -195,15 +209,22 @@ describe('cxx_parser', () => {
                 "attributes":[],
                 "base_clazzs":[],
                 "comment":"",
+                "conditional_compilation_directives_infos": [],
                 "constructors":[],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "member_variables":[
                   {
                     "__TYPE":"MemberVariable",
                     "access_specifier":"",
+                    "attributes": [],
                     "comment":"",
+                    "conditional_compilation_directives_infos": [],
+                    "file_path":"${preProcessParseFilesDir}/file1.h",
                     "is_mutable":false,
                     "name":"a",
+                    "namespaces": [],
+                    "parent_name": "",
+                    "source": "",
                     "type":{
                       "__TYPE":"SimpleType",
                       "is_builtin_type":true,
@@ -268,11 +289,17 @@ describe('cxx_parser', () => {
                 "__TYPE":"Enumz",
                 "attributes":[],
                 "comment":"",
+                "conditional_compilation_directives_infos": [],
                 "enum_constants": [
                   {
                     "__TYPE": "EnumConstant",
+                    "attributes": [],
                     "comment":"",
+                    "conditional_compilation_directives_infos": [],
+                    "file_path": "",
                     "name": "A",
+                    "namespaces": [],
+                    "parent_name": "MyEnum",
                     "source": "0",
                     "value": "0"
                   }
@@ -330,11 +357,17 @@ describe('cxx_parser', () => {
                 "__TYPE":"Enumz",
                 "attributes":[],
                 "comment":"",
+                "conditional_compilation_directives_infos": [],
                 "enum_constants": [
                   {
                     "__TYPE": "EnumConstant",
+                    "attributes": [],
                     "comment":"",
+                    "conditional_compilation_directives_infos": [],
+                    "file_path": "",
                     "name": "A",
+                    "namespaces": [],
+                    "parent_name": "",
                     "source": "0",
                     "value": "0"
                   }
@@ -390,6 +423,7 @@ describe('cxx_parser', () => {
                 "__TYPE": "TypeAlias",
                 "attributes": [],
                 "comment": "",
+                "conditional_compilation_directives_infos": [],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "name": "view_t",
                 "namespaces": [],
@@ -455,15 +489,22 @@ describe('cxx_parser', () => {
                 "attributes":[],
                 "base_clazzs":[],
                 "comment":"",
+                "conditional_compilation_directives_infos": [],
                 "constructors":[],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "member_variables":[
                   {
                     "__TYPE":"MemberVariable",
                     "access_specifier":"",
+                    "attributes": [],
                     "comment":"",
+                    "conditional_compilation_directives_infos": [],
+                    "file_path":"${preProcessParseFilesDir}/file1.h",
                     "is_mutable":false,
                     "name":"a",
+                    "namespaces": [],
+                    "parent_name": "AAA",
+                    "source": ""
                     "type":{
                       "__TYPE":"SimpleType",
                       "is_builtin_type":true,
@@ -485,6 +526,7 @@ describe('cxx_parser', () => {
                 "__TYPE": "TypeAlias",
                 "attributes": [],
                 "comment": "",
+                "conditional_compilation_directives_infos": [],
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "name": "view_t",
                 "namespaces": [],
