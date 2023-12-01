@@ -256,7 +256,6 @@ namespace terra
             }
             base_node.parent_name = parent_name;
             base_node.attributes = std::vector<std::string>(parse_attributes(cpp_entity));
-            // base_node.comment = parse_comment(cpp_entity);
             adjust_comment_and_directives(base_node, cpp_entity);
         }
 
@@ -351,7 +350,6 @@ namespace terra
             {
                 EnumConstant enum_constant;
                 enum_constant.name = en.name();
-                // enum_constant.comment = parse_comment(en);
 
                 parse_base_node(enum_constant, {}, "", en);
                 enum_constant.parent_name = cpp_enum.name();
