@@ -55,10 +55,12 @@ SimpleType.prototype.lenOfArrayType = function (): string {
   assert(this.kind === SimpleTypeKind.array_t);
   assert(this.source);
 
-  let regex = new RegExp(/\d+/);
+  // Match the `[*]` instead of match the number directly, to avoid matching the number from the std type.
+  // e.g., `uint8_t[10]` will match the 8 from `uint8_t`.
+  let regex = new RegExp(/\[\d+\]/);
   let len = this.source.match(regex);
   if (len) {
-    return len[0];
+    return len[0].replace('[', '').replace(']', '');
   }
 
   assert(false); // Should not reach here
