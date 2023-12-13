@@ -208,13 +208,16 @@ namespace terra
                 cpp_entity.parent().value().kind() != cppast::cpp_entity_kind::namespace_t)
             {
                 parent_name = cpp_entity.parent().value().name();
+                // some cppast::cpp_entity_kind has no parent, but parent_name is not empty
+                // such as agora::util::CopyableAutoPtr
+                // we need to set parent_name to empty
+                if (base_node.name.compare(parent_name) == 0)
+                {
+                    parent_name = "";
+                }
             }
 
-            // some cppast::cpp_entity_kind has no parent, but parent_name is not empty
-            // such as agora::util::CopyableAutoPtr
-            // we need to set parent_name to empty
-            if (cpp_entity.parent().has_value() &&
-                base_node.name.compare(cpp_entity.parent().value().name()) == 0)
+            if (base_node.name.compare(cpp_entity.parent().value().name()) == 0)
             {
                 parent_name = "";
             }
