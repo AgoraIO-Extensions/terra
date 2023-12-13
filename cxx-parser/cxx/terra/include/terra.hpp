@@ -217,11 +217,6 @@ namespace terra
                 }
             }
 
-            if (base_node.name.compare(cpp_entity.parent().value().name()) == 0)
-            {
-                parent_name = "";
-            }
-
             base_node.parent_name = parent_name;
             base_node.attributes = std::vector<std::string>(parse_attributes(cpp_entity));
             base_node.comment = parse_comment(cpp_entity);
