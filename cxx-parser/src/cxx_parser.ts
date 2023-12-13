@@ -117,9 +117,7 @@ export function CXXParser(
 ): ParseResult | undefined {
   let cxxParserConfigs = CXXParserConfigs.resolve(terraContext.configDir, args);
 
-  let parseFiles = cxxParserConfigs.parseFiles.include.filter((it) => {
-    return !cxxParserConfigs.parseFiles.exclude.includes(it);
-  });
+  let parseFiles = cxxParserConfigs.parseFiles.resolveParseFiles();
   let jsonContent = dumpCXXAstJson(
     terraContext,
     cxxParserConfigs.includeHeaderDirs,
