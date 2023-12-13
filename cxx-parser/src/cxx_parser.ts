@@ -6,7 +6,7 @@ import path from 'path';
 import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
 import { ClangASTStructConstructorParser } from './constructor_initializer_parser';
-import { CXXParserConfigs } from './cxx_parser_configs';
+import { CXXParserConfigs, ParseFilesConfig } from './cxx_parser_configs';
 import { CXXFile, CXXTYPE, cast } from './cxx_terra_node';
 
 export function generateChecksum(files: string[]) {
@@ -117,7 +117,9 @@ export function CXXParser(
 ): ParseResult | undefined {
   let cxxParserConfigs = CXXParserConfigs.resolve(terraContext.configDir, args);
 
-  let parseFiles = cxxParserConfigs.parseFiles.resolveParseFiles();
+  let parseFiles = ParseFilesConfig.resolveParseFiles(
+    cxxParserConfigs.parseFiles
+  );
   let jsonContent = dumpCXXAstJson(
     terraContext,
     cxxParserConfigs.includeHeaderDirs,

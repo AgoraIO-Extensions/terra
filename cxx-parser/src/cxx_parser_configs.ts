@@ -25,9 +25,9 @@ export class ParseFilesConfig {
    *
    * @returns An array of strings representing the files to be parsed.
    */
-  resolveParseFiles(): string[] {
-    return this.include.filter((it) => {
-      return !this.exclude.includes(it);
+  static resolveParseFiles(config: ParseFilesConfig): string[] {
+    return config.include.filter((it) => {
+      return !config.exclude.includes(it);
     });
   }
 }

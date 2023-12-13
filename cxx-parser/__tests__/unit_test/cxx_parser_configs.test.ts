@@ -2,7 +2,10 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { CXXParserConfigs } from '../../src/cxx_parser_configs';
+import {
+  CXXParserConfigs,
+  ParseFilesConfig,
+} from '../../src/cxx_parser_configs';
 
 describe('CXXParserConfigs', () => {
   let tmpDir: string = '';
@@ -72,7 +75,7 @@ describe('ParseFilesConfig', () => {
       args as unknown as CXXParserConfigs
     );
 
-    let finalParseFiles = config.parseFiles.resolveParseFiles();
+    let finalParseFiles = ParseFilesConfig.resolveParseFiles(config.parseFiles);
 
     expect(finalParseFiles.length).toBe(1);
     expect(finalParseFiles[0]).toEqual(path1); // file1.h
