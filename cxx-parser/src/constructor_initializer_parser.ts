@@ -91,56 +91,53 @@ class _StructConstructors {
  * @returns The default include dirs for clang command line tool
  */
 function getDefaultIncludeDirs(): string[] {
-  // TODO(littlegnal): This implementation is borrowed from cppast to retrive the default include dirs
-  // https://github.com/foonathan/cppast/blob/f00df6675d87c6983033d270728c57a55cd3db22/src/libclang/libclang_parser.cpp#L287
-  // But it seems it's not necessary to add these when running the clang command line tool, so we just keep the code here, and
-  // see if we need to add these in the future.
-  // function _findIncludeDirsFromClang(): string[] {
-  //   let verbose_output: string = '';
-  //   let verboseCommand = 'clang++ -xc++ -v -';
-  //   try {
-  //     execSync(verboseCommand, {
-  //       input: '',
-  //       stdio: ['pipe', 'pipe', 'pipe'], // Pipe stdin, stdout, and stderr
-  //       encoding: 'utf-8',
-  //     }).toString();
-  //   } catch (error: any) {
-  //     // We need to use the tricky wayt to get the verbose output from clang
-  //     verbose_output = error.message ?? '';
-  //   }
+  function _findIncludeDirsFromClang(): string[] {
+    let verbose_output: string = '';
+    let verboseCommand = 'clang++ -xc++ -v -';
+    try {
+      execSync(verboseCommand, {
+        input: '',
+        stdio: ['pipe', 'pipe', 'pipe'], // Pipe stdin, stdout, and stderr
+        encoding: 'utf-8',
+      }).toString();
+    } catch (error: any) {
+      // We need to use the tricky wayt to get the verbose output from clang
+      verbose_output = error.message ?? '';
+    }
 
-  //   // If the command failed, return the empty include header dirs
-  //   if (!verbose_output) {
-  //     return [];
-  //   }
+    // If the command failed, return the empty include header dirs
+    if (!verbose_output) {
+      return [];
+    }
 
-  //   let verboseOutputInLines = verbose_output.split('\n');
+    let verboseOutputInLines = verbose_output.split('\n');
 
-  //   verboseOutputInLines = verboseOutputInLines.slice(
-  //     verboseOutputInLines.findIndex((it) => {
-  //       return it.startsWith('#include <...>');
-  //     }) + 1, // Do not include the index of '#include <...>'
-  //     verboseOutputInLines.findIndex((it) => {
-  //       return it.startsWith('End of search list.');
-  //     })
-  //   );
-  //   let includeDirs = verboseOutputInLines
-  //     .filter((it) => {
-  //       return it.startsWith(' ');
-  //     })
-  //     .map((it) => {
-  //       if (it.includes(' (')) {
-  //         // /Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk/System/Library/Frameworks (framework directory)
-  //         return it.trim().split(' (')[0];
-  //       }
+    verboseOutputInLines = verboseOutputInLines.slice(
+      verboseOutputInLines.findIndex((it) => {
+        return it.startsWith('#include <...>');
+      }) + 1, // Do not include the index of '#include <...>'
+      verboseOutputInLines.findIndex((it) => {
+        return it.startsWith('End of search list.');
+      })
+    );
+    let includeDirs = verboseOutputInLines
+      .filter((it) => {
+        return it.startsWith(' ');
+      })
+      .map((it) => {
+        if (it.includes(' (')) {
+          // /Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk/System/Library/Frameworks (framework directory)
+          return it.trim().split(' (')[0];
+        }
 
-  //       return it.trim();
-  //     });
+        return it.trim();
+      });
 
-  //   return includeDirs;
-  // }
+    return includeDirs.map((it) => path.resolve(it));
+  }
 
   return [
+    ..._findIncludeDirsFromClang(),
     // Add cxx-parser/cxx/cppast_backend/include/system_fake
     path.join(getCppAstBackendDir(), 'include', 'system_fake'),
   ];
@@ -169,6 +166,23 @@ function dumpClangASTJSON(
   includeHeaderDirs: string[],
   parseFile: string
 ): string {
+  // In some systems, if the llvm path spefic to the `PATH` environment variables, the clang AST
+  // will run with error that can not find the std headers, e.g.,
+  // `/opt/homebrew/opt/llvm@15/include/c++/v1/stdio.h:107:15: fatal error: 'stdio.h' file not found`.
+  // So we filter the llvm path from the `PATH` to run the clang AST, it's a little tricky but for a workaround.
+  function _clangCLIEnv() {
+    let originalEnv = process.env;
+    let pathEnv = process.env.PATH;
+    if (pathEnv) {
+      pathEnv = pathEnv.split(':').filter((it) => !it.includes('llvm')).join(':');
+    }
+
+    return {
+      ...originalEnv,
+      PATH: pathEnv,
+    }
+  }
+
   let fileName = path.basename(parseFile);
   let checksum = generateChecksum([parseFile]);
 
@@ -201,6 +215,7 @@ function dumpClangASTJSON(
     execSync(bashScript, {
       stdio: ['pipe', 'pipe', 'pipe'], // Pipe stdin, stdout, and stderr,
       encoding: 'utf8',
+      env: _clangCLIEnv(),
     });
   } catch (err: any) {
     let errMessage = err.message;
