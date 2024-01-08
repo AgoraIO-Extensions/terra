@@ -35,6 +35,14 @@ declare module '@agoraio-extensions/terra-core' {
      * @returns The resolved `CXXTerraNode`.
      */
     resolveNodeByType(type: SimpleType): CXXTerraNode;
+
+    /**
+     * Resolves a `CXXTerraNode` based on the given node's name. If none is found, the undefined is returned.
+     *
+     * @param name - The node's name to resolve.
+     * @returns The resolved `CXXTerraNode`.
+     */
+    resolveNodeByName(name: string): CXXTerraNode | undefined;
   }
 }
 
@@ -118,13 +126,6 @@ ParseResult.prototype.findEnumz = function (
 ParseResult.prototype.resolveNodeByType = function (
   type: SimpleType
 ): CXXTerraNode {
-  function _match(ns: string, namespace_string: string): boolean {
-    return (
-      ns == namespace_string ||
-      namespace_string == '' ||
-      ns.includes(namespace_string)
-    );
-  }
   let name = type.name;
   if (name.length === 0) {
     return type;
@@ -142,26 +143,33 @@ ParseResult.prototype.resolveNodeByType = function (
     name = type.template_arguments[0];
   }
 
-  const namespaceInString = name.getNamespace();
-  const nameWithoutNS = name.trimNamespace();
+  return this.resolveNodeByName(name) ?? type;
+};
 
+ParseResult.prototype.resolveNodeByName = function (
+  name: string
+): CXXTerraNode | undefined {
   for (const f of this.nodes) {
     let cxxFile = f as CXXFile;
     for (const node of cxxFile.nodes) {
-      if (node.name === nameWithoutNS) {
-        let ns = node.namespaces.join('::');
-        let found = _match(ns, namespaceInString);
-        if (!found && node.parent_name) {
-          ns = [...node.namespaces, node.parent_name].join('::');
-          found = _match(ns, namespaceInString);
-        }
+      if (
+        name == node.fullName ||
+        (node.fullName.includes(name) && name.trimNamespace() == node.name)
+      ) {
+        return node;
+      }
 
-        if (found) {
+      if (node.parent_name) {
+        let tmp = [...node.namespaces, node.parent_name, node.name].join('::');
+        if (
+          name == tmp ||
+          (tmp.includes(name) && name.trimNamespace() == node.name)
+        ) {
           return node;
         }
       }
     }
   }
 
-  return type;
+  return undefined;
 };
