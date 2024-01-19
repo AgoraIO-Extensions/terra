@@ -14,6 +14,8 @@ terra is a shell of the code-gen flow: Parse AST -> Generate codes.
 
 Additional setup required for using [cxx-parser](cxx-parser/README.md#prerequisites)
 
+## Getting Started
+
 ### Installing terra in your Project
 
 > Currently, we do not provide an npm package for this repository. You should depend on `terra` from the GitHub repository using [yarn berry](https://github.com/yarnpkg/berry) as the package manager.
@@ -39,8 +41,6 @@ yarn add <terra repo url>
 #### 4. Install dependencies:
 
 `yarn`
-
-## Getting Started
 
 ### Configuration Format
 
