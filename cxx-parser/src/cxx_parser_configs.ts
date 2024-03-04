@@ -50,12 +50,12 @@ export class CXXParserConfigs {
         .flat(1),
       definesMacros: original.definesMacros ?? [],
       parseFiles: {
-        include: (original.parseFiles.include ?? [])
+        include: (original.parseFiles?.include ?? [])
           .map((it) => {
             return _resolvePaths(it, configDir);
           })
           .flat(1),
-        exclude: (original.parseFiles.exclude ?? [])
+        exclude: (original.parseFiles?.exclude ?? [])
           .map((it) => {
             return _resolvePaths(it, configDir);
           })
