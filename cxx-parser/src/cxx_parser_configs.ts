@@ -33,6 +33,7 @@ export class ParseFilesConfig {
 }
 
 export interface CXXParserConfigs {
+  buildDirNamePrefix?: string;
   includeHeaderDirs: string[];
   definesMacros: string[];
   parseFiles: ParseFilesConfig;
@@ -41,6 +42,7 @@ export interface CXXParserConfigs {
 export class CXXParserConfigs {
   static resolve(configDir: any, original: CXXParserConfigs): CXXParserConfigs {
     return {
+      buildDirNamePrefix: original.buildDirNamePrefix,
       includeHeaderDirs: (original.includeHeaderDirs ?? [])
         .map((it) => {
           return _resolvePaths(it, configDir);
