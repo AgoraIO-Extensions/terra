@@ -23,9 +23,16 @@ export function generateChecksum(files: string[]) {
     .toString();
 }
 
-function getBuildDir(terraContext: TerraContext) {
+function getBuildDir(
+  terraContext: TerraContext,
+  buildDirNamePrefix?: string | undefined
+) {
+  let prefix = buildDirNamePrefix ?? '';
+  if (prefix.length) {
+    prefix = `${prefix}_`;
+  }
   // <my_project>/.terra/cxx_parser
-  return path.join(terraContext.buildDir, 'cxx_parser');
+  return path.join(terraContext.buildDir, `${prefix}cxx_parser`);
 }
 
 export function getCppAstBackendDir() {
@@ -36,11 +43,12 @@ export function dumpCXXAstJson(
   terraContext: TerraContext,
   includeHeaderDirs: string[],
   parseFiles: string[],
-  defines: string[]
+  defines: string[],
+  buildDirNamePrefix?: string | undefined
 ): string {
   let parseFilesChecksum = generateChecksum(parseFiles);
 
-  let buildDir = getBuildDir(terraContext);
+  let buildDir = getBuildDir(terraContext, buildDirNamePrefix);
   let preProcessParseFilesDir = path.join(
     buildDir,
     `preProcess@${parseFilesChecksum}`
@@ -124,7 +132,8 @@ export function CXXParser(
     terraContext,
     cxxParserConfigs.includeHeaderDirs,
     parseFiles,
-    cxxParserConfigs.definesMacros
+    cxxParserConfigs.definesMacros,
+    cxxParserConfigs.buildDirNamePrefix
   );
 
   let newParseResult = genParseResultFromJson(jsonContent);
@@ -136,7 +145,7 @@ export function CXXParser(
   });
 
   ClangASTStructConstructorParser(
-    getBuildDir(terraContext),
+    getBuildDir(terraContext, cxxParserConfigs.buildDirNamePrefix),
     cxxParserConfigs.includeHeaderDirs,
     cppastParsedFiles,
     newParseResult

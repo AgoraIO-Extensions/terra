@@ -109,6 +109,84 @@ describe('cxx_parser', () => {
       expect(json).toEqual(expectedJson);
     });
 
+    it('generate ast json with buildDirNamePrefix', () => {
+      let file1Path = path.join(tmpDir, 'file1.h');
+      let file2Path = path.join(tmpDir, 'file2.h');
+
+      fs.writeFileSync(file1Path, 'void file1_main() {}');
+      fs.writeFileSync(file2Path, 'void file2_main() {}');
+
+      const expectedJson = JSON.stringify([
+        {
+          file_path: '/my/path/IAgoraRtcEngine.h',
+          nodes: [
+            {
+              __TYPE: 'Clazz',
+              name: 'TestClazz',
+              methods: [
+                {
+                  __TYPE: 'MemberFunction',
+                  name: 'test',
+                  parameters: [
+                    {
+                      __TYPE: 'Variable',
+                      name: 'test',
+                      type: {
+                        __TYPE: 'SimpleType',
+                        is_builtin_type: false,
+                        is_const: false,
+                        kind: 101,
+                        name: 'Test',
+                        source: 'Test *',
+                        template_arguments: [],
+                      },
+                    },
+                  ],
+                  parent_name: 'TestClazz',
+                  namespaces: ['test'],
+                },
+              ],
+              namespaces: ['test'],
+            },
+          ],
+        },
+      ]);
+
+      let cppastBackendBuildDirWithPrefix = path.join(tmpDir, 'abc_cxx_parser');
+
+      let checkSum = generateChecksum([file1Path, file2Path]);
+      let jsonFilePath = path.join(
+        cppastBackendBuildDirWithPrefix,
+        `dump_json_${checkSum}.json`
+      );
+      let preProcessParseFilesDir = path.join(
+        cppastBackendBuildDirWithPrefix,
+        `preProcess@${checkSum}`
+      );
+
+      (execSync as jest.Mock).mockImplementationOnce(() => {
+        // Simulate generate the ast json file after run the bash script
+        fs.mkdirSync(cppastBackendBuildDirWithPrefix, { recursive: true });
+        fs.writeFileSync(jsonFilePath, expectedJson);
+        return '';
+      });
+
+      let json = dumpCXXAstJson(
+        new TerraContext(tmpDir),
+        [],
+        [file1Path, file2Path],
+        [],
+        'abc'
+      );
+
+      let expectedBashScript = `bash ${cppastBackendBuildBashPath} \"${cppastBackendBuildDirWithPrefix}\" "--visit-headers=${file1Path},${file2Path} --include-header-dirs= --defines-macros="" --output-dir=${jsonFilePath} --pre-process-dir=${preProcessParseFilesDir} --dump-json"`;
+      expect(execSync).toHaveBeenCalledWith(expectedBashScript, {
+        encoding: 'utf8',
+        stdio: 'inherit',
+      });
+      expect(json).toEqual(expectedJson);
+    });
+
     it('generate ast json with clean', () => {
       let file1Path = path.join(tmpDir, 'file1.h');
       let file2Path = path.join(tmpDir, 'file2.h');

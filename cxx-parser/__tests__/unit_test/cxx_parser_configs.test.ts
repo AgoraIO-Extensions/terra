@@ -18,6 +18,19 @@ describe('CXXParserConfigs', () => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
+  it('resolve buildDirNamePrefix', () => {
+    let args = {
+      buildDirNamePrefix: 'prefix',
+    };
+
+    let config = CXXParserConfigs.resolve(
+      tmpDir,
+      args as unknown as CXXParserConfigs
+    );
+
+    expect(config.buildDirNamePrefix).toEqual('prefix');
+  });
+
   it('resolve parseFiles and keep path order', () => {
     let path1 = path.join(tmpDir, 'file1.h');
     let path2 = path.join(tmpDir, 'file2.h');
