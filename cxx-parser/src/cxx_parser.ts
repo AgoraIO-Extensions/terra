@@ -3,6 +3,8 @@ import crypto from 'crypto';
 import * as fs from 'fs';
 import path from 'path';
 
+import './cxx_parser_ext';
+
 import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
 import { ClangASTStructConstructorParser } from './constructor_initializer_parser';
@@ -112,9 +114,10 @@ export function genParseResultFromJson(astJsonContent: string): ParseResult {
     }
     return value;
   });
-  fillParentNode(cxxFiles);
+
   const parseResult = new ParseResult();
   parseResult.nodes = cxxFiles;
+  fillParentNode(parseResult, cxxFiles);
   return parseResult;
 }
 
@@ -154,10 +157,15 @@ export function CXXParser(
   return newParseResult;
 }
 
-function fillParentNode(cxxFiles: CXXFile[]) {
+function fillParentNode(parseResult: ParseResult, cxxFiles: CXXFile[]) {
   cxxFiles.forEach((file) => {
     file.nodes.forEach((node) => {
-      node.parent = file;
+      if (node.parent_name) {
+        node.parent = parseResult.resolveNodeByName(node.parent_name) ?? file;
+      } else {
+        node.parent = file;
+      }
+
       if (node.__TYPE === CXXTYPE.Clazz) {
         node.asClazz().constructors.forEach((constructor) => {
           constructor.parent = node;

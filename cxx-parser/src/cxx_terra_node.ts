@@ -51,12 +51,18 @@ export abstract class CXXTerraNode implements TerraNode {
 
   public get fullName(): string {
     let fn = this.realName;
+    let parentFullName = this.parent?.fullName ?? '';
+    if (parentFullName != '') {
+      return `${parentFullName}::${fn}`;
+    }
+
     if (this.parent_name) {
       fn = `${this.parent_name}::${fn}`;
     }
     if (this.namespaces?.length > 0) {
       fn = `${this.namespace}::${fn}`;
     }
+
     return fn;
   }
 
