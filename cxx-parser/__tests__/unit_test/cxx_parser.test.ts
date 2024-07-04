@@ -430,5 +430,89 @@ describe('cxx_parser', () => {
         'agora::rtm::IRtmEventHandler::PresenceEvent::IntervalInfo'
       );
     });
+
+    it('can fill parent node with a same parent name node', () => {
+      let json = `
+    [
+      {
+        "__TYPE": "CXXFile",
+        "file_path": "IAgoraRtmClient.h",
+        "nodes": [
+          {
+            "__TYPE": "Clazz",
+            "attributes": [],
+            "base_clazzs": [],
+            "comment": "",
+            "conditional_compilation_directives_infos": [],
+            "constructors": [],
+            "file_path": "IAgoraRtmClient.h",
+            "member_variables": [],
+            "methods": [],
+            "name": "IRtmEventHandler",
+            "namespaces": ["agora", "rtm"],
+            "parent_name": "",
+            "source": ""
+          },
+          {
+            "__TYPE": "Clazz",
+            "attributes": [],
+            "base_clazzs": [],
+            "comment": "",
+            "conditional_compilation_directives_infos": [],
+            "constructors": [],
+            "file_path": "IAgoraRtmClient.h",
+            "member_variables": [],
+            "methods": [],
+            "name": "IRtmEventHandler",
+            "namespaces": ["agora", "rtm", "base"],
+            "parent_name": "",
+            "source": ""
+          },
+          {
+            "__TYPE": "Struct",
+            "attributes": [],
+            "base_clazzs": [],
+            "comment": "",
+            "conditional_compilation_directives_infos": [],
+            "constructors": [],
+            "file_path": "IAgoraRtmClient.h",
+            "member_variables": [],
+            "methods": [],
+            "name": "PresenceEvent",
+            "namespaces": ["agora", "rtm"],
+            "parent_name": "IRtmEventHandler",
+            "source": ""
+          },
+          {
+            "__TYPE": "Struct",
+            "attributes": [],
+            "base_clazzs": [],
+            "comment": "",
+            "conditional_compilation_directives_infos": [],
+            "constructors": [],
+            "file_path": "IAgoraRtmClient.h",
+            "member_variables": [],
+            "methods": [],
+            "name": "IntervalInfo",
+            "namespaces": ["agora", "rtm"],
+            "parent_name": "PresenceEvent",
+            "source": ""
+          }
+        ]
+      }  
+    ]   
+`;
+
+      let parseResult = genParseResultFromJson(json);
+      let nestedStruct1 = (parseResult.nodes[0] as CXXFile).nodes[2] as Struct;
+      expect(nestedStruct1!.fullName).toEqual(
+        'agora::rtm::IRtmEventHandler::PresenceEvent'
+      );
+
+      let nestedStruct2 = (parseResult.nodes[0] as CXXFile).nodes[3] as Struct;
+      expect(nestedStruct2!.fullName).toEqual(
+        'agora::rtm::IRtmEventHandler::PresenceEvent::IntervalInfo'
+      );
+    });
   });
 });
