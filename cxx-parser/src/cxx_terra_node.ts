@@ -41,6 +41,7 @@ export abstract class CXXTerraNode implements TerraNode {
   file_path: string = '';
   namespaces: string[] = [];
   parent_name: string = '';
+  parent_full_scope_name: string = '';
   parent?: CXXTerraNode;
 
   attributes: string[] = [];

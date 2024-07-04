@@ -381,6 +381,7 @@ describe('cxx_parser', () => {
             "methods": [],
             "name": "IRtmEventHandler",
             "namespaces": ["agora", "rtm"],
+            "parent_full_scope_name": "",
             "parent_name": "",
             "source": ""
           },
@@ -396,6 +397,7 @@ describe('cxx_parser', () => {
             "methods": [],
             "name": "PresenceEvent",
             "namespaces": ["agora", "rtm"],
+            "parent_full_scope_name": "agora::rtm::IRtmEventHandler",
             "parent_name": "IRtmEventHandler",
             "source": ""
           },
@@ -411,6 +413,7 @@ describe('cxx_parser', () => {
             "methods": [],
             "name": "IntervalInfo",
             "namespaces": ["agora", "rtm"],
+            "parent_full_scope_name": "agora::rtm::IRtmEventHandler::PresenceEvent",
             "parent_name": "PresenceEvent",
             "source": ""
           }
@@ -450,6 +453,7 @@ describe('cxx_parser', () => {
             "methods": [],
             "name": "IRtmEventHandler",
             "namespaces": ["agora", "rtm"],
+            "parent_full_scope_name": "",
             "parent_name": "",
             "source": ""
           },
@@ -465,6 +469,7 @@ describe('cxx_parser', () => {
             "methods": [],
             "name": "IRtmEventHandler",
             "namespaces": ["agora", "rtm", "base"],
+            "parent_full_scope_name": "",
             "parent_name": "",
             "source": ""
           },
@@ -480,6 +485,7 @@ describe('cxx_parser', () => {
             "methods": [],
             "name": "PresenceEvent",
             "namespaces": ["agora", "rtm"],
+            "parent_full_scope_name": "agora::rtm::IRtmEventHandler",
             "parent_name": "IRtmEventHandler",
             "source": ""
           },
@@ -495,6 +501,7 @@ describe('cxx_parser', () => {
             "methods": [],
             "name": "IntervalInfo",
             "namespaces": ["agora", "rtm"],
+            "parent_full_scope_name": "agora::rtm::IRtmEventHandler::PresenceEvent",
             "parent_name": "PresenceEvent",
             "source": ""
           }

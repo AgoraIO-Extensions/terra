@@ -204,8 +204,9 @@ function _findParent(
 function fillParentNode(parseResult: ParseResult, cxxFiles: CXXFile[]) {
   cxxFiles.forEach((file) => {
     file.nodes.forEach((node) => {
-      if (node.parent_name) {
-        node.parent = _findParent(parseResult, node.parent_name);
+      if (node.parent_full_scope_name) {
+        node.parent =
+          parseResult.resolveNodeByName(node.parent_full_scope_name) ?? file; // _findParent(parseResult, node.parent_name);
       } else {
         node.parent = file;
       }

@@ -38,6 +38,7 @@ namespace terra
         std::vector<std::string> namespaces;
         std::string file_path;
         std::string parent_name;
+        std::string parent_full_scope_name;
         std::vector<std::string> attributes;
         std::string comment;
         std::string source;

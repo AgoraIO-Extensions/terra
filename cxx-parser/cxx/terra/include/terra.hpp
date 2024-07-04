@@ -243,7 +243,12 @@ namespace terra
             }
         }
 
-        void parse_base_node(BaseNode &base_node, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_entity &cpp_entity)
+        void parse_base_node(
+            BaseNode &base_node,
+            const std::vector<std::string> &namespaceList,
+            const std::vector<std::string> &parentFullScopeList,
+            const std::string &file_path,
+            const cppast::cpp_entity &cpp_entity)
         {
             base_node.name = std::string(cpp_entity.name());
             base_node.namespaces = std::vector<std::string>(namespaceList);
@@ -261,17 +266,28 @@ namespace terra
                     parent_name = "";
                 }
             }
+            std::string parent_full_scope_name = "";
+            if (!parent_name.empty())
+            {
+                parent_full_scope_name = terra::JoinToString(std::vector<std::string>(parentFullScopeList), "::");
+            }
 
             base_node.parent_name = parent_name;
+            base_node.parent_full_scope_name = parent_full_scope_name;
             base_node.attributes = std::vector<std::string>(parse_attributes(cpp_entity));
             adjust_comment_and_directives(base_node, cpp_entity);
         }
 
         // public cpp_entity, public cpp_variable_base,
         template <typename T>
-        void parse_parameter(Variable &parameter, const std::vector<std::string> &namespaceList, const std::string &file_path, const T &cpp_variable_base)
+        void parse_parameter(
+            Variable &parameter,
+            const std::vector<std::string> &namespaceList,
+            const std::vector<std::string> &parentFullScopeList,
+            const std::string &file_path,
+            const T &cpp_variable_base)
         {
-            parse_base_node(parameter, namespaceList, file_path, cpp_variable_base);
+            parse_base_node(parameter, namespaceList, parentFullScopeList, file_path, cpp_variable_base);
 
             SimpleType param_type;
             to_simple_type(param_type, cpp_variable_base.type());
@@ -299,9 +315,15 @@ namespace terra
             std::cout << "param type:" << parameter.type.name << " " << parameter.type.kind << " " << parameter.type.is_builtin_type << ", name:" << parameter.name << ", default value: " << parameter.default_value << "\n";
         }
 
-        void parse_member_variables(MemberVariable &member_variable, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_member_variable &cpp_member_variable, std::string &current_access_specifier)
+        void parse_member_variables(
+            MemberVariable &member_variable,
+            const std::vector<std::string> &namespaceList,
+            const std::vector<std::string> &parentFullScopeList,
+            const std::string &file_path,
+            const cppast::cpp_member_variable &cpp_member_variable,
+            std::string &current_access_specifier)
         {
-            parse_base_node(member_variable, namespaceList, file_path, cpp_member_variable);
+            parse_base_node(member_variable, namespaceList, parentFullScopeList, file_path, cpp_member_variable);
 
             SimpleType type;
             to_simple_type(type, cpp_member_variable.type());
@@ -310,18 +332,26 @@ namespace terra
             member_variable.access_specifier = current_access_specifier;
         }
 
-        void parse_method(MemberFunction &method, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_member_function &cpp_member_function, std::string &current_access_specifier)
+        void parse_method(
+            MemberFunction &method,
+            const std::vector<std::string> &namespaceList,
+            const std::vector<std::string> &parentFullScopeList,
+            const std::string &file_path,
+            const cppast::cpp_member_function &cpp_member_function,
+            std::string &current_access_specifier)
         {
-            parse_base_node(method, namespaceList, file_path, cpp_member_function);
+            parse_base_node(method, namespaceList, parentFullScopeList, file_path, cpp_member_function);
 
             method.is_virtual = cpp_member_function.is_virtual();
             SimpleType return_type;
             to_simple_type(return_type, cpp_member_function.return_type());
             method.return_type = return_type;
+            std::vector<std::string> methodFullScopeList(parentFullScopeList);
+            methodFullScopeList.push_back(method.name);
             for (auto &param : cpp_member_function.parameters())
             {
                 Variable parameter;
-                parse_parameter(parameter, namespaceList, file_path, param);
+                parse_parameter(parameter, namespaceList, methodFullScopeList, file_path, param);
 
                 method.parameters.push_back(parameter);
             }
@@ -331,21 +361,31 @@ namespace terra
             method.signature = cpp_member_function.signature();
         }
 
-        void parse_constructor(Constructor &constructor, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_constructor &cpp_constructor)
+        void parse_constructor(
+            Constructor &constructor,
+            const std::vector<std::string> &namespaceList,
+            const std::vector<std::string> &parentFullScopeList,
+            const std::string &file_path,
+            const cppast::cpp_constructor &cpp_constructor)
         {
-            parse_base_node(constructor, namespaceList, file_path, cpp_constructor);
+            parse_base_node(constructor, namespaceList, parentFullScopeList, file_path, cpp_constructor);
 
             for (auto &param : cpp_constructor.parameters())
             {
                 Variable parameter;
-                parse_parameter(parameter, namespaceList, file_path, param);
+                parse_parameter(parameter, namespaceList, parentFullScopeList, file_path, param);
                 constructor.parameters.push_back(parameter);
             }
         }
 
-        void parse_enum(Enumz &enumz, const std::vector<std::string> &namespaceList, const std::string &file_path, const cppast::cpp_enum &cpp_enum)
+        void parse_enum(
+            Enumz &enumz,
+            const std::vector<std::string> &namespaceList,
+            const std::vector<std::string> &parentFullScopeList,
+            const std::string &file_path,
+            const cppast::cpp_enum &cpp_enum)
         {
-            parse_base_node(enumz, namespaceList, file_path, cpp_enum);
+            parse_base_node(enumz, namespaceList, parentFullScopeList, file_path, cpp_enum);
 
             if (cpp_enum.scope_name().has_value())
             {
@@ -359,7 +399,7 @@ namespace terra
                 EnumConstant enum_constant;
                 enum_constant.name = en.name();
 
-                parse_base_node(enum_constant, {}, "", en);
+                parse_base_node(enum_constant, {}, {}, "", en);
                 enum_constant.parent_name = cpp_enum.name();
                 if (en.value().has_value())
                 {
@@ -385,10 +425,14 @@ namespace terra
             }
         }
 
-        NodeType parse_type_alias(const cppast::cpp_type_alias &cpp_type_alias, const std::vector<std::string> &namespaceList, const std::string &file_path)
+        NodeType parse_type_alias(
+            const cppast::cpp_type_alias &cpp_type_alias,
+            const std::vector<std::string> &namespaceList,
+            const std::vector<std::string> &parentFullScopeList,
+            const std::string &file_path)
         {
             TypeAlias type_alias;
-            parse_base_node(type_alias, namespaceList, file_path, cpp_type_alias);
+            parse_base_node(type_alias, namespaceList, parentFullScopeList, file_path, cpp_type_alias);
 
             SimpleType st;
             to_simple_type(st, cpp_type_alias.underlying_type());
@@ -397,7 +441,11 @@ namespace terra
             return type_alias;
         }
 
-        NodeType parse_class(const cppast::cpp_class &cpp_class, const std::vector<std::string> &namespaceList, const std::string &file_path)
+        NodeType parse_class(
+            const cppast::cpp_class &cpp_class,
+            const std::vector<std::string> &namespaceList,
+            const std::vector<std::string> &parentFullScopeList,
+            const std::string &file_path)
         {
             std::cout << "member of " << cpp_class.name() << "\n";
             std::string current_access_specifier;
@@ -405,6 +453,8 @@ namespace terra
             std::vector<MemberFunction> methods;
             std::vector<MemberVariable> member_variables;
             std::vector<std::string> base_clazzs;
+            std::vector<std::string> classFullScopeList(parentFullScopeList);
+            classFullScopeList.push_back(cpp_class.name());
 
             for (auto &base : cpp_class.bases())
             {
@@ -431,7 +481,7 @@ namespace terra
                     auto &cpp_constructor = static_cast<const cppast::cpp_constructor &>(member);
 
                     Constructor constructor;
-                    parse_constructor(constructor, namespaceList, file_path, cpp_constructor);
+                    parse_constructor(constructor, namespaceList, classFullScopeList, file_path, cpp_constructor);
                     // clazz->constructors.push_back(constructor);
                     constructors.push_back(constructor);
                     break;
@@ -441,7 +491,7 @@ namespace terra
                     auto &func = static_cast<const cppast::cpp_member_function &>(member);
 
                     MemberFunction method;
-                    parse_method(method, namespaceList, file_path, func, current_access_specifier);
+                    parse_method(method, namespaceList, classFullScopeList, file_path, func, current_access_specifier);
                     method.attributes = std::vector<std::string>(parse_attributes(member));
 
                     // clazz->methods.push_back(method);
@@ -452,13 +502,15 @@ namespace terra
                 {
                     auto &cpp_member_variable = static_cast<const cppast::cpp_member_variable &>(member);
                     MemberVariable member_variable;
-                    parse_member_variables(member_variable, namespaceList, file_path, cpp_member_variable, current_access_specifier);
+                    parse_member_variables(member_variable, namespaceList, classFullScopeList, file_path, cpp_member_variable, current_access_specifier);
                     // clazz->member_variables.push_back(member_variable);
                     member_variables.push_back(member_variable);
                     break;
                 }
                 case cppast::cpp_entity_kind::class_t:
                 {
+                    std::cout << "child cpp_entity_kind::class_t: " << member.name() << " (" << cppast::to_string(member.kind()) << ")"
+                              << "\n";
                 }
 
                 default:
@@ -471,7 +523,7 @@ namespace terra
             if (cpp_class.class_kind() == cppast::cpp_class_kind::struct_t)
             {
                 Struct structt; // = new Struct();
-                parse_base_node(structt, namespaceList, file_path, cpp_class);
+                parse_base_node(structt, namespaceList, parentFullScopeList, file_path, cpp_class);
                 structt.constructors = std::vector<Constructor>(constructors);
                 structt.methods = std::vector<MemberFunction>(methods);
                 structt.member_variables = std::vector<MemberVariable>(member_variables);
@@ -481,7 +533,7 @@ namespace terra
             else
             {
                 Clazz clazz; // = new Clazz();
-                parse_base_node(clazz, namespaceList, file_path, cpp_class);
+                parse_base_node(clazz, namespaceList, parentFullScopeList, file_path, cpp_class);
                 clazz.constructors = std::vector<Constructor>(constructors);
                 clazz.methods = std::vector<MemberFunction>(methods);
                 clazz.member_variables = std::vector<MemberVariable>(member_variables);
@@ -544,6 +596,7 @@ namespace terra
             CXXFile cxx_file{file_path};
 
             std::vector<std::string> namespaceList;
+            std::vector<std::string> fullScopeList;
 
             // std::string prefix; // the current prefix string
             // recursively visit file and all children
@@ -581,6 +634,7 @@ namespace terra
                                       << "start\n";
 
                             namespaceList.push_back(cpp_namespace.name());
+                            fullScopeList.push_back(std::string(e.name()));
                         }
                         else if (info.event == cppast::visitor_info::container_entity_exit)
                         {
@@ -588,10 +642,7 @@ namespace terra
                                       << "end\n";
 
                             namespaceList.pop_back();
-
-                            std::vector<BaseNode> baseNode;
-                            Clazz clazz;
-                            baseNode.push_back(clazz);
+                            fullScopeList.pop_back();
                         }
                     }
 
@@ -606,7 +657,7 @@ namespace terra
 
                         if (cxx_file.nodes.empty())
                         {
-                            NodeType node = parse_type_alias(cpp_type_alias, namespaceList, file_path);
+                            NodeType node = parse_type_alias(cpp_type_alias, namespaceList, fullScopeList, file_path);
                             cxx_file.nodes.push_back(node);
                             std::cout << "[type_alias_t] type name: " << cpp_type_alias.name() << ", under type: " << cppast::to_string(cpp_type_alias.underlying_type())
                                       << std::endl;
@@ -673,7 +724,7 @@ namespace terra
                         std::string cn = cpp_type_alias.name();
                         if (!isNeedFillPreNodeName && preNodeName != cn)
                         {
-                            NodeType node = parse_type_alias(cpp_type_alias, namespaceList, file_path);
+                            NodeType node = parse_type_alias(cpp_type_alias, namespaceList, fullScopeList, file_path);
                             cxx_file.nodes.push_back(node);
                             std::cout << "[type_alias_t] type name: " << cpp_type_alias.name() << ", under type: " << cppast::to_string(cpp_type_alias.underlying_type())
                                       << std::endl;
@@ -682,7 +733,7 @@ namespace terra
                         return true;
                     }
 
-                    if (e.kind() == cppast::cpp_entity_kind::class_t && !info.is_old_entity())
+                    if (e.kind() == cppast::cpp_entity_kind::class_t)
                     {
                         auto &cpp_class = static_cast<const cppast::cpp_class &>(e);
 
@@ -692,16 +743,35 @@ namespace terra
                             return true;
                         }
 
-                        NodeType node = parse_class(cpp_class, namespaceList, file_path);
-                        cxx_file.nodes.push_back(node);
+                        if (!info.is_old_entity())
+                        {
+                            NodeType node = parse_class(cpp_class, namespaceList, fullScopeList, file_path);
+                            cxx_file.nodes.push_back(node);
+                        }
 
-                        return true;
+                        if (info.event == cppast::visitor_info::container_entity_enter)
+                        {
+
+                            std::cout << "full scope kind: '" << " (" << cppast::to_string(e.kind()) << ")\n";
+
+                            fullScopeList.push_back(std::string(e.name()));
+                            // namespaceList.push_back(std::string(e.name()));
+                        }
+                        else if (info.event == cppast::visitor_info::container_entity_exit)
+                        {
+
+                            fullScopeList.pop_back();
+                            // namespaceList.pop_back();
+                        }
+                        std::cout << "full scope: '" << terra::JoinToString(fullScopeList, "::") << " end \n";
+
+                        // return true;
                     }
                     else if (e.kind() == cppast::cpp_entity_kind::enum_t && !info.is_old_entity())
                     {
                         auto &cpp_enum = static_cast<const cppast::cpp_enum &>(e);
                         Enumz enumz; // = new Enumz();
-                        parse_enum(enumz, namespaceList, file_path, cpp_enum);
+                        parse_enum(enumz, namespaceList, fullScopeList, file_path, cpp_enum);
 
                         cxx_file.nodes.push_back(enumz);
 
@@ -712,7 +782,7 @@ namespace terra
                         std::cout << "cppast::cpp_entity_kind::variable_t: " << cppast::to_string(e.kind()) << " name: " << e.name() << std::endl;
                         auto &cpp_variable = static_cast<const cppast::cpp_variable &>(e);
                         Variable top_level_variable;
-                        parse_parameter(top_level_variable, namespaceList, file_path, cpp_variable);
+                        parse_parameter(top_level_variable, namespaceList, fullScopeList, file_path, cpp_variable);
 
                         cxx_file.nodes.push_back(top_level_variable);
                         return true;
@@ -928,6 +998,7 @@ namespace terra
 
             json["file_path"] = node->file_path;
             json["parent_name"] = node->parent_name;
+            json["parent_full_scope_name"] = node->parent_full_scope_name;
             json["attributes"] = node->attributes;
             json["comment"] = node->comment;
             json["source"] = node->source;
