@@ -65,6 +65,7 @@ describe('cxx_parser', () => {
                       "is_mutable":false,
                       "name":"a",
                       "namespaces": [],
+                      "parent_full_scope_name": "AAA",
                       "parent_name": "AAA",
                       "source": "",
                       "type":{
@@ -81,6 +82,7 @@ describe('cxx_parser', () => {
                   "methods":[],
                   "name":"AAA",
                   "namespaces":[],
+                  "parent_full_scope_name": "",
                   "parent_name":"${preProcessParseFilesDir}/file1.h",
                   "source":""
                 }
@@ -142,6 +144,7 @@ describe('cxx_parser', () => {
                     "is_mutable":false,
                     "name":"a",
                     "namespaces": [],
+                    "parent_full_scope_name": "AAA",
                     "parent_name": "AAA",
                     "source": "",
                     "type":{
@@ -158,6 +161,7 @@ describe('cxx_parser', () => {
                 "methods":[],
                 "name":"AAA",
                 "namespaces":[],
+                "parent_full_scope_name": "",
                 "parent_name":"${preProcessParseFilesDir}/file1.h",
                 "source":""
               }
@@ -223,6 +227,7 @@ describe('cxx_parser', () => {
                     "is_mutable":false,
                     "name":"a",
                     "namespaces": [],
+                    "parent_full_scope_name": "",
                     "parent_name": "",
                     "source": "",
                     "type":{
@@ -239,6 +244,7 @@ describe('cxx_parser', () => {
                 "methods":[],
                 "name":"AAA",
                 "namespaces":[],
+                "parent_full_scope_name": "",
                 "parent_name":"${preProcessParseFilesDir}/file1.h",
                 "source":""
               }
@@ -299,6 +305,7 @@ describe('cxx_parser', () => {
                     "file_path": "",
                     "name": "A",
                     "namespaces": [],
+                    "parent_full_scope_name": "MyEnum",
                     "parent_name": "MyEnum",
                     "source": "0",
                     "value": "0"
@@ -307,6 +314,7 @@ describe('cxx_parser', () => {
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "name":"MyEnum",
                 "namespaces":[],
+                "parent_full_scope_name": "",
                 "parent_name":"${preProcessParseFilesDir}/file1.h",
                 "source":""
               }
@@ -375,6 +383,7 @@ describe('cxx_parser', () => {
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "name":"MyEnum",
                 "namespaces":[],
+                "parent_full_scope_name": "",
                 "parent_name":"${preProcessParseFilesDir}/file1.h",
                 "source":""
               }
@@ -427,6 +436,7 @@ describe('cxx_parser', () => {
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "name": "view_t",
                 "namespaces": [],
+                "parent_full_scope_name": "",
                 "parent_name":"${preProcessParseFilesDir}/file1.h",
                 "source": "",
                 "underlyingType": {
@@ -503,6 +513,7 @@ describe('cxx_parser', () => {
                     "is_mutable":false,
                     "name":"a",
                     "namespaces": [],
+                    "parent_full_scope_name": "AAA",
                     "parent_name": "AAA",
                     "source": "",
                     "type":{
@@ -519,6 +530,7 @@ describe('cxx_parser', () => {
                 "methods":[],
                 "name":"AAA",
                 "namespaces":[],
+                "parent_full_scope_name": "",
                 "parent_name":"${preProcessParseFilesDir}/file1.h",
                 "source":""
               },
@@ -530,6 +542,7 @@ describe('cxx_parser', () => {
                 "file_path":"${preProcessParseFilesDir}/file1.h",
                 "name": "view_t",
                 "namespaces": [],
+                "parent_full_scope_name": "",
                 "parent_name":"${preProcessParseFilesDir}/file1.h",
                 "source": "",
                 "underlyingType": {

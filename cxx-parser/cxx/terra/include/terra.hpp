@@ -394,12 +394,15 @@ namespace terra
 
             std::cout << "enum: " << enumz.name << "\n";
 
+            std::vector<std::string> enumFullScopeList(parentFullScopeList);
+            enumFullScopeList.push_back(enumz.name);
+
             for (auto &en : cpp_enum)
             {
                 EnumConstant enum_constant;
                 enum_constant.name = en.name();
 
-                parse_base_node(enum_constant, {}, {}, "", en);
+                parse_base_node(enum_constant, {}, enumFullScopeList, "", en);
                 enum_constant.parent_name = cpp_enum.name();
                 if (en.value().has_value())
                 {
@@ -458,7 +461,6 @@ namespace terra
 
             for (auto &base : cpp_class.bases())
             {
-                // clazz->base_clazzs.push_back(std::string(base.name()));
                 base_clazzs.push_back(std::string(base.name()));
             }
 
@@ -482,7 +484,6 @@ namespace terra
 
                     Constructor constructor;
                     parse_constructor(constructor, namespaceList, classFullScopeList, file_path, cpp_constructor);
-                    // clazz->constructors.push_back(constructor);
                     constructors.push_back(constructor);
                     break;
                 }
@@ -494,7 +495,6 @@ namespace terra
                     parse_method(method, namespaceList, classFullScopeList, file_path, func, current_access_specifier);
                     method.attributes = std::vector<std::string>(parse_attributes(member));
 
-                    // clazz->methods.push_back(method);
                     methods.push_back(method);
                     break;
                 }
@@ -503,14 +503,11 @@ namespace terra
                     auto &cpp_member_variable = static_cast<const cppast::cpp_member_variable &>(member);
                     MemberVariable member_variable;
                     parse_member_variables(member_variable, namespaceList, classFullScopeList, file_path, cpp_member_variable, current_access_specifier);
-                    // clazz->member_variables.push_back(member_variable);
                     member_variables.push_back(member_variable);
                     break;
                 }
                 case cppast::cpp_entity_kind::class_t:
                 {
-                    std::cout << "child cpp_entity_kind::class_t: " << member.name() << " (" << cppast::to_string(member.kind()) << ")"
-                              << "\n";
                 }
 
                 default:
