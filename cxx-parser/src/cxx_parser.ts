@@ -9,7 +9,7 @@ import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
 import { ClangASTStructConstructorParser } from './constructor_initializer_parser';
 import { CXXParserConfigs, ParseFilesConfig } from './cxx_parser_configs';
-import { CXXFile, CXXTYPE, cast } from './cxx_terra_node';
+import { CXXFile, CXXTYPE, CXXTerraNode, cast } from './cxx_terra_node';
 
 export function generateChecksum(files: string[]) {
   let allFileContents = files
@@ -157,11 +157,56 @@ export function CXXParser(
   return newParseResult;
 }
 
+/// Workaround for finding the parent nodes with the same name, this only works if the namespaces are different.
+/// To excectly find the parent node, we need to add more infos in `CXXTerraNode` to identity the unique parent node.
+function _findParent(
+  parseResult: ParseResult,
+  parentName: string
+): CXXTerraNode | undefined {
+  function _findResolvedNodeRecursively(
+    node: CXXTerraNode
+  ): CXXTerraNode | undefined {
+    let tmpFullName = node.parent_name
+      ? `${node.parent_name}::${node.name}`
+      : `${node.namespaces.join('::')}::${node.name}`;
+    let tmpNode = parseResult.resolveNodeByName(tmpFullName);
+    if (tmpNode && tmpNode.parent_name) {
+      // recursively find the parent node
+      tmpNode = _findResolvedNodeRecursively(tmpNode);
+    }
+    return tmpNode;
+  }
+  let foundNode: CXXTerraNode | undefined;
+
+  for (const f of parseResult.nodes) {
+    let cxxFile = f as CXXFile;
+    let foundNodes = cxxFile.nodes.filter((node) => node.name == parentName);
+    if (foundNodes.length == 0) {
+      continue;
+    }
+
+    if (foundNodes.length == 1) {
+      return foundNodes[0];
+    }
+
+    for (let node of foundNodes) {
+      // find the most matched node
+      foundNode = _findResolvedNodeRecursively(node);
+      if (foundNode) {
+        return foundNode;
+      }
+    }
+  }
+
+  return foundNode;
+}
+
 function fillParentNode(parseResult: ParseResult, cxxFiles: CXXFile[]) {
   cxxFiles.forEach((file) => {
     file.nodes.forEach((node) => {
-      if (node.parent_name) {
-        node.parent = parseResult.resolveNodeByName(node.parent_name) ?? file;
+      if (node.parent_full_scope_name) {
+        node.parent =
+          parseResult.resolveNodeByName(node.parent_full_scope_name) ?? file; // _findParent(parseResult, node.parent_name);
       } else {
         node.parent = file;
       }
