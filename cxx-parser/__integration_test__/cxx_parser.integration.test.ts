@@ -375,6 +375,7 @@ describe('cxx_parser', () => {
                     "file_path": "",
                     "name": "A",
                     "namespaces": [],
+                    "parent_full_scope_name": "",
                     "parent_name": "",
                     "source": "0",
                     "value": "0"
