@@ -244,6 +244,7 @@ export class MemberFunction extends CXXTerraNode {
   is_overriding: boolean = false;
   is_const: boolean = false;
   signature: string = '';
+  is_variadic: boolean = false;
 
   override get fullName(): string {
     return `${this.parent?.fullName}.${this.name}`;

@@ -359,6 +359,7 @@ namespace terra
             method.is_overriding = cppast::is_overriding(cpp_member_function.virtual_info());
             method.is_const = cpp_member_function.cv_qualifier() == cppast::cpp_cv::cpp_cv_const;
             method.signature = cpp_member_function.signature();
+            method.is_variadic = cpp_member_function.is_variadic();
         }
 
         void parse_constructor(
@@ -1169,6 +1170,7 @@ namespace terra
             json["is_overriding"] = node->is_overriding;
             json["is_const"] = node->is_const;
             json["signature"] = node->signature;
+            json["is_variadic"] = node->is_variadic;
         }
 
         void Variable2Json(Variable *node, nlohmann::json &json)
