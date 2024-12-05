@@ -129,8 +129,9 @@ namespace terra
         bool is_overriding;
         bool is_const;
         std::string signature;
+        bool is_variadic;
     } MemberFunction;
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MemberFunction, name, is_virtual, return_type, parameters, access_specifier, is_overriding, signature, namespaces, file_path);
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MemberFunction, name, is_virtual, return_type, parameters, access_specifier, is_overriding, signature, is_variadic, namespaces, file_path);
 
     typedef struct MemberVariable : BaseNode
     {
