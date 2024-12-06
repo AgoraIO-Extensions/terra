@@ -79,6 +79,10 @@ renderers:
     args:
       config1: true
       config2: 'xyz'
+      
+# List of global args
+globalArgs:
+  type: 'rtc'
 ```
 
 ### Custom `Parser` and `Renderer`

@@ -65,6 +65,13 @@ export class TerraConfigs {
     });
 
     let renderers = (parsedYaml.renderers ?? []).map((p: any) => {
+      p.args =
+        parsedYaml.globalArgs || p.args
+          ? {
+              ...parsedYaml.globalArgs,
+              ...p.args,
+            }
+          : undefined;
       return p as TerraLoaderConfig;
     });
 
