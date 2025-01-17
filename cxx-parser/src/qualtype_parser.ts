@@ -19,7 +19,7 @@ import {_FlattenNode,dumpClangASTJSON ,filterAndFlattenNodes,ClangASTNodeKind,Ta
 
 const STR_UNDEFINED = 'Undefined';
 
-class ASTNodeKey {
+export class ASTNodeKey {
   constructor(
       // public kind: string | undefined,
       // public tagUsed: string | undefined,
@@ -44,7 +44,7 @@ class ASTNodeKey {
   }
 }
 
-class ASTNodeMap {
+ export class ASTNodeMap {
   private map = new Map<string, string[]>();
 
   set(key: ASTNodeKey, qualType: string | undefined): void {
