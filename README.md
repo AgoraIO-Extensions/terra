@@ -78,7 +78,7 @@ renderers:
   - path: 'path/to/another-renderer'
     args:
       config1: true
-      config2: 'xyz'
+      config2: 'xyz'11
       
 # List of global args
 globalArgs:
