@@ -37,6 +37,7 @@ export interface CXXParserConfigs {
   includeHeaderDirs: string[];
   definesMacros: string[];
   parseFiles: ParseFilesConfig;
+  parseClangQualType:boolean;
 }
 
 export class CXXParserConfigs {
@@ -61,6 +62,7 @@ export class CXXParserConfigs {
           })
           .flat(1),
       } as ParseFilesConfig,
+      parseClangQualType: original.parseClangQualType,
     };
   }
 }
