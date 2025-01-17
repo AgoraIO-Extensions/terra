@@ -9,7 +9,7 @@ on:
 
 jobs:
   unit_test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
       packages: read
@@ -18,10 +18,10 @@ jobs:
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
-          registry-url: "https://npm.pkg.github.com"
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
-          scope: "@agoraio-extensions"
+          scope: '@agoraio-extensions'
 
       - name: Run unit test
         env:
@@ -38,14 +38,14 @@ jobs:
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
-          registry-url: "https://npm.pkg.github.com"
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
-          scope: "@agoraio-extensions"
+          scope: '@agoraio-extensions'
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v1
         with:
-          version: "15.0.6"
+          version: '15.0.6'
       - name: Run unit test
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,10 +63,10 @@ jobs:
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
-          registry-url: "https://npm.pkg.github.com"
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
-          scope: "@agoraio-extensions"
+          scope: '@agoraio-extensions'
       - name: Cache LLVM and Clang
         id: cache-llvm
         uses: actions/cache@v3
@@ -77,7 +77,7 @@ jobs:
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v1
         with:
-          version: "15.0.7"
+          version: '15.0.7'
           cached: ${{ steps.cache-llvm.outputs.cache-hit }}
       - name: Run unit test
         env:
