@@ -1,11 +1,3 @@
-import {
-  TagUsedType,
-  ClangASTNodeKind,
-  _FlattenNode,
-  dumpClangASTJSON,
-  filterAndFlattenNodes,
-} from './utils'
-
 import { ParseResult, visibleForTesting } from '@agoraio-extensions/terra-core';
 
 import { generateChecksum, getCppAstBackendDir } from './cxx_parser';
@@ -18,6 +10,13 @@ import {
   SimpleType,
   Struct,
 } from './cxx_terra_node';
+import {
+  ClangASTNodeKind,
+  TagUsedType,
+  _FlattenNode,
+  dumpClangASTJSON,
+  filterAndFlattenNodes,
+} from './utils';
 
 /**
  * Intermediate objects used internally
@@ -46,7 +45,6 @@ class _StructConstructors {
   name: string = '';
   constructors: _ConstructorInitializer[] = [];
 }
-
 
 function _parseStructConstructors(
   buildDir: string,

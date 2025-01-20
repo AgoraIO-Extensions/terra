@@ -1,4 +1,9 @@
+import { strict as assert } from 'assert';
+import { execSync } from 'child_process';
+import * as fs from 'fs';
 import path from 'path';
+
+import { generateChecksum, getCppAstBackendDir } from './cxx_parser';
 
 export function getAbsolutePath(
   dir: string,
@@ -30,15 +35,6 @@ export function getAbsolutePaths(
 
   return absolutePaths;
 }
-
-
-
-import { execSync } from 'child_process';
-import * as fs from 'fs';
-import { generateChecksum, getCppAstBackendDir } from './cxx_parser';
-
-import { strict as assert } from 'assert';
-
 
 export enum TagUsedType {
   struct_t = 'struct',
@@ -82,10 +78,6 @@ export interface _FlattenNode {
   ns: string; // namespace
   node: any;
 }
-
-
-
-
 
 /**
  *
@@ -175,13 +167,16 @@ export function dumpClangASTJSON(
     let originalEnv = process.env;
     let pathEnv = process.env.PATH;
     if (pathEnv) {
-      pathEnv = pathEnv.split(':').filter((it) => !it.includes('llvm')).join(':');
+      pathEnv = pathEnv
+        .split(':')
+        .filter((it) => !it.includes('llvm'))
+        .join(':');
     }
 
     return {
       ...originalEnv,
       PATH: pathEnv,
-    }
+    };
   }
 
   let fileName = path.basename(parseFile);
@@ -242,11 +237,6 @@ export function dumpClangASTJSON(
   let ast_json_file_content = fs.readFileSync(clangAstJsonPath, 'utf-8');
   return ast_json_file_content;
 }
-
-
-
-
-
 
 export function filterAndFlattenNodes(
   parseFiles: string,
