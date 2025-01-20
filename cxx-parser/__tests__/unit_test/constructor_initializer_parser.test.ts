@@ -282,19 +282,19 @@ namespace ns1 {
                   {
                     kind: ConstructorInitializerKind.Value,
                     name: 'aaa_enum_',
-                    type: 'ns1::AAA_ENUM',
+                    type: 'AAA_ENUM',
                     values: ['ns1::AAA_ENUM::ERR_NOT_READY'],
                   },
                 ],
               },
               {
                 name: 'AAA',
-                signature: 'void (ns1::AAA_ENUM)',
+                signature: 'void (AAA_ENUM)',
                 parameterList: [
                   {
                     kind: ConstructorInitializerKind.Parameter,
                     name: 'aaa_enum',
-                    type: 'ns1::AAA_ENUM',
+                    type: 'AAA_ENUM',
                     values: ['aaa_enum'],
                   },
                 ],
@@ -302,7 +302,7 @@ namespace ns1 {
                   {
                     kind: ConstructorInitializerKind.Parameter,
                     name: 'aaa_enum_',
-                    type: 'ns1::AAA_ENUM',
+                    type: 'AAA_ENUM',
                     values: ['aaa_enum'],
                   },
                 ],
@@ -404,7 +404,7 @@ namespace ns1 {
                   {
                     kind: ConstructorInitializerKind.Value,
                     name: 'aaa_',
-                    type: 'ns1::view_t',
+                    type: 'view_t',
                     values: ['NULL'],
                   },
                 ],
@@ -809,7 +809,7 @@ namespace ns1 {
                   {
                     kind: ConstructorInitializerKind.Construct,
                     name: 'aaa_',
-                    type: 'ns1::Rectangle',
+                    type: 'Rectangle',
                     values: ['0', '0', '0', '0'],
                   },
                 ],

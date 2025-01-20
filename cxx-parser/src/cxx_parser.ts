@@ -10,6 +10,7 @@ import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 import { ClangASTStructConstructorParser } from './constructor_initializer_parser';
 import { CXXParserConfigs, ParseFilesConfig } from './cxx_parser_configs';
 import { CXXFile, CXXTYPE, CXXTerraNode, cast } from './cxx_terra_node';
+import { ClangASTQualTypeParser } from './qualtype_parser';
 
 export function generateChecksum(files: string[]) {
   let allFileContents = files
@@ -153,6 +154,15 @@ export function CXXParser(
     cppastParsedFiles,
     newParseResult
   );
+
+  if (cxxParserConfigs.parseClangQualType) {
+    ClangASTQualTypeParser(
+      getBuildDir(terraContext, cxxParserConfigs.buildDirNamePrefix),
+      cxxParserConfigs.includeHeaderDirs,
+      cppastParsedFiles,
+      newParseResult
+    );
+  }
 
   return newParseResult;
 }

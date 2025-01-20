@@ -268,6 +268,7 @@ export class SimpleType extends CXXTerraNode {
   is_const: boolean = false;
   is_builtin_type: boolean = false;
   template_arguments: string[] = [];
+  clang_qualtype: string = '';
 
   override get realName(): string {
     if (this.name) {
