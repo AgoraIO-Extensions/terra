@@ -3,4 +3,4 @@
 	url = https://github.com/AgoraIO-Extensions/cppast.git
 [submodule "third_party/iris-doc"]
 	path = third_party/iris-doc
-	url = https://github.com/littleGnAl/iris-doc.git
+	url = https://github.com/AgoraIO-Extensions/iris_doc.git
