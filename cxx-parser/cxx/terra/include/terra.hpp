@@ -360,6 +360,7 @@ namespace terra
             method.is_const = cpp_member_function.cv_qualifier() == cppast::cpp_cv::cpp_cv_const;
             method.signature = cpp_member_function.signature();
             method.is_variadic = cpp_member_function.is_variadic();
+            method.mangled_name = cpp_member_function.mangled_name();
         }
 
         void parse_constructor(
@@ -1149,6 +1150,8 @@ namespace terra
             nlohmann::json returnTypeJson;
             SimpleType2Json(&node->return_type, returnTypeJson);
             json["return_type"] = returnTypeJson;
+
+            json["mangled_name"] = node->mangled_name;
 
             if (node->parameters.size() <= 0)
             {

@@ -58,6 +58,7 @@ namespace rtc {
               {
                 __TYPE: 'MemberFunction',
                 name: 'joinChannel',
+                mangled_name: '__ZN5agora3rtc10IRtcEngine11joinChannelEj',
                 parameters: [
                   {
                     __TYPE: 'Variable',
@@ -82,6 +83,7 @@ namespace rtc {
               {
                 __TYPE: 'MemberFunction',
                 name: 'setConfig',
+                mangled_name: '__ZN5agora3rtc10IRtcEngine9setConfigEidPPv',
                 parameters: [
                   {
                     __TYPE: 'Variable',
