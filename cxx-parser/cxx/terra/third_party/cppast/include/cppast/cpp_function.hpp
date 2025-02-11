@@ -105,6 +105,12 @@ public:
         return do_get_signature();
     }
 
+    ///  \returns get mangled name
+    const std::string& mangled_name() const noexcept
+    {
+        return mangled_name_;
+    }
+
 protected:
     /// Builder class for functions.
     ///
@@ -172,6 +178,12 @@ protected:
             return std::move(function);
         }
 
+        // set mangled_name
+        void mangled_name(std::string name)
+        {
+            static_cast<cpp_function_base&>(*function).mangled_name_ = name;
+        }
+
     protected:
         basic_builder()           = default;
         ~basic_builder() noexcept = default;
@@ -180,7 +192,7 @@ protected:
     };
 
     cpp_function_base(std::string name)
-    : cpp_entity(std::move(name)), body_(cpp_function_declaration), variadic_(false)
+    : cpp_entity(std::move(name)), body_(cpp_function_declaration), variadic_(false), mangled_name_("")
     {}
 
 protected:
@@ -192,6 +204,7 @@ private:
     std::unique_ptr<cpp_expression>                noexcept_expr_;
     cpp_function_body_kind                         body_;
     bool                                           variadic_;
+    std::string                                    mangled_name_; 
 };
 
 /// A [cppast::cpp_entity]() modelling a C++ function.

@@ -518,6 +518,13 @@ std::unique_ptr<cpp_entity> parse_cpp_function_impl(const detail::parse_context&
 {
     auto name = detail::get_cursor_name(cur);
 
+    // get mangled name
+    CXString full_mangled = clang_Cursor_getMangling(cur);
+    std::string fullMangledName = clang_getCString(full_mangled);
+    clang_disposeString(full_mangled);
+
+
+
     detail::cxtokenizer    tokenizer(context.tu, context.file, cur);
     detail::cxtoken_stream stream(tokenizer, cur);
 
@@ -527,6 +534,10 @@ std::unique_ptr<cpp_entity> parse_cpp_function_impl(const detail::parse_context&
 
     cpp_function::builder builder(name.c_str(),
                                   detail::parse_type(context, cur, clang_getCursorResultType(cur)));
+
+    // set mangled name
+    builder.mangled_name(fullMangledName);
+
     context.comments.match(builder.get(), cur);
     builder.get().add_attribute(prefix.attributes);
 
@@ -676,6 +687,11 @@ std::unique_ptr<cpp_entity> detail::parse_cpp_member_function(const detail::pars
                  detail::assert_handler{});
     auto name = detail::get_cursor_name(cur);
 
+    // get mangled name
+    CXString full_mangled = clang_Cursor_getMangling(cur);
+    std::string fullMangledName = clang_getCString(full_mangled);
+    clang_disposeString(full_mangled);
+
     detail::cxtokenizer    tokenizer(context.tu, context.file, cur);
     detail::cxtoken_stream stream(tokenizer, cur);
 
@@ -696,6 +712,9 @@ std::unique_ptr<cpp_entity> detail::parse_cpp_member_function(const detail::pars
         builder.is_constexpr();
     else if (prefix.is_consteval)
         builder.is_consteval();
+
+    // set mangled_name
+    builder.mangled_name(fullMangledName);
 
     skip_parameters(stream);
     return handle_suffix(context, cur, builder, stream, prefix.is_virtual,
