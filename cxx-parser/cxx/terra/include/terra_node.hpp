@@ -130,8 +130,9 @@ namespace terra
         bool is_const;
         std::string signature;
         bool is_variadic;
+        std::string mangled_name;
     } MemberFunction;
-    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MemberFunction, name, is_virtual, return_type, parameters, access_specifier, is_overriding, signature, is_variadic, namespaces, file_path);
+    NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(MemberFunction, name, is_virtual, return_type, parameters, access_specifier, is_overriding, signature, is_variadic, namespaces, file_path, mangled_name);
 
     typedef struct MemberVariable : BaseNode
     {

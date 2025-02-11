@@ -10,6 +10,7 @@ import {
   ConstructorInitializerKind,
   SimpleType,
   Struct,
+  Variable,
 } from './cxx_terra_node';
 
 import {
@@ -44,6 +45,45 @@ class ASTNodeKey {
   }
 }
 
+// export function get_signature(node: any){
+//   if(node.kind !== ClangASTNodeKind.CXXMethodDecl){
+//     return;
+//   }
+
+//   let result = "(";
+
+//   if (node.inner) {
+//     for (const param_node of node.inner) {
+//       if(param_node.kind == ClangASTNodeKind.ParmVarDecl){
+//         result += param_node.type.qualType + ",";
+//       }
+//     }
+//   }
+
+//   if(node.variadic){
+//     result += "...";
+//   }
+
+//   // 处理最后的闭括号
+//   if (result[result.length - 1] === ',') {
+//       // 将最后的逗号替换为闭括号
+//       result = result.slice(0, -1) + ')';
+//   } else {
+//       // 直接添加闭括号
+//       result += ')';
+//   }
+
+//   return result;
+// }
+
+export function get_mangled_name(node: any) {
+  if (node.kind !== ClangASTNodeKind.CXXMethodDecl) {
+    return;
+  }
+
+  return node.mangledName;
+}
+
 class ASTNodeMap {
   private map = new Map<string, string[]>();
 
@@ -53,10 +93,15 @@ class ASTNodeMap {
       let final_key = keyString;
 
       // TBD(WinterPu): for now, just save the duplicated key. need to find the reasons and remove it in the future.
+      // cause 01: function overloading: add signature [fixed]
       if (!this.map.has(final_key)) {
         this.map.set(final_key, []);
       } else {
-        console.log('ASTNodeMap Duplicate Key', final_key);
+        if (this.map.get(final_key)?.includes(qualType)) {
+          return;
+        } else {
+          console.log('ASTNodeMap Duplicate Key', final_key);
+        }
       }
 
       this.map.get(keyString)?.push(qualType);
@@ -64,9 +109,27 @@ class ASTNodeMap {
   }
 
   get(node: CXXTerraNode): string | undefined {
-    // TBD(WinterPu) : not safe here
     let parent_full_scope_name = node.parent_full_scope_name;
     let param_name = node.name;
+
+    if (node.__TYPE === CXXTYPE.MemberFunction) {
+      // parent_full_scope_name: parent_full_scope_name
+      // param_name: `${param_name}::${mangled_name}`
+
+      //let signature = node.asMemberFunction().signature;
+      let mangled_name = node.asMemberFunction().mangled_name;
+      mangled_name = mangled_name == '' ? 'undefined' : mangled_name;
+      param_name = `${param_name}::${mangled_name}`;
+    }
+    if (node.__TYPE === CXXTYPE.Variable) {
+      // parent_full_scope_name: `${parent_full_scope_name}::${mangled_name}`
+      // param_name: param_name
+
+      //let signature = node.parent?.asMemberFunction().signature;
+      let mangled_name = node.parent?.asMemberFunction().mangled_name;
+      mangled_name = mangled_name == '' ? 'undefined' : mangled_name;
+      parent_full_scope_name = `${parent_full_scope_name}::${mangled_name}`;
+    }
 
     // let terra_type = node.__TYPE;
     // let name = node.name;
@@ -183,8 +246,14 @@ function _parseQualTypes(
     }
     // handle CXXMethodDecl
     if (node.kind === ClangASTNodeKind.CXXMethodDecl) {
-      let key = new ASTNodeKey(val_parent_full_scope_name, node.name);
+      // let signature = get_signature(node);
+      let mangled_name = node.mangledName;
+      let node_name = `${node.name}::${mangled_name}`;
+      let key = new ASTNodeKey(val_parent_full_scope_name, node_name);
       mapASTNodeQualType.set(key, node.type?.qualType);
+
+      // then, set val_parent_full_scope_name for parameters
+      val_parent_full_scope_name = `${val_parent_full_scope_name}::${node_name}`;
     }
 
     // flatten nodes would save namespace to ns
@@ -193,9 +262,9 @@ function _parseQualTypes(
     let bIsKind_Class =
       node.kind == ClangASTNodeKind.CXXRecordDecl &&
       node.tagUsed == TagUsedType.class_t;
-    let bIsKind_Method = node.kind == ClangASTNodeKind.CXXMethodDecl;
+    // let bIsKind_Method = node.kind == ClangASTNodeKind.CXXMethodDecl;
 
-    if (bIsKind_Class || bIsKind_Method) {
+    if (bIsKind_Class) {
       val_parent_full_scope_name = val_parent_full_scope_name
         ? `${val_parent_full_scope_name}::${node.name}`
         : node.name;

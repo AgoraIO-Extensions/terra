@@ -246,6 +246,8 @@ export class MemberFunction extends CXXTerraNode {
   signature: string = '';
   is_variadic: boolean = false;
 
+  mangled_name: string = '';
+
   override get fullName(): string {
     return `${this.parent?.fullName}.${this.name}`;
   }
@@ -268,7 +270,7 @@ export class SimpleType extends CXXTerraNode {
   is_const: boolean = false;
   is_builtin_type: boolean = false;
   template_arguments: string[] = [];
-  clang_qualtype: string = '';
+  clang_qualtype: string = ''; // added in runtime
 
   override get realName(): string {
     if (this.name) {
