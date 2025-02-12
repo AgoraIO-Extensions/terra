@@ -21,8 +21,8 @@ import {
   filterAndFlattenNodes,
 } from './utils';
 
-const STR_UNDEFINED = 'Undefined';
-
+const STR_UNDEFINED = 'undefined';
+const STR_NO_MANGLED_NAME = 'no_mangledname';
 class ASTNodeKey {
   constructor(
     // public kind: string | undefined,
@@ -94,13 +94,19 @@ class ASTNodeMap {
 
       // TBD(WinterPu): for now, just save the duplicated key. need to find the reasons and remove it in the future.
       // cause 01: function overloading: add signature [fixed]
+      // cause 02: operator overloading doesn't have mangled name [currently, doesn't matter]
+      // cause 03: cause 02 is because that the method uses C++ template [currently, doesn't matter]
+      // cause 04; constructor not considered [fixed]
       if (!this.map.has(final_key)) {
         this.map.set(final_key, []);
       } else {
         if (this.map.get(final_key)?.includes(qualType)) {
           return;
         } else {
-          console.log('ASTNodeMap Duplicate Key', final_key);
+          // debugger;
+          console.log(
+            `ASTNodeMap Duplicate Key: ${final_key}\nQual Type: ${qualType}\n`
+          );
         }
       }
 
@@ -118,7 +124,10 @@ class ASTNodeMap {
 
       //let signature = node.asMemberFunction().signature;
       let mangled_name = node.asMemberFunction().mangled_name;
-      mangled_name = mangled_name == '' ? 'undefined' : mangled_name;
+      mangled_name =
+        mangled_name == '' || mangled_name == undefined
+          ? STR_NO_MANGLED_NAME
+          : mangled_name;
       param_name = `${param_name}::${mangled_name}`;
     }
     if (node.__TYPE === CXXTYPE.Variable) {
@@ -127,7 +136,10 @@ class ASTNodeMap {
 
       //let signature = node.parent?.asMemberFunction().signature;
       let mangled_name = node.parent?.asMemberFunction().mangled_name;
-      mangled_name = mangled_name == '' ? 'undefined' : mangled_name;
+      mangled_name =
+        mangled_name == '' || mangled_name == undefined
+          ? STR_NO_MANGLED_NAME
+          : mangled_name;
       parent_full_scope_name = `${parent_full_scope_name}::${mangled_name}`;
     }
 
@@ -248,6 +260,24 @@ function _parseQualTypes(
     if (node.kind === ClangASTNodeKind.CXXMethodDecl) {
       // let signature = get_signature(node);
       let mangled_name = node.mangledName;
+      mangled_name =
+        mangled_name == '' || mangled_name == undefined
+          ? STR_NO_MANGLED_NAME
+          : mangled_name;
+      let node_name = `${node.name}::${mangled_name}`;
+      let key = new ASTNodeKey(val_parent_full_scope_name, node_name);
+      mapASTNodeQualType.set(key, node.type?.qualType);
+
+      // then, set val_parent_full_scope_name for parameters
+      val_parent_full_scope_name = `${val_parent_full_scope_name}::${node_name}`;
+    }
+    if (node.kind === ClangASTNodeKind.CXXConstructorDecl) {
+      // let signature = get_signature(node);
+      let mangled_name = node.mangledName;
+      mangled_name =
+        mangled_name == '' || mangled_name == undefined
+          ? STR_NO_MANGLED_NAME
+          : mangled_name;
       let node_name = `${node.name}::${mangled_name}`;
       let key = new ASTNodeKey(val_parent_full_scope_name, node_name);
       mapASTNodeQualType.set(key, node.type?.qualType);
@@ -262,9 +292,13 @@ function _parseQualTypes(
     let bIsKind_Class =
       node.kind == ClangASTNodeKind.CXXRecordDecl &&
       node.tagUsed == TagUsedType.class_t;
+
+    let bIsKind_Struct =
+      node.kind == ClangASTNodeKind.CXXRecordDecl &&
+      node.tagUsed == TagUsedType.struct_t;
     // let bIsKind_Method = node.kind == ClangASTNodeKind.CXXMethodDecl;
 
-    if (bIsKind_Class) {
+    if (bIsKind_Class || bIsKind_Struct) {
       val_parent_full_scope_name = val_parent_full_scope_name
         ? `${val_parent_full_scope_name}::${node.name}`
         : node.name;
