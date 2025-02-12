@@ -998,7 +998,21 @@ namespace terra
             json["file_path"] = node->file_path;
             json["parent_name"] = node->parent_name;
             json["parent_full_scope_name"] = node->parent_full_scope_name;
-            json["attributes"] = node->attributes;
+
+            if (node->attributes.size() <= 0)
+            {
+                json["attributes"] = nlohmann::json::parse("[]");
+            }
+            else
+            {
+                nlohmann::json attributesJson;
+                for (auto attr : node->attributes)
+                {
+                    attributesJson.push_back(attr);
+                }
+                json["attributes"] = attributesJson;
+            }
+
             json["comment"] = node->comment;
             json["source"] = node->source;
             json["conditional_compilation_directives_infos"] = node->conditional_compilation_directives_infos;
