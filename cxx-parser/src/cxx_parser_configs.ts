@@ -37,8 +37,8 @@ export interface CXXParserConfigs {
   includeHeaderDirs: string[];
   definesMacros: string[];
   parseFiles: ParseFilesConfig;
-  parseClangQualType: boolean;
-  preprocessParseFiles: boolean;
+  parseClangQualType?: boolean;
+  preprocessParseFiles?: boolean;
 }
 
 export class CXXParserConfigs {
