@@ -63,8 +63,8 @@ export class CXXParserConfigs {
           })
           .flat(1),
       } as ParseFilesConfig,
-      parseClangQualType: original.parseClangQualType,
-      preprocessParseFiles: original.preprocessParseFiles,
+      parseClangQualType: original.parseClangQualType ?? false,
+      preprocessParseFiles: original.preprocessParseFiles ?? false,
     };
   }
 }
