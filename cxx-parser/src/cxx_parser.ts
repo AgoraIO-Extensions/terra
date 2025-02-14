@@ -5,6 +5,7 @@ import path from 'path';
 
 import './cxx_parser_ext';
 
+import { replaceText } from '@agoraio-extensions/cxx-parser/src/tools';
 import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
 import { ClangASTStructConstructorParser } from './constructor_initializer_parser';
@@ -132,6 +133,17 @@ export function CXXParser(
   let parseFiles = ParseFilesConfig.resolveParseFiles(
     cxxParserConfigs.parseFiles
   );
+
+  if (cxxParserConfigs.preprocessParseFiles) {
+    // for cppast to parse attributes successfully
+    parseFiles.forEach((file) => {
+      let func_should_skip = (line: string) => {
+        return line.includes('#define') && line.includes('__deprecated');
+      };
+      replaceText(file, '__deprecated', '[[deprecated]]', func_should_skip);
+    });
+  }
+
   let jsonContent = dumpCXXAstJson(
     terraContext,
     cxxParserConfigs.includeHeaderDirs,
