@@ -15,8 +15,8 @@ fi
 pushd ${OUTPUT_PATH}
 
 # Check if --prebuilt is in ARGS
-if [[ "${ARGS}" == *"--prebuilt"* ]]; then
-    PREBUILT_URL="https://example.com/path/to/prebuilt/cppast_backend"
+if [[ $CPPAST_BACKEND_PREBUILT == 1 ]]; then
+    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/0.1.0/cppast_backend"
     PREBUILT_FILE="${OUTPUT_PATH}/cppast_backend"
 
     if [ ! -f "${PREBUILT_FILE}" ]; then
@@ -38,7 +38,7 @@ else
       LLVM_CONFIG_BINARY=$(which llvm-config)
     fi
 
-    # set LLVM_DOWNLOAD_URL env like 
+    # set LLVM_DOWNLOAD_URL env like
     # linux: https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
     # macos: https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.7/clang+llvm-15.0.7-x86_64-apple-darwin21.0.tar.xz
     cmake \

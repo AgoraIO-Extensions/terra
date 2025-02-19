@@ -6,7 +6,6 @@ set -x
 SCRIPT_PATH=$(dirname "$0")
 MY_PATH=$(realpath ${SCRIPT_PATH})
 OUTPUT_PATH=${MY_PATH}/prebuilt
-LLVM_DOWNLOAD_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 LLVM_CONFIG_BINARY=""
 
 if [ ! -d "${OUTPUT_PATH}" ]; then

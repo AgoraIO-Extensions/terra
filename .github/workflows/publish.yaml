@@ -4,13 +4,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  publish-unbuntu:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: build cppast_backend
+        env:
+          LLVM_DOWNLOAD_URL: |
+            https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
         run: |
           sh cxx-parser/cxx/cppast_backend/prebuilt.sh
 
@@ -18,5 +21,24 @@ jobs:
         with:
           name: cppast_backend-ubuntu
           path: |
-            cxx-parser/cxx/cppast_backend/prebuilt/**
+            cxx-parser/cxx/cppast_backend/prebuilt/cppast_backend
+          if-no-files-found: error
+  publish-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: build cppast_backend
+        env:
+          LLVM_DOWNLOAD_URL: |
+            https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.7/clang+llvm-15.0.7-x86_64-apple-darwin21.0.tar.xz
+        run: |
+          sh cxx-parser/cxx/cppast_backend/prebuilt.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cppast_backend-macos
+          path: |
+            cxx-parser/cxx/cppast_backend/prebuilt/cppast_backend
           if-no-files-found: error
