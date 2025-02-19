@@ -24,7 +24,7 @@ jobs:
             cxx-parser/cxx/cppast_backend/prebuilt/cppast_backend
           if-no-files-found: error
   publish-macos:
-    runs-on: macos-latest
+    runs-on: macos-13
     steps:
       - name: Checkout
         uses: actions/checkout@v3

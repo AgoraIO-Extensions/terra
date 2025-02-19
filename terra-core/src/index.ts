@@ -27,7 +27,6 @@ export class TerraContext {
    * @param configDir The configuration directory path.
    * @param outputDir The output directory path.
    * @param clean Flag indicating whether to clean the build directory.
-   * @param usePrebuilt Flag whether to use the prebuilt cppast_backend.
    * @param verbose Flag for verbose logging.
    */
   constructor(
@@ -35,7 +34,6 @@ export class TerraContext {
     public readonly configDir: string = '',
     public readonly outputDir: string = '',
     public readonly clean: boolean = false,
-    public readonly usePrebuilt: boolean = true,
     public readonly verbose: boolean = false
   ) {}
 }

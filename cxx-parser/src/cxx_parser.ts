@@ -95,10 +95,6 @@ export function dumpCXXAstJson(
 
   bashArgs += ` --pre-process-dir=${preProcessParseFilesDir}`;
 
-  if (terraContext.usePrebuilt) {
-    bashArgs += ` --prebuilt`;
-  }
-
   bashArgs += ` --dump-json`;
 
   let buildScript = `bash ${build_shell_path} \"${buildDir}\" \"${bashArgs}\"`;
