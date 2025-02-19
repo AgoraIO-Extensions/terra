@@ -63,7 +63,6 @@ jobs:
           path: ./ubuntu
 
       - name: Get Package Info
-        if: ${{ inputs.package == 'iris-web-rtc' }}
         run: |
           version=$(node -p "require('./cxx-parser/package.json').version")
           echo "version=${version}" >> $GITHUB_ENV
@@ -71,6 +70,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
+
+      - name: Setup NPM auth token
+        run: |
+          npm set "//registry.npmjs.org/:_authToken" ${{ secrets.NPM_TOKEN }}
+
+      - name: Config Git
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
 
       - name: Create Release
         run: |
