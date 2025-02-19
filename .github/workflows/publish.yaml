@@ -13,3 +13,10 @@ jobs:
       - name: build cppast_backend
         run: |
           sh cxx-parser/cxx/cppast_backend/prebuilt.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cppast_backend-ubuntu
+          path: |
+            cxx-parser/cxx/cppast_backend/prebuilt/**
+          if-no-files-found: error
