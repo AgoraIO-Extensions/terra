@@ -13,7 +13,7 @@ if [ ! -d "${OUTPUT_PATH}" ]; then
     mkdir -p ${OUTPUT_PATH}
 fi
 
-pushd ${OUTPUT_PATH}
+cd ${OUTPUT_PATH}
 
 # set LLVM_DOWNLOAD_URL env like 
 # linux: https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
