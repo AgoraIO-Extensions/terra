@@ -68,7 +68,12 @@ jobs:
           version=$(node -p "require('./cxx-parser/package.json').version")
           echo "version=${version}" >> $GITHUB_ENV
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
       - name: Create Release
-        if: ${{ steps.check-if-release-exists.outputs.release-exists == 0 }}
         run: |
-          pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./macos/cppast_backend_macos --github.assets=./ubuntu/cppast_backend_ubuntu
+          cd cxx-parser
+          npm install
+          npm run release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./macos/cppast_backend_macos --github.assets=./ubuntu/cppast_backend_ubuntu
