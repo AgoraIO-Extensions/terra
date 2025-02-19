@@ -51,13 +51,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download MacOS Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cppast_backend_macos
           path: ./macos
 
       - name: Download Ubuntu Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cppast_backend_ubuntu
           path: ./ubuntu
@@ -71,4 +71,4 @@ jobs:
       - name: Create Release
         if: ${{ steps.check-if-release-exists.outputs.release-exists == 0 }}
         run: |
-          pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./macos --github.assets=./ubuntu
+          pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./macos/cppast_backend_macos --github.assets=./ubuntu/cppast_backend_ubuntu
