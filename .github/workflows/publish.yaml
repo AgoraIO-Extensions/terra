@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: cppast_backend-ubuntu
+          name: cppast_backend_ubuntu
           path: |
             cxx-parser/cxx/cppast_backend/prebuilt/cppast_backend
           if-no-files-found: error
@@ -38,7 +38,37 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: cppast_backend-macos
+          name: cppast_backend_macos
           path: |
             cxx-parser/cxx/cppast_backend/prebuilt/cppast_backend
           if-no-files-found: error
+
+  create-release:
+      needs: [build-ubuntu, build-macos]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Download MacOS Artifact
+          uses: actions/download-artifact@v3
+          with:
+            name: cppast_backend_macos
+            path: ./macos
+
+        - name: Download Ubuntu Artifact
+          uses: actions/download-artifact@v3
+          with:
+            name: cppast_backend_ubuntu
+            path: ./ubuntu
+
+        - name: Get Package Info
+          if: ${{ inputs.package == 'iris-web-rtc' }}
+          run: |
+            version=$(node -p "require('./cxx-parser/package.json').version")
+            echo "version=${version}" >> $GITHUB_ENV
+
+        - name: Create Release
+          if: ${{ steps.check-if-release-exists.outputs.release-exists == 0 }}
+          run: |
+            pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./macos --github.assets=./ubuntu

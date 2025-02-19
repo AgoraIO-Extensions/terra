@@ -6,7 +6,8 @@
   "license": "ISC",
   "scripts": {
     "build": "tsc",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "release": "release-it"
   },
   "peerDependencies": {
     "@agoraio-extensions/terra-core": "*"
@@ -14,6 +15,9 @@
   "dependencies": {
     "yaml": "^2.1.3",
     "glob": "^10.3.4"
+  },
+  "devDependencies": {
+    "release-it": "^16.1.3"
   },
   "repository": {
     "type": "git",
@@ -23,5 +27,19 @@
     "url": "https://github.com/AgoraIO-Extensions/terra/issues"
   },
   "homepage": "https://github.com/AgoraIO-Extensions/terra#readme",
-  "description": ""
+  "description": "",
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "requireCleanWorkingDir": false,
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": false,
+      "allowSameVersion": true
+    },
+    "github": {
+      "release": true
+    }
+  }
 }

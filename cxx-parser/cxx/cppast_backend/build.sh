@@ -14,9 +14,22 @@ fi
 
 pushd ${OUTPUT_PATH}
 
-# Check if --prebuilt is in ARGS
-if [[ $CPPAST_BACKEND_PREBUILT == 1 ]]; then
-    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/0.1.0/cppast_backend"
+VERSION="0.1.0"
+# Determine the prebuilt URL based on the operating system
+OS=$(uname)
+if [[ "$OS" == "Darwin" ]]; then
+    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/${VERSION}/cppast_backend_macos"
+elif [[ "$OS" == "Linux" ]]; then
+    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/${VERSION}/cppast_backend_ubuntu"
+else
+    echo "Unsupported OS: $OS"
+    exit 1
+fi
+
+# Check if CPPAST_BACKEND_BUILD is set to 1
+# If it is set to 1, build the cppast_backend from source
+# If it is not set, download the prebuilt cppast_backend
+if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
     PREBUILT_FILE="${OUTPUT_PATH}/cppast_backend"
 
     if [ ! -f "${PREBUILT_FILE}" ]; then
