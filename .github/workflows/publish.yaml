@@ -1,0 +1,15 @@
+name: Publish cppast_backend
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v3
+
+      - name: build cppast_backend
+        run: |
+          sh cxx-parser/cxx/cppast_backend/prebuilt.sh
