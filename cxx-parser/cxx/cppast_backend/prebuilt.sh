@@ -7,6 +7,7 @@ SCRIPT_PATH=$(dirname "$0")
 MY_PATH=$(realpath ${SCRIPT_PATH})
 OUTPUT_PATH=${MY_PATH}/prebuilt
 LLVM_CONFIG_BINARY=""
+BUILD_TYPE=${1:-Release}
 
 if [ ! -d "${OUTPUT_PATH}" ]; then
     mkdir -p ${OUTPUT_PATH}
@@ -21,6 +22,7 @@ cmake \
     -DLLVM_CONFIG_BINARY=${LLVM_CONFIG_BINARY} \
     -DLLVM_DOWNLOAD_URL=${LLVM_DOWNLOAD_URL} \
     -DRUNTIME_OUTPUT_DIRECTORY=${OUTPUT_PATH} \
+    -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
     ${MY_PATH}
 
 cmake --build .
