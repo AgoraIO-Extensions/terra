@@ -31,16 +31,22 @@ fi
 # If it is set to 1, build the cppast_backend from source
 # If it is not set, download the prebuilt cppast_backend
 if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
-    PREBUILT_FILE="${OUTPUT_PATH}/cppast_backend"
+    PREBUILT_FILE="${OUTPUT_PATH}/temp"
 
     if [ ! -f "${PREBUILT_FILE}" ]; then
         echo "Downloading prebuilt cppast_backend from ${PREBUILT_URL}"
         curl -L -o ${PREBUILT_FILE} ${PREBUILT_URL}
         unzip -o ${PREBUILT_FILE} -d ${OUTPUT_PATH}
         rm ${PREBUILT_FILE}
-        mv ${OUTPUT_PATH}/cppast_backend/* ${OUTPUT_PATH}/
-        rmdir ${OUTPUT_PATH}/cppast_backend
-        chmod +x ${PREBUILT_FILE}
+        if [[ "$OS" == "Darwin" ]]; then
+            mv ${OUTPUT_PATH}/macos/* ${OUTPUT_PATH}
+            rmdir ${OUTPUT_PATH}/macos
+        elif [[ "$OS" == "Linux" ]]; then
+            mv ${OUTPUT_PATH}/ubuntu/* ${OUTPUT_PATH}
+            rmdir ${OUTPUT_PATH}/ubuntu
+        fi
+        chmod +x ${OUTPUT_PATH}/cppast_backend
+        install_name_tool -add_rpath ${OUTPUT_PATH}/terra ${OUTPUT_PATH}/cppast_backend
     else
         echo "Prebuilt cppast_backend already exists, skipping download."
     fi
