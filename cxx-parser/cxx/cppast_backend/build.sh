@@ -46,7 +46,6 @@ if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
             rmdir ${OUTPUT_PATH}/ubuntu
         fi
         chmod +x ${OUTPUT_PATH}/cppast_backend
-        install_name_tool -add_rpath ${OUTPUT_PATH}/terra ${OUTPUT_PATH}/cppast_backend
     else
         echo "Prebuilt cppast_backend already exists, skipping download."
     fi
