@@ -39,7 +39,8 @@
       "allowSameVersion": true
     },
     "github": {
-      "release": true
+      "release": true,
+      "assets": ["../macos/cppast_backend_macos", "../ubuntu/cppast_backend_ubuntu"]
     }
   }
 }

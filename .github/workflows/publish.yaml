@@ -66,6 +66,8 @@ jobs:
       - name: Rename MacOS Artifact
         run: |
           mv macos/cppast_backend macos/cppast_backend_macos
+          MACOS_PACKAGE_PATH=$(ls macos | awk -F/ '{print $NF}')
+          echo "MACOS_PACKAGE_PATH=$MACOS_PACKAGE_PATH" >> $GITHUB_ENV
 
       - name: Download Ubuntu Artifact
         uses: actions/download-artifact@v4
@@ -76,6 +78,8 @@ jobs:
       - name: Rename Ubuntu Artifact
         run: |
           mv ubuntu/cppast_backend ubuntu/cppast_backend_ubuntu
+          UBUNTU_PACKAGE_PATH=$(ls ubuntu | awk -F/ '{print $NF}')
+          echo "UBUNTU_PACKAGE_PATH=$UBUNTU_PACKAGE_PATH" >> $GITHUB_ENV
 
       - uses: actions/setup-node@v3
         with:
@@ -95,5 +99,7 @@ jobs:
           npm install
           cd .. && cd macos && ls && cd .. && cd cxx-parser
           cd .. && cd ubuntu && ls && cd .. && cd cxx-parser
-          npm run release ${{ inputs.increment }} --ci --npm.allowSameVersion --github.assets=../macos/cppast_backend_macos --github.assets=../ubuntu/cppast_backend_ubuntu
+          echo ${{ env.UBUNTU_PACKAGE_PATH }}
+          echo ${{ env.MACOS_PACKAGE_PATH }}
+          npm run release ${{ inputs.increment }} --ci --npm.allowSameVersion
         working-directory: ./cxx-parser
