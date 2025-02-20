@@ -19,9 +19,9 @@ VERSION=$(jq -r '.version' ${PACKAGE_JSON_PATH})
 # Determine the prebuilt URL based on the operating system
 OS=$(uname)
 if [[ "$OS" == "Darwin" ]]; then
-    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/v${VERSION}/cppast_backend_macos"
+    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/v${VERSION}/cppast_backend_macos.zip"
 elif [[ "$OS" == "Linux" ]]; then
-    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/v${VERSION}/cppast_backend_ubuntu"
+    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/v${VERSION}/cppast_backend_ubuntu.zip"
 else
     echo "Unsupported OS: $OS"
     exit 1
@@ -36,6 +36,7 @@ if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
     if [ ! -f "${PREBUILT_FILE}" ]; then
         echo "Downloading prebuilt cppast_backend from ${PREBUILT_URL}"
         curl -L -o ${PREBUILT_FILE} ${PREBUILT_URL}
+        unzip -o ${PREBUILT_FILE}
         chmod +x ${PREBUILT_FILE}
     else
         echo "Prebuilt cppast_backend already exists, skipping download."
