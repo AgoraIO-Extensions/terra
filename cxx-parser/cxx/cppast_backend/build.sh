@@ -19,9 +19,9 @@ VERSION=$(jq -r '.version' ${PACKAGE_JSON_PATH})
 # Determine the prebuilt URL based on the operating system
 OS=$(uname)
 if [[ "$OS" == "Darwin" ]]; then
-    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/${VERSION}/cppast_backend_macos"
+    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/v${VERSION}/cppast_backend_macos"
 elif [[ "$OS" == "Linux" ]]; then
-    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/${VERSION}/cppast_backend_ubuntu"
+    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/v${VERSION}/cppast_backend_ubuntu"
 else
     echo "Unsupported OS: $OS"
     exit 1
