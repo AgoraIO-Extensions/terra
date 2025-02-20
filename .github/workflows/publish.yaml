@@ -71,9 +71,9 @@ jobs:
           name: cppast_backend_macos
           path: ./macos
 
-      - name: Rename MacOS Artifact
+      - name: zip MacOS Artifact
         run: |
-          mv macos/cppast_backend macos/cppast_backend_macos
+          zip -r cppast_backend_macos macos
 
       - name: Download Ubuntu Artifact
         uses: actions/download-artifact@v4
@@ -81,9 +81,9 @@ jobs:
           name: cppast_backend_ubuntu
           path: ./ubuntu
 
-      - name: Rename Ubuntu Artifact
+      - name: zip Ubuntu Artifact
         run: |
-          mv ubuntu/cppast_backend ubuntu/cppast_backend_ubuntu
+          zip -r cppast_backend_ubuntu ubuntu
 
       - uses: actions/setup-node@v3
         with:

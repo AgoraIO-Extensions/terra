@@ -41,8 +41,8 @@
     "github": {
       "release": true,
       "assets": [
-        "../macos/cppast_backend_macos",
-        "../ubuntu/cppast_backend_ubuntu"
+        "../cppast_backend_macos.zip",
+        "../cppast_backend_ubuntu.zip"
       ]
     }
   }
