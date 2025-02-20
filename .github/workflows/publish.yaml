@@ -22,11 +22,15 @@ jobs:
         run: |
           sh cxx-parser/cxx/cppast_backend/prebuilt.sh
 
+      - name: remove useless file
+        run: |
+          rm -rf cxx-parser/cxx/cppast_backend/prebuilt/terra/cppast/clang+llvm**
+
       - uses: actions/upload-artifact@v4
         with:
           name: cppast_backend_ubuntu
           path: |
-            cxx-parser/cxx/cppast_backend/prebuilt/cppast_backend
+            cxx-parser/cxx/cppast_backend/prebuilt
           if-no-files-found: error
   publish-macos:
     runs-on: macos-13
@@ -41,11 +45,15 @@ jobs:
         run: |
           sh cxx-parser/cxx/cppast_backend/prebuilt.sh
 
+      - name: remove useless file
+        run: |
+          rm -rf cxx-parser/cxx/cppast_backend/prebuilt/terra/cppast/clang+llvm**
+
       - uses: actions/upload-artifact@v4
         with:
           name: cppast_backend_macos
           path: |
-            cxx-parser/cxx/cppast_backend/prebuilt/cppast_backend
+            cxx-parser/cxx/cppast_backend/prebuilt
           if-no-files-found: error
 
   create-release:
