@@ -152,6 +152,13 @@ renderers:
 npm exec terra -- run --config my_terra_config.yaml --output-dir=<YOUR_OUTPUT_PATH>
 ```
 
+### prebuilt
+
+if you set CPPAST_BACKEND_BUILD=true in your environments, cppast_backend will build. otherwise,
+cppast_backend will use prebuilt version.
+
+Currently, we provide macos and ubuntu prebuilt version.
+
 ## Examples
 
 - https://github.com/AgoraIO-Extensions/iris_web/blob/main/scripts/terra

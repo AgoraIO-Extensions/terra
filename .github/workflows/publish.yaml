@@ -2,14 +2,104 @@ name: Publish cppast_backend
 
 on:
   workflow_dispatch:
-
+    inputs:
+      increment:
+        description: 'Version'
+        required: true
+        default: '0.x.x'
+        type: string
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+  publish-ubuntu:
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: build cppast_backend
+        env:
+          LLVM_DOWNLOAD_URL: |
+            https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
         run: |
           sh cxx-parser/cxx/cppast_backend/prebuilt.sh
+
+      - name: remove useless file
+        run: |
+          rm -rf cxx-parser/cxx/cppast_backend/prebuilt/terra/cppast/clang+llvm**
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cppast_backend_ubuntu
+          path: |
+            cxx-parser/cxx/cppast_backend/prebuilt
+          if-no-files-found: error
+  publish-macos:
+    runs-on: macos-13
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: build cppast_backend
+        env:
+          LLVM_DOWNLOAD_URL: |
+            https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.7/clang+llvm-15.0.7-x86_64-apple-darwin21.0.tar.xz
+        run: |
+          sh cxx-parser/cxx/cppast_backend/prebuilt.sh
+
+      - name: remove useless file
+        run: |
+          rm -rf cxx-parser/cxx/cppast_backend/prebuilt/terra/cppast/clang+llvm**
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cppast_backend_macos
+          path: |
+            cxx-parser/cxx/cppast_backend/prebuilt
+          if-no-files-found: error
+
+  create-release:
+    needs: [publish-ubuntu, publish-macos]
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download MacOS Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cppast_backend_macos
+          path: ./macos
+
+      - name: zip MacOS Artifact
+        run: |
+          zip -r cppast_backend_macos macos
+
+      - name: Download Ubuntu Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cppast_backend_ubuntu
+          path: ./ubuntu
+
+      - name: zip Ubuntu Artifact
+        run: |
+          zip -r cppast_backend_ubuntu ubuntu
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: Setup NPM auth token
+        run: |
+          npm set "//registry.npmjs.org/:_authToken" ${{ secrets.NPM_TOKEN }}
+
+      - name: Config Git
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+
+      - name: Create Release
+        run: |
+          npm install
+          npm run release ${{ inputs.increment }} --ci --npm.allowSameVersion
+        working-directory: ./cxx-parser

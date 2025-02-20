@@ -35,11 +35,10 @@ describe('ClangASTQualTypeParser', () => {
 
 namespace agora {
 namespace rtc {
-    typedef uint32_t uid_t;
     typedef void* view_t;
 
     class IRtcEngine {
-        void joinChannel(uid_t uid);
+        int joinChannel(const char *token, const char *channelId, uid_t uid);
         void setConfig(int width, double height, view_t* view);
     };
 }}
@@ -161,7 +160,9 @@ namespace rtc {
 
         methods.forEach((method) => {
           if (method.name == 'joinChannel') {
-            expect(method.parameters[0].type.clang_qualtype).toBe('uid_t');
+            expect(method.parameters[0].type.clang_qualtype).toBe(
+              'const char *'
+            );
           } else if (method.name == 'setConfig') {
             method.parameters.forEach((param) => {
               if (param.name == 'width') {

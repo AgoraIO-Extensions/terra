@@ -10,3 +10,8 @@ node_modules/
 
 dump_json.json
 **/package-lock.json
+
+
+macos/
+ubuntu/
+**.zip
