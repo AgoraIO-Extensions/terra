@@ -37,7 +37,6 @@ if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
         echo "Downloading prebuilt cppast_backend from ${PREBUILT_URL}"
         curl -L -o ${PREBUILT_FILE} ${PREBUILT_URL}
         unzip -o ${PREBUILT_FILE} -d ${OUTPUT_PATH}
-        rm ${PREBUILT_FILE}
         if [[ "$OS" == "Darwin" ]]; then
             mv ${OUTPUT_PATH}/macos/* ${OUTPUT_PATH}
             rmdir ${OUTPUT_PATH}/macos
@@ -46,6 +45,9 @@ if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
             rmdir ${OUTPUT_PATH}/ubuntu
         fi
         chmod +x ${OUTPUT_PATH}/cppast_backend
+        if [[ "$OS" == "Darwin" ]]; then
+            install_name_tool -add_rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
+        fi
     else
         echo "Prebuilt cppast_backend already exists, skipping download."
     fi
