@@ -21,7 +21,7 @@ if(APPLE)
     )
 elseif(UNIX)
     set_target_properties(cppast_backend PROPERTIES
-        LINK_FLAGS "-Wl,-rpath,'$ORIGIN'"
+        LINK_FLAGS "-Wl,-rpath='$ORIGIN'"
     )
 endif()
 
