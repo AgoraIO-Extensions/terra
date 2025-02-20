@@ -45,13 +45,14 @@ if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
             rmdir ${OUTPUT_PATH}/ubuntu
         fi
         chmod +x ${OUTPUT_PATH}/cppast_backend
-        if [[ "$OS" == "Darwin" ]]; then
-            install_name_tool -add_rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
-        fi
-        if [[ "$OS" == "Linux" ]]; then
-            sudo ln -s ${OUTPUT_PATH}/libclang.so ${OUTPUT_PATH}/libclang.so.15
-            patchelf --set-rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
-        fi
+        # Add rpath in cmake
+        # if [[ "$OS" == "Darwin" ]]; then
+        #     install_name_tool -add_rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
+        # fi
+        # if [[ "$OS" == "Linux" ]]; then
+        #     sudo ln -s ${OUTPUT_PATH}/libclang.so ${OUTPUT_PATH}/libclang.so.15
+        #     patchelf --set-rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
+        # fi
     else
         echo "Prebuilt cppast_backend already exists, skipping download."
     fi
