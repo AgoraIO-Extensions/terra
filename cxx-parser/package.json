@@ -1,6 +1,6 @@
 {
   "name": "@agoraio-extensions/cxx-parser",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "src/index",
   "author": "",
   "license": "ISC",
@@ -40,7 +40,10 @@
     },
     "github": {
       "release": true,
-      "assets": ["../macos/cppast_backend_macos", "../ubuntu/cppast_backend_ubuntu"]
+      "assets": [
+        "../macos/cppast_backend_macos",
+        "../ubuntu/cppast_backend_ubuntu"
+      ]
     }
   }
 }
