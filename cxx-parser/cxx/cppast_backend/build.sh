@@ -36,7 +36,10 @@ if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
     if [ ! -f "${PREBUILT_FILE}" ]; then
         echo "Downloading prebuilt cppast_backend from ${PREBUILT_URL}"
         curl -L -o ${PREBUILT_FILE} ${PREBUILT_URL}
-        unzip -o ${PREBUILT_FILE}
+        unzip -o ${PREBUILT_FILE} -d ${OUTPUT_PATH}
+        rm ${PREBUILT_FILE}
+        mv ${OUTPUT_PATH}/cppast_backend/* ${OUTPUT_PATH}/
+        rmdir ${OUTPUT_PATH}/cppast_backend
         chmod +x ${PREBUILT_FILE}
     else
         echo "Prebuilt cppast_backend already exists, skipping download."
