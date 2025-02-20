@@ -49,6 +49,7 @@ if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
             install_name_tool -add_rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
         fi
         if [[ "$OS" == "Linux" ]]; then
+            sudo ln -s ${OUTPUT_PATH}/libclang.so ${OUTPUT_PATH}/libclang.so.15
             patchelf --set-rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
         fi
     else
