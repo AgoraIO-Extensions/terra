@@ -13,5 +13,7 @@ dump_json.json
 
 
 macos/
+macos_debug/
 ubuntu/
+ubuntu_debug/
 **.zip
