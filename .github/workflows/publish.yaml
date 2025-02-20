@@ -85,5 +85,7 @@ jobs:
       - name: Create Release
         run: |
           npm install
+          cd .. && cd macos && ls && cd .. && cd cxx-parser
+          cd .. && cd ubuntu && ls && cd .. && cd cxx-parser
           npm run release ${{ inputs.increment }} --ci --npm.allowSameVersion --github.assets=../macos/cppast_backend_macos --github.assets=../ubuntu/cppast_backend_ubuntu
         working-directory: ./cxx-parser
