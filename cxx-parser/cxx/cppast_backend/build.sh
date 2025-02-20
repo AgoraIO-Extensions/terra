@@ -48,6 +48,9 @@ if [[ $CPPAST_BACKEND_BUILD != 1 ]]; then
         if [[ "$OS" == "Darwin" ]]; then
             install_name_tool -add_rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
         fi
+        if [[ "$OS" == "Linux" ]]; then
+            patchelf --set-rpath ${OUTPUT_PATH} ${OUTPUT_PATH}/cppast_backend
+        fi
     else
         echo "Prebuilt cppast_backend already exists, skipping download."
     fi
