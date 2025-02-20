@@ -1,6 +1,6 @@
 {
   "name": "@agoraio-extensions/cxx-parser",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "src/index",
   "author": "",
   "license": "ISC",
