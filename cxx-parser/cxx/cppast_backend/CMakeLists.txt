@@ -20,9 +20,10 @@ if(APPLE)
         LINK_FLAGS "-Wl, -rpath @loader_path"
     )
 elseif(UNIX)
-    set_target_properties(cppast_backend PROPERTIES
-        LINK_FLAGS "-Wl,-rpath,$ORIGIN/;$ORIGIN/lib"
-    )
+    # TODO: add rpath to the executable
+    # set_target_properties(cppast_backend PROPERTIES
+    #     LINK_FLAGS "-Wl,-rpath,$ORIGIN/;$ORIGIN/lib"
+    # )
 endif()
 
 # copy the libclang library to the build directory
