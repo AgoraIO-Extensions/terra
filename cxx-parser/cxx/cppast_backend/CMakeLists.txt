@@ -14,3 +14,9 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../terra" terra)
 
 add_executable(cppast_backend "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cc")
 target_link_libraries(cppast_backend PRIVATE terra cxxopts)
+
+# copy the libclang library to the build directory
+add_custom_command(TARGET cppast_backend POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${LIBCLANG_LIBRARY}"
+        $<TARGET_FILE_DIR:cppast_backend>)

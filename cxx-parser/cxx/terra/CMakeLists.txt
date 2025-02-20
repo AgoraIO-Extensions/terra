@@ -14,7 +14,7 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/terra_parser.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/include/terra_generator.hpp
     )
-add_library(${LIBRARY_NAME} SHARED ${HEADERS})
+add_library(${LIBRARY_NAME} STATIC ${CMAKE_CURRENT_SOURCE_DIR}/terra.cpp ${HEADERS})
 
 set(V_NLOHMANN_JSON v3.10.5)
 
