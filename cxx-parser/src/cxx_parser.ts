@@ -6,6 +6,7 @@ import path from 'path';
 import './cxx_parser_ext';
 
 import { replaceText } from '@agoraio-extensions/cxx-parser/src/tools';
+import { fillParentNode } from '@agoraio-extensions/cxx-parser/src/utils';
 import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
 import { ClangASTStructConstructorParser } from './constructor_initializer_parser';
@@ -221,55 +222,4 @@ function _findParent(
   }
 
   return foundNode;
-}
-
-function fillParentNode(parseResult: ParseResult, cxxFiles: CXXFile[]) {
-  cxxFiles.forEach((file) => {
-    file.nodes.forEach((node) => {
-      if (node.parent_full_scope_name) {
-        node.parent =
-          parseResult.resolveNodeByName(node.parent_full_scope_name) ?? file; // _findParent(parseResult, node.parent_name);
-      } else {
-        node.parent = file;
-      }
-
-      if (node.__TYPE === CXXTYPE.Clazz) {
-        node.asClazz().constructors.forEach((constructor) => {
-          constructor.parent = node;
-          constructor.parameters.forEach((param) => {
-            param.parent = constructor;
-            param.type.parent = param;
-          });
-        });
-        node.asClazz().methods.forEach((method) => {
-          method.parent = node;
-          method.parameters.forEach((param) => {
-            param.parent = method;
-            param.type.parent = param;
-          });
-          method.return_type.parent = method;
-        });
-        node.asClazz().member_variables.forEach((variable) => {
-          variable.parent = node;
-          variable.type.parent = variable;
-        });
-      } else if (node.__TYPE === CXXTYPE.Struct) {
-        node.asStruct().constructors.forEach((constructor) => {
-          constructor.parent = node;
-          constructor.parameters.forEach((param) => {
-            param.parent = constructor;
-            param.type.parent = param;
-          });
-        });
-        node.asStruct().member_variables.forEach((variable) => {
-          variable.parent = node;
-          variable.type.parent = variable;
-        });
-      } else if (node.__TYPE === CXXTYPE.Enumz) {
-        node.asEnumz().enum_constants.forEach((enum_constant) => {
-          enum_constant.parent = node;
-        });
-      }
-    });
-  });
 }
