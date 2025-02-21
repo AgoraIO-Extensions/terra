@@ -15,7 +15,7 @@ fi
 pushd ${OUTPUT_PATH}
 
 PACKAGE_JSON_PATH=$(realpath ${MY_PATH}/../../package.json)
-VERSION=$(jq -r '.version' ${PACKAGE_JSON_PATH})
+VERSION=$(awk -F'"' '/"version":/{print $4}' ${PACKAGE_JSON_PATH})
 # Determine the prebuilt URL based on the operating system
 OS=$(uname)
 if [[ "$OS" == "Darwin" ]]; then
