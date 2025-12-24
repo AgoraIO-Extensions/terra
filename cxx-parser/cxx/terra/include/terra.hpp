@@ -510,6 +510,34 @@ namespace terra
                 }
                 case cppast::cpp_entity_kind::class_t:
                 {
+                    // Handle nested class/struct/union (like anonymous unions)
+                    auto &cpp_nested_class = static_cast<const cppast::cpp_class &>(member);
+
+                    // Check if it's a union
+                    if (cpp_nested_class.class_kind() == cppast::cpp_class_kind::union_t)
+                    {
+                        std::cout << "[nested union_t] Flattening union members: " << cpp_nested_class.name() << std::endl;
+
+                        // Flatten union members to parent struct
+                        // Iterate through union's members and add them as member variables
+                        for (auto &union_member : cpp_nested_class)
+                        {
+                            if (union_member.kind() == cppast::cpp_entity_kind::member_variable_t)
+                            {
+                                auto &cpp_member_var = static_cast<const cppast::cpp_member_variable &>(union_member);
+                                MemberVariable member_var;
+                                parse_member_variables(member_var, namespaceList, classFullScopeList, file_path, cpp_member_var, current_access_specifier);
+                                member_variables.push_back(member_var);
+                                std::cout << "  [union member] Added: " << member_var.name << std::endl;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "[nested class_t] Skipping nested class/struct: " << cpp_nested_class.name() << std::endl;
+                        // Skip other nested classes/structs
+                    }
+                    break;
                 }
 
                 default:
@@ -518,7 +546,17 @@ namespace terra
             }
 
             std::cout << "[class_t] cpp_class: " << cpp_class.name() << std::endl;
-
+            
+            // Skip anonymous unions - they will be handled differently
+            if (cpp_class.class_kind() == cppast::cpp_class_kind::union_t)
+            {
+                std::cout << "[union_t] Skipping union (not supported): " << cpp_class.name() << std::endl;
+                // TODO: Extract union members and flatten them to parent struct
+                // For now, we skip unions to avoid generating empty Clazz nodes
+                Clazz clazz;  // Return empty Clazz with empty name to be filtered later
+                parse_base_node(clazz, namespaceList, parentFullScopeList, file_path, cpp_class);
+                return clazz;
+            }
             if (cpp_class.class_kind() == cppast::cpp_class_kind::struct_t)
             {
                 Struct structt; // = new Struct();
