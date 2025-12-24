@@ -9,7 +9,7 @@ on:
 
 jobs:
   unit_test:
-    runs-on: macos-13
+    runs-on: macos-14
     permissions:
       contents: read
       packages: read
@@ -50,7 +50,7 @@ jobs:
           npm run test:integration
 
   integration_test_macos:
-    runs-on: macos-13
+    runs-on: macos-14
     permissions:
       contents: read
       packages: read

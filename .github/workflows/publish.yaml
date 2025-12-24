@@ -79,7 +79,7 @@ jobs:
             cxx-parser/cxx/cppast_backend/prebuilt
           if-no-files-found: error
   publish-macos-debug:
-    runs-on: macos-13
+    runs-on: macos-14
     steps:
       - name: Checkout
         uses: actions/checkout@v3
