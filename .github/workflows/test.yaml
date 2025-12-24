@@ -9,7 +9,7 @@ on:
 
 jobs:
   unit_test:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     permissions:
       contents: read
       packages: read
@@ -18,10 +18,10 @@ jobs:
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
-          registry-url: 'https://npm.pkg.github.com'
+          node-version: "16.x"
+          registry-url: "https://npm.pkg.github.com"
           # Defaults to the user or organization that owns the workflow file
-          scope: '@agoraio-extensions'
+          scope: "@agoraio-extensions"
 
       - name: Run unit test
         env:
@@ -38,10 +38,10 @@ jobs:
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
-          registry-url: 'https://npm.pkg.github.com'
+          node-version: "16.x"
+          registry-url: "https://npm.pkg.github.com"
           # Defaults to the user or organization that owns the workflow file
-          scope: '@agoraio-extensions'
+          scope: "@agoraio-extensions"
       - name: Run unit test
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,7 +50,7 @@ jobs:
           npm run test:integration
 
   integration_test_macos:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     permissions:
       contents: read
       packages: read
@@ -59,10 +59,10 @@ jobs:
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
-          registry-url: 'https://npm.pkg.github.com'
+          node-version: "16.x"
+          registry-url: "https://npm.pkg.github.com"
           # Defaults to the user or organization that owns the workflow file
-          scope: '@agoraio-extensions'
+          scope: "@agoraio-extensions"
       - name: Run unit test
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
