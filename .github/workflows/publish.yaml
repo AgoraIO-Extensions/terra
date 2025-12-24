@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       increment:
-        description: 'Version'
+        description: "Version"
         required: true
-        default: '0.x.x'
+        default: "0.x.x"
         type: string
 jobs:
   publish-ubuntu:
@@ -56,7 +56,7 @@ jobs:
             cxx-parser/cxx/cppast_backend/prebuilt
           if-no-files-found: error
   publish-macos:
-    runs-on: macos-14
+    runs-on: macos-15-intel
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -79,7 +79,7 @@ jobs:
             cxx-parser/cxx/cppast_backend/prebuilt
           if-no-files-found: error
   publish-macos-debug:
-    runs-on: macos-14
+    runs-on: macos-15-intel
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -154,7 +154,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: "16.x"
 
       - name: Setup NPM auth token
         run: |
