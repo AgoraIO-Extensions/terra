@@ -546,18 +546,15 @@ namespace terra
             }
 
             std::cout << "[class_t] cpp_class: " << cpp_class.name() << std::endl;
-            
+
             // Skip anonymous unions - they will be handled differently
             if (cpp_class.class_kind() == cppast::cpp_class_kind::union_t)
             {
-                std::cout << "[union_t] Skipping union (not supported): " << cpp_class.name() << std::endl;
-                // TODO: Extract union members and flatten them to parent struct
-                // For now, we skip unions to avoid generating empty Clazz nodes
-                Clazz clazz;  // Return empty Clazz with empty name to be filtered later
-                parse_base_node(clazz, namespaceList, parentFullScopeList, file_path, cpp_class);
-                return clazz;
+                std::cout << "[union_t] Ignoring union completely: " << cpp_class.name() << std::endl;
+                // Skip unions completely, don't even create an empty Clazz
+                return Clazz(); // Return default-constructed Clazz that will be filtered out
             }
-            if (cpp_class.class_kind() == cppast::cpp_class_kind::struct_t)
+            if (cpp_class.class_kind() == cppast::cpp_class_kind::struct_t || cpp_class.class_kind() == cppast::cpp_class_kind::union_t)
             {
                 Struct structt; // = new Struct();
                 parse_base_node(structt, namespaceList, parentFullScopeList, file_path, cpp_class);
@@ -949,6 +946,18 @@ namespace terra
 
                 for (auto node : cxx_file.nodes)
                 {
+                    // 过滤掉空的 Clazz 对象（通常是由 union_t 生成的）
+                    if (std::holds_alternative<Clazz>(node))
+                    {
+                        auto &ele = std::get<Clazz>(node);
+                        // 如果是空的 Clazz 对象（名称为空），则跳过
+                        if (ele.name.empty())
+                        {
+                            std::cout << "[DefaultJsonGenerator] Filtering out empty Clazz node" << std::endl;
+                            continue;
+                        }
+                    }
+
                     nlohmann::json eleJson;
 
                     if (std::holds_alternative<IncludeDirective>(node))
