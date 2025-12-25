@@ -546,18 +546,9 @@ namespace terra
             }
 
             std::cout << "[class_t] cpp_class: " << cpp_class.name() << std::endl;
-            
+
             // Skip anonymous unions - they will be handled differently
-            if (cpp_class.class_kind() == cppast::cpp_class_kind::union_t)
-            {
-                std::cout << "[union_t] Skipping union (not supported): " << cpp_class.name() << std::endl;
-                // TODO: Extract union members and flatten them to parent struct
-                // For now, we skip unions to avoid generating empty Clazz nodes
-                Clazz clazz;  // Return empty Clazz with empty name to be filtered later
-                parse_base_node(clazz, namespaceList, parentFullScopeList, file_path, cpp_class);
-                return clazz;
-            }
-            if (cpp_class.class_kind() == cppast::cpp_class_kind::struct_t)
+            if (cpp_class.class_kind() == cppast::cpp_class_kind::struct_t || cpp_class.class_kind() == cppast::cpp_class_kind::union_t)
             {
                 Struct structt; // = new Struct();
                 parse_base_node(structt, namespaceList, parentFullScopeList, file_path, cpp_class);
