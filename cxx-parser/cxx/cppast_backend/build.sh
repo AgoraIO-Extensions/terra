@@ -19,9 +19,9 @@ VERSION=$(awk -F'"' '/"version":/{print $4}' ${PACKAGE_JSON_PATH})
 # Determine the prebuilt URL based on the operating system
 OS=$(uname)
 if [[ "$OS" == "Darwin" ]]; then
-    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/v${VERSION}/cppast_backend_macos.zip"
+    PREBUILT_URL="https://download.agora.io/sdk/release/cppast_backend_macos_v${VERSION}.zip"
 elif [[ "$OS" == "Linux" ]]; then
-    PREBUILT_URL="https://github.com/AgoraIO-Extensions/terra/releases/download/v${VERSION}/cppast_backend_ubuntu.zip"
+    PREBUILT_URL="https://download.agora.io/sdk/release/cppast_backend_ubuntu_v${VERSION}.zip"
 else
     echo "Unsupported OS: $OS"
     exit 1
