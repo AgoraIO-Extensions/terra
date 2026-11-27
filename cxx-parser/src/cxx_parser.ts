@@ -161,10 +161,13 @@ export function CXXParser(
     return (it as CXXFile).file_path;
   });
 
+  // cppast flattens platform branches to collect the complete API surface.
+  // Constructor initializers need the original conditional compilation: mutually
+  // exclusive constructors can have identical signatures and different defaults.
   ClangASTStructConstructorParser(
     getBuildDir(terraContext, cxxParserConfigs.buildDirNamePrefix),
     cxxParserConfigs.includeHeaderDirs,
-    cppastParsedFiles,
+    parseFiles,
     newParseResult
   );
 
